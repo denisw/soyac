@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Chapter 2. Grammars</title><link rel="stylesheet" href="langref.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.73.2" /><link rel="start" href="index.html" title="The Soya Language Reference" /><link rel="up" href="index.html" title="The Soya Language Reference" /><link rel="prev" href="ch01.html" title="Chapter 1. Introduction" /><link rel="next" href="ch03.html" title="Chapter 3. Lexical Structure" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter 2. Grammars</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch01.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ch03.html">Next</a></td></tr></table><hr /></div><div class="chapter" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="grammars"></a>Chapter 2. Grammars</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="ch02.html#id3373412">2.1. Lexical Grammar</a></span></dt><dt><span class="sect1"><a href="ch02.html#id3373427">2.2. Syntactic Grammar</a></span></dt></dl></div><p>
+  The structure of a Soya module () is defined by two context-free grammars.
+  The lexical grammar defines how a sequence of characters is to be translated
+  into a sequence of tokens. The syntactic grammar specifies how these tokens are
+  then translated into a valid Soya module.
+  </p><p>
+  Both grammars are specified using the Extended BNF metalanguage (ISO/IEC
+  14977). The terms "production", "terminal symbol", and "non-terminal symbol"
+  are used in this specification are defined in the EBNF standard.
+  </p><div class="sect1" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="id3373412"></a>2.1. Lexical Grammar</h2></div></div></div><p>
+    The lexical grammar of Soya is presented in (3). It's terminal symbols are
+    the characters of the Unicode character set. The productions of the lexical
+    grammar specify how these characters are translated into a sequence of
+    input elements, consisting of tokens (), white space () and comments ().
+    </p><p>
+    Every Soya module must conform with the input production of the lexical
+    grammar ().
+    </p></div><div class="sect1" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="id3373427"></a>2.2. Syntactic Grammar</h2></div></div></div><p>
+    The syntactical grammar of Soya is presented in chapters 4 through ?.
+    It's terminal symbols are the tokens defined by the lexical grammar.
+    The productions of the grammar specify how these tokens are translated
+    to a valid Soya module. 
+    </p><p>
+    Every Soya module must conform with the module production of the syntactic
+    grammar (). 
+    </p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch01.html">Prev</a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="ch03.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter 1. Introduction </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Chapter 3. Lexical Structure</td></tr></table></div></body></html>

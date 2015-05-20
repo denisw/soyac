@@ -1,0 +1,28 @@
+/*
+ * soyac - The Soya programming language compiler
+ * Copyright (c) 2009 Denis Washington <dwashington@gmx.net>
+ *
+ * This file is distributed under the terms of the MIT license.
+ * See LICENSE.txt for details.
+ */
+
+extern function exit(code : int);
+
+struct Point
+{
+    var x : int;
+    var y : int = 218;
+    var z : int;
+
+    constructor(z : int)
+    {
+        this.z = z;
+    }
+}
+
+var p = new Point(2);
+
+if (p.x != 0) exit(1);
+if (p.y != 218) exit(2);
+if (p.z != 2) exit(3);
+

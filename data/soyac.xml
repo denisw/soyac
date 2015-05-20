@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="text/x-soya">
+    <sub-class-of type="text/x-csrc"/>
+    <comment>Soya source code</comment>
+    <comment xml:lang="bg">Изходен код на Soya</comment>
+    <comment xml:lang="ca">codi font en Soya</comment>
+    <comment xml:lang="cs">Zdrojový kód v Soya</comment>
+    <comment xml:lang="cy">Ffynhonnell Rhaglen Soya</comment>
+    <comment xml:lang="da">Soya-kildekode</comment>
+    <comment xml:lang="de">Soya-Quelltext</comment>
+    <comment xml:lang="el">πηγαίος κώδικας Soya</comment>
+    <comment xml:lang="eo">Soya-fontkodo</comment>
+    <comment xml:lang="es">código fuente en Soya</comment>
+    <comment xml:lang="eu">Soya iturburu-kodea</comment>
+    <comment xml:lang="fi">Soya-lähdekoodi</comment>
+    <comment xml:lang="fr">code source Soya</comment>
+    <comment xml:lang="hu">Soya-forráskód</comment>
+    <comment xml:lang="it">Soyaodice sorgente Soya</comment>
+    <comment xml:lang="ja">Soya ソースコード</comment>
+    <comment xml:lang="ko">Soya 소스 코드</comment>
+    <comment xml:lang="lt">Soya pradinis kodas</comment>
+    <comment xml:lang="ms">Kod sumber Soya</comment>
+    <comment xml:lang="nb">Soya-kildekode</comment>
+    <comment xml:lang="nl">Soya-broncode</comment>
+    <comment xml:lang="nn">Soya-kjeldekode</comment>
+    <comment xml:lang="pl">Kod źródłowy w Soya</comment>
+    <comment xml:lang="pt">código fonte Soya</comment>
+    <comment xml:lang="pt_BR">Soyaódigo fonte Soya</comment>
+    <comment xml:lang="ru">программа на языке Soya</comment>
+    <comment xml:lang="sq">Kod burues Soya</comment>
+    <comment xml:lang="sr">Soya изворни ко̂д</comment>
+    <comment xml:lang="sv">Soya-källkod</comment>
+    <comment xml:lang="uk">Вихідний код на мові Soya</comment>
+    <comment xml:lang="vi">Mã nguồn Soya</comment>
+    <comment xml:lang="zh_SoyaN">Soya 源代码</comment>
+    <comment xml:lang="zh_TW">Soya 源代碼</comment>
+    <glob pattern="*.soya"/>
+    <magic priority="30">
+      <match value="alias" type="string" offset="0"/>
+      <match value="function" type="string" offset="0"/>
+      <match value="var" type="string" offset="0"/>
+    </magic>
+  </mime-type>
+</mime-info>

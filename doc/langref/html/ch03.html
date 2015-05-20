@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Chapter 3. Lexical Structure</title><link rel="stylesheet" href="langref.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.73.2" /><link rel="start" href="index.html" title="The Soya Language Reference" /><link rel="up" href="index.html" title="The Soya Language Reference" /><link rel="prev" href="ch02.html" title="Chapter 2. Grammars" /><link rel="next" href="ch04.html" title="Chapter 4. Types" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter 3. Lexical Structure</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch02.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ch04.html">Next</a></td></tr></table><hr /></div><div class="chapter" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="lexical_structure"></a>Chapter 3. Lexical Structure</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="ch03.html#line_terminators">3.1. Line Terminators</a></span></dt><dt><span class="sect1"><a href="ch03.html#whitespace">3.2. White Space</a></span></dt><dt><span class="sect1"><a href="ch03.html#comments">3.3. Comments</a></span></dt><dt><span class="sect1"><a href="ch03.html#identifiers">3.4. Identifiers</a></span></dt><dt><span class="sect1"><a href="ch03.html#keywords">3.5. Keywords</a></span></dt><dt><span class="sect1"><a href="ch03.html#literals">3.6. Literals</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch03.html#boolean_literals">3.6.1. Boolean Literals</a></span></dt><dt><span class="sect2"><a href="ch03.html#integer_literals">3.6.2. Integer Literals</a></span></dt><dt><span class="sect2"><a href="ch03.html#floating_point_literals">3.6.3. Floating-Point Literals</a></span></dt><dt><span class="sect2"><a href="ch03.html#character_literals">3.6.4. Character Literals</a></span></dt><dt><span class="sect2"><a href="ch03.html#string_literals">3.6.5. String Literals</a></span></dt><dt><span class="sect2"><a href="ch03.html#the_null_literal">3.6.6. The null literal</a></span></dt></dl></dd><dt><span class="sect1"><a href="ch03.html#punctators">3.7. Punctators</a></span></dt><dt><span class="sect1"><a href="ch03.html#operators">3.8. Operators</a></span></dt></dl></div><p>
+  A Soya program consists of one or multiple modules (). Each module is a
+  stream of characters of the character set defined in the Unicode
+  standard (www.unicode.org).
+  </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+    Although the Unicode standard defines several different encodings for
+    characters, implementations are only required to support the UTF-8
+    encoding.
+    </p></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+    The Soya reference implementation currently only supports the ASCII
+    subset of the Unicode standard.
+    </p></div><p>
+  The Unicode character stream is translated to a sequence of input elements.
+  These are line terminators (<a class="xref" href="ch03.html#line_terminators" title="3.1. Line Terminators">Section 3.1, “Line Terminators”</a>), whitespace
+  (<a class="xref" href="ch03.html#whitespace" title="3.2. White Space">Section 3.2, “White Space”</a>), comments (<a class="xref" href="ch03.html#comments" title="3.3. Comments">Section 3.3, “Comments”</a>),
+  and tokens. Only the tokens, which are keywords (<a class="xref" href="ch03.html#keywords" title="3.5. Keywords">Section 3.5, “Keywords”</a>),
+  literals (<a class="xref" href="ch03.html#literals" title="3.6. Literals">Section 3.6, “Literals”</a>), punctators (<a class="xref" href="ch03.html#punctators" title="3.7. Punctators">Section 3.7, “Punctators”</a>),
+  and operators (<a class="xref" href="ch03.html#operators" title="3.8. Operators">Section 3.8, “Operators”</a>), matter in the syntactic grammar;
+  all other input elements are discarded.
+  </p><p>
+  The translation to input elements is specified by the <code class="code">input</code>
+  production, which is defined as follows:
+  </p><pre xmlns="" class="productionset">input
+    = {input-part} ;
+
+input-part
+    = {input-element}, line-terminator ;
+
+input-element
+    = line-terminator
+    | white-space
+    | token ;
+
+token
+    = identifier-or-keyword
+    | literal
+    | punctator
+    | operator ;
+
+</pre><p>
+  If multiple lexical grammar productions match a certain character sequence,
+  the production producing the longest input element is chosen. (For instance,
+  the sequence "<code class="code">==</code>" will always be translated into the equality
+  operator (<code class="code">==</code>) and never to two assignment operators
+  (<code class="code">= =</code>).)
+  </p><div class="sect1" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="line_terminators"></a>3.1. Line Terminators</h2></div></div></div><p>
+    Line terminators are the carriage return characters (optionally followed by
+    a line feed character), line feed characters without a leading carriage
+    return character, and line and paragraph separator characters.
+    </p><pre xmlns="" class="productionset">line-terminator
+    = ? Carriage return character (U+000D) ?, [? Line feed character (U+000A) ?]
+    | ? Line feed character (U+000A) ?
+    | ? Line separator character (U+2028) ?
+    | ? Paragraph separator character (U+2029) ? ;
+
+</pre></div><div class="sect1" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="whitespace"></a>3.2. White Space</h2></div></div></div><p>
+    The characters classified as White are the space character and any other
+    character in Unicode character category Zs, the horizontal tab character,
+    the vertica tab character, and the form feed character.
+    </p><pre xmlns="" class="productionset">white-space
+    = ? Any character in Unicode character category Zs ?
+    | ? Horizontal tab character (U+0009) ?
+    | ? Vertical tab character (U+000B) ?
+    | ? Form feed character (U+000C) ? ;
+
+</pre></div><div class="sect1" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="comments"></a>3.3. Comments</h2></div></div></div><p>
+    There are two kinds of comments: delimited comments, which are starts with
+    /* and ended with */, and single-line comments, which start with // and
+    end at the end of the line.
+    </p><pre xmlns="" class="productionset">comment
+    = delimited-comment
+    | single-line-comment ;
+
+delimited-comment
+    = "/*", {? Any Unicode character except * ?}, "*/" ;
+
+single-line-comment
+    = "//", {? Any Unicode character except line-terminator ?} ;
+
+</pre><div class="example"><a id="id3373730"></a><p class="title"><b>Example 3.1. Comment Styles</b></p><div class="example-contents"><p>
+      The following two examples show the same program with both comment styles:
+      </p><pre class="programlisting">/* 
+  "Hello World" Example
+  Prints "Hello World!" on the screen
+*/
+print("Hello World!");</pre><pre class="programlisting">
+// "Hello World" Example
+// Prints "Hello World!" on the screen
+print("Hello World!");</pre></div></div><br class="example-break" /></div><div class="sect1" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="identifiers"></a>3.4. Identifiers</h2></div></div></div><p>
+    The rules for identifiers are are the same as those recommended by Unicode
+    Standard Annex 15 except that underscores are allowed at the beginning of
+    an identifier.
+    </p><pre xmlns="" class="productionset">identifier
+    = ? identifier-or-keyword which is no keyword ? ;
+
+identifier-or-keyword
+    = identifier-start-character, {identifier-part-character} ;
+
+identifier-start-character
+    = letter
+    | ? Underscore character (U+005F) ? ;
+
+identifier-part-character
+    = letter
+    | decimal-digit
+    | connecting-character
+    | combining-character
+    | formatting-character ;
+
+letter
+    = ? Any Unicode character of class Lu, Ll, Lt, Lm, Lo, or Nl ? ;
+
+decimal-digit
+    = ? Any Unicode character of class Nd ? ;
+
+connecting-character
+    = ? Any Unicode character of class Pc ? ;
+
+combining-character
+    = ? Any Unicode character of class Mn or Mc ? ;
+
+formatting-character
+    = ? Any Unicode character of class Cf ? ;
+
+</pre><p>
+    Identifiers which start with two underscore characters (U+005F) are reserve
+    for use by implementations. However, implementations are not required to
+    check if a program contains such identifiers.
+    </p></div><div class="sect1" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="keywords"></a>3.5. Keywords</h2></div></div></div><p>
+    Keywords are reserved identifier-like sequences which have special roles
+    in Soya's syntax and thus may not be used as ordinary identifiers.
+    </p><pre xmlns="" class="productionset">keyword
+    = "alias" | "and" | "as" | "bool" | "break" | "byte" | "case"
+    | "char" | "class" | "const" | "continue" | "default" | "do"
+    | "double" | "else" | "enum" | "extern" | "false" | "float" | "for"
+    | "from" | "function" | "get" | "if" | "is" | "import" | "int"
+    | "long" | "new" | "not" | "null" | "or" | "override" | "private"
+    | "property" | "protected" | "public" | "readonly" | "return"
+    | "sbyte" | "self" | "set" | "short" | "static" | "struct"
+    | "switch" | "true" | "uint" | "ulong" | "ushort" | "var"
+    | "virtual" | "void" | "while" | "xor" ;
+
+</pre></div><div class="sect1" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="literals"></a>3.6. Literals</h2></div></div></div><p>
+    Literals represent values of a simple type (<a class="xref" href="ch04.html#simple_types" title="4.1.1. Simple Types">Section 4.1.1, “Simple Types”</a>),
+    the <span class="type">String</span> type (), or the null type ().
+    </p><pre xmlns="" class="productionset">literal
+    = boolean-literal
+    | integer-literal
+    | floating-point-literal
+    | character-literal
+    | string-literal
+    | null-literal ;
+
+</pre><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="boolean_literals"></a>3.6.1. Boolean Literals</h3></div></div></div><p>
+      A boolean literal represents one of the two boolean literals true
+      and false.
+      </p><pre xmlns="" class="productionset">boolean-literal
+    = "true"
+    | "false" ;
+
+</pre><p>
+      The type of a boolean literal is bool.
+      </p></div><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="integer_literals"></a>3.6.2. Integer Literals</h3></div></div></div><p>
+      Integer literals represent values of types int, uint, long, and ulong.
+      They can be written either in decimal, binary, octal or hexadecimal
+      notation.
+      </p><pre xmlns="" class="productionset">integer-literal
+    = decimal-integer-literal
+    | binary-integer-literal
+    | octal-integer-literal
+    | hexadecimal-integer-literal ;
+
+decimal-integer-literal
+    = decimal-digit, {decimal-digit} ;
+
+decimal-digit
+    = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" ;
+
+binary-integer-literal
+    = "0b", binary-digit, {binary-digit} ;
+
+hexadecimal-digit
+    = "0" | "1" ;
+
+octal-integer-literal
+    = "0c", octal-digit, {octal-digit} ;
+
+octal-digit
+    = "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" ;
+
+hexadecimal-integer-literal
+    = "0x", hexadecimal-digit, {hexadecimal-digit} ;
+
+hexadecimal-digit
+    = decimal-digit | "A" | "B" | "C" | "D" | "E" | "F" | "a" | "b" | "c" | "d" | "e" | "f" ;
+
+</pre><p>
+      The type of an integer literal is the first of the following types in
+      which the value can be represented:
+      </p><div class="orderedlist"><ol type="1"><li><p><span class="type">int</span></p></li><li><p><span class="type">uint</span></p></li><li><p><span class="type">long</span></p></li><li><p><span class="type">ulong</span></p></li></ol></div><p>
+      If the literal value cannot be represented by any of these types, a
+      compile-time error occurs.
+      </p></div><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="floating_point_literals"></a>3.6.3. Floating-Point Literals</h3></div></div></div><p>
+      Floating-point literals represent literals of type double.
+      </p><pre xmlns="" class="productionset">floating-point-literal
+    = {decimal-digit}, ".", [exponent-part]
+    | {decimal-digit}, ["."], exponent-part ;
+
+exponent-part
+    = ( "E" | "e" ), [sign], {decimal-digit} ;
+
+sign
+    = "+" | "-" ;
+
+</pre><p>
+      The type of a floating-point literal is <span class="type">double</span>.
+      </p></div><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="character_literals"></a>3.6.4. Character Literals</h3></div></div></div><p>
+      A character literal represent single character.
+      </p><pre xmlns="" class="productionset">character-literal
+    = "'", character, "'"
+    |  ;
+
+character
+    = single-character
+    | escape-sequence ;
+
+single-character
+    = ? Any Unicode character except ' (U+0027), \ (U+005C) and line-terminator ? ;
+
+</pre><p>
+      Each escape sequence represents a specific Unicode character, as described
+      in the table below.
+      </p><table xmlns="" id="id3374294"><thead><tr>
+            <td>Escape Sequence</td>
+            <td>Unicode Character</td>
+          </tr></thead><tbody><tr>
+            <td>\'</td>
+            <td>Single quote (U+0027)</td>
+          </tr><tr>
+            <td>\"</td>
+            <td>Double quote (U+0022)</td>
+          </tr><tr>
+            <td>\\</td>
+            <td>Backslash (U+005C)</td>
+          </tr><tr>
+            <td>\0</td>
+            <td>Null (U+0000)</td>
+          </tr><tr>
+            <td>\a</td>
+            <td>Alert (U+0007)</td>
+          </tr><tr>
+            <td>\b</td>
+            <td>Backspace (U+0008)</td>
+          </tr><tr>
+            <td>\f</td>
+            <td>Form feed (U+000C)</td>
+          </tr><tr>
+            <td>\n</td>
+            <td>New line (U+000A)</td>
+          </tr><tr>
+            <td>\r</td>
+            <td>Carriage return (U+000D)</td>
+          </tr><tr>
+            <td>\t</td>
+            <td>Horizontal tab (U+0009)</td>
+          </tr><tr>
+            <td>\v</td>
+            <td>Vertical tab (U+000B)</td>
+          </tr></tbody></table><p>
+      The type of a character literal is char.
+      </p></div><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="string_literals"></a>3.6.5. String Literals</h3></div></div></div><p>
+      String literals represent character strings.
+      </p><pre xmlns="" class="productionset">string-literal
+    = '"', {string-character}, '"'
+    |  ;
+
+string-character
+    = simple-string-character
+    | escape-sequence ;
+
+single-character
+    = ? Any Unicode character except " (U+0022) and \ (U+005C) ? ;
+
+</pre><p>
+      Escape sequences are specified in ().
+      </p><p>
+      The type of a string literal is the String class ().
+      </p></div><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="the_null_literal"></a>3.6.6. The null literal</h3></div></div></div><pre xmlns="" class="productionset">null-literal
+    = "null" ;
+
+</pre><p>
+      The type of a null literal is the null type ().
+      </p></div></div><div class="sect1" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="punctators"></a>3.7. Punctators</h2></div></div></div><p>
+    Punctators are used to separate and group tokens.
+    </p><pre xmlns="" class="productionset">punctator
+    = "(" | ")" | "[" | "]" | "{" | "}" | "." | ".." | "," | ":" | ";" | "=&gt;" ;
+
+</pre></div><div class="sect1" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="operators"></a>3.8. Operators</h2></div></div></div><p>
+    Operators are used in expressions to describe certain operations or
+    expressing calls to certain instance methods in an elegant way. (For
+    example, the call expression <code class="code">a.__add__(b)</code> can be expressed
+    as <code class="code">a + b</code> using the + operator.)
+    </p><pre xmlns="" class="productionset">operator
+    = "+" | "-" | "*" | "/" | "%" | "&amp;" | "|" | "^" | "~" | "and"
+    | "or" | "xor" | "not" | "&lt;&lt;" | "&gt;&gt;" | "=" |"+="
+    | "-=" | "*=" | "/=" | "%=" | "&amp;=" | "|=" | "^=" | "&lt;&lt;="
+    | "&gt;&gt;=" | "==" | "!=" | "&lt;" | "&gt;" | "&lt;=" | "&gt;=" ;
+
+</pre></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch02.html">Prev</a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="ch04.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter 2. Grammars </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Chapter 4. Types</td></tr></table></div></body></html>

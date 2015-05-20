@@ -1,0 +1,36 @@
+/*
+ * soyac - The Soya programming language compiler
+ * Copyright (c) 2009 Denis Washington <dwashington@gmx.net>
+ *
+ * This file is distributed under the terms of the MIT license.
+ * See LICENSE.txt for details.
+ */
+
+extern function exit(code : int);
+
+class A
+{
+    var foo : int;
+
+    constructor(foo : int)
+    {
+        this.foo = foo;
+    }
+}
+
+class B extends A
+{
+    var bar : double;
+
+    constructor(foo : int, bar : double)
+    : super(foo)
+    {
+        this.bar = bar;
+    }
+}
+
+
+var b = new B(1, 218.89);
+
+if (b.foo != 1) exit(1);
+if (b.bar != 218.89) exit(2);

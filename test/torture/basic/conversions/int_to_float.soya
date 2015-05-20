@@ -1,0 +1,58 @@
+/*
+ * soyac - Soya Programming Language compiler
+ * Copyright (c) 2009 Denis Washington <dwashington@gmx.net>
+ *
+ * This file is distributed under the terms of the MIT license.
+ * See LICENSE.txt for details.
+ */
+
+extern function exit(code : int);
+
+var f : float;
+var d : double;
+
+var i8  : int8    = -112;
+var u8  : uint8   =  224;
+var i16 : int16   = -3264;
+var u16 : uint16  =  53856;
+var i32 : int32   = -210889;
+var u32 : uint32  =  1685305;
+var i64 : int64   = -5748425;
+var u64 : uint64  =  103748000;
+
+
+f = i8;
+if (f != i8) exit(1);
+f = u8;
+if (f != u8) exit(2);
+f = i16;
+if (f != i16) exit(3);
+f = u16;
+if (f != u16) exit(4);
+f = i32;
+if (f != i32) exit(5);
+f = u32;
+if (f != u32) exit(6);
+f = i64;
+if (f != i64) exit(7);
+f = u64;
+if (f != u64) exit(8);
+
+
+d = i8;
+if (d != i8) exit(9);
+d = u8;
+if (d != u8) exit(10);
+d = i16;
+if (d != i16) exit(11);
+d = u16;
+if (d != u16) exit(12);
+d = i32;
+if (d != i32) exit(13);
+d = u32;
+if (d != u32) exit(14);
+d = i64;
+if (d != i64) exit(15);
+d = u64;
+if (d != u64) exit(16);
+

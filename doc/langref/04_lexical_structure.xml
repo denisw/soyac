@@ -1,0 +1,656 @@
+<chapter id="lexical_structure" xmlns:xlink="http://www.w3.org/1999/xlink/">
+  <title>Lexical Structure</title>
+
+  <para>
+  A Soya program consists of one or multiple modules (). Each module is a
+  stream of characters of the character set defined in the Unicode
+  standard (<link xlink:href="http://www.unicode.org">www.unicode.org</link>).
+  </para>
+
+  <note role="implementation-note">
+    <para>
+    Although the Unicode standard defines several different encodings for
+    characters, implementations are only required to support the UTF-8
+    encoding.
+    </para>
+  </note>
+
+  <para>
+  The Unicode character stream is translated to a sequence of input elements.
+  These are line terminators (<xref linkend="line_terminators"/>), whitespace
+  (<xref linkend="whitespace"/>), comments (<xref linkend="comments"/>),
+  and tokens. Only the tokens are of signficance for syntactic analysis;
+  all other input elements are ignored.
+  </para>
+
+  <para>
+  The translation to input elements is specified by the <code>input</code>
+  production, which is defined as follows:
+  </para>
+
+  <productionset>
+    <production>
+      <lhs>input</lhs>
+      <rhs>
+      {input-part}
+      </rhs>
+    </production>
+
+    <production>
+      <lhs>input-part</lhs>
+      <rhs>
+      {input-element}, line-terminator
+      </rhs>
+    </production>
+
+    <production>
+      <lhs>input-element</lhs>
+      <rhs>
+      line-terminator <sbr/>
+      white-space     <sbr/>
+      token
+      </rhs>
+    </production>
+
+    <production>
+      <lhs>token</lhs>
+      <rhs>
+      identifier-or-keyword <sbr/>
+      literal               <sbr/>
+      punctator             <sbr/>
+      operator
+      </rhs>
+    </production>
+  </productionset>
+
+  <para>
+  If multiple lexical grammar productions match a certain character sequence,
+  the production producing the longest input element is chosen. (For instance,
+  the sequence "<code>==</code>" will always be translated into the equality
+  operator (<code>==</code>) and never to two assignment operators
+  (<code>= =</code>).)
+  </para>
+
+  <sect1 id="line_terminators">
+    <title>Line Terminators</title>
+
+    <para>
+    Line terminators are the carriage return characters (optionally followed by
+    a line feed character), line feed characters without a leading carriage
+    return character, and line and paragraph separator characters.
+    </para>
+
+    <productionset>
+      <production>
+        <lhs>line-terminator</lhs>
+        <rhs>
+        ? Carriage return character (U+000D) ?,
+          [? Line feed character (U+000A) ?]       <sbr/>
+        ? Line feed character (U+000A) ?           <sbr/>
+        ? Line separator character (U+2028) ?      <sbr/>
+        ? Paragraph separator character (U+2029) ?
+        </rhs>
+      </production>
+    </productionset>
+  </sect1>
+
+  <sect1 id="whitespace">
+    <title>White Space</title>
+    
+    <para>
+    The characters classified as White are the space character and any other
+    character in Unicode character category Zs, the horizontal tab character,
+    the vertica tab character, and the form feed character.
+    </para>
+
+    <productionset>
+      <production>
+        <lhs>white-space</lhs>
+        <rhs>
+        ? Any character in Unicode character category Zs ? <sbr/>
+        ? Horizontal tab character (U+0009) ?   <sbr/>
+        ? Vertical tab character (U+000B) ?     <sbr/>
+        ? Form feed character (U+000C) ?
+        </rhs>
+      </production>
+    </productionset>
+  </sect1>
+
+  <sect1 id="comments">
+    <title>Comments</title>
+
+    <para>
+    There are two kinds of comments: delimited comments, which are starts with
+    /* and ended with */, and single-line comments, which start with // and
+    end at the end of the line.
+    </para>
+
+    <productionset>
+      <production>
+        <lhs>comment</lhs>
+        <rhs>
+        delimited-comment   <sbr/>
+        single-line-comment
+        </rhs>
+      </production>
+
+      <production>
+        <lhs>delimited-comment</lhs>
+        <rhs>
+        "/*", {? Any Unicode character except * ?}, "*/"
+        </rhs>
+      </production>
+
+      <production>
+        <lhs>single-line-comment</lhs>
+        <rhs>
+        "//", {? Any Unicode character except line-terminator ?}
+        </rhs>
+      </production>
+    </productionset>
+
+    <example>
+      <title>Comment Styles</title>
+
+      <para>
+      The following two examples show the same program with both comment styles:
+      </para>
+
+<programlisting>/* 
+  "Hello World" Example
+  Prints "Hello World!" on the screen
+*/
+print("Hello World!");</programlisting>
+
+<programlisting>
+// "Hello World" Example
+// Prints "Hello World!" on the screen
+print("Hello World!");</programlisting>
+
+    </example>
+  </sect1>
+
+  <sect1 id="identifiers">
+    <title>Identifiers</title>
+
+    <para>
+    The rules for identifiers are are the same as those recommended by Unicode
+    Standard Annex 15 except that underscores are allowed at the beginning of
+    an identifier.
+    </para>
+
+    <productionset>
+      <production>
+        <lhs>identifier</lhs>
+        <rhs>
+        ? identifier-or-keyword which is no keyword ?
+        </rhs>
+      </production>
+
+      <production>
+        <lhs>identifier-or-keyword</lhs>
+        <rhs>
+        identifier-start-character, {identifier-part-character}
+        </rhs>
+      </production>
+
+      <production>
+        <lhs>identifier-start-character</lhs>
+        <rhs>
+        letter <sbr/>
+        ? Underscore character (U+005F) ?
+        </rhs>
+      </production>
+
+      <production>
+        <lhs>identifier-part-character</lhs>
+        <rhs>
+        letter                 <sbr/>
+        decimal-digit          <sbr/>
+        connecting-character   <sbr/>
+        combining-character    <sbr/>
+        formatting-character
+        </rhs>
+      </production>
+
+      <production>
+        <lhs>letter</lhs>
+        <rhs>
+        ? Any Unicode character of class Lu, Ll, Lt, Lm, Lo, or Nl ?
+        </rhs>
+      </production>
+
+      <production>
+        <lhs>decimal-digit</lhs>
+        <rhs>
+        ? Any Unicode character of class Nd ?
+        </rhs>
+      </production>
+
+      <production>
+        <lhs>connecting-character</lhs>
+        <rhs>
+        ? Any Unicode character of class Pc ?
+        </rhs>
+      </production>
+
+      <production>
+        <lhs>combining-character</lhs>
+        <rhs>
+        ? Any Unicode character of class Mn or Mc ?
+        </rhs>
+      </production>
+
+      <production>
+        <lhs>formatting-character</lhs>
+        <rhs>
+        ? Any Unicode character of class Cf ?
+        </rhs>
+      </production>
+    </productionset>
+
+    <para>
+    Identifiers which start with two underscore characters (U+005F) are reserve
+    for use by implementations. However, implementations are not required to
+    check if a program contains such identifiers.
+    </para>
+  </sect1>
+
+  <sect1 id="keywords">
+    <title>Keywords</title>
+
+    <para>
+    Keywords are reserved identifier-like sequences which have special roles
+    in Soya's syntax and thus may not be used as ordinary identifiers.
+    </para>
+
+    <productionset>
+      <production>
+        <lhs>keyword</lhs>
+        <rhs>
+        "alias" | "and" | "as" | "bool" | "break" | "byte" | "case"       <sbr/>
+        "char" |  "class" | "const" | "continue" | "default" | "do"       <sbr/>
+        "double" | "else" | "enum" | "extern" | "false" | "float" | "for" <sbr/>
+        "from" | "function" | "get" | "if" | "is" | "import" | "int"      <sbr/>
+        "long" | "new" | "not" | "null" | "or" | "override" | "private"   <sbr/>
+        "property" | "protected" | "public" | "readonly" | "return"       <sbr/>
+        "sbyte" | "self" | "set" | "short" | "static" | "struct"          <sbr/>
+        "switch" | "true" | "uint" | "ulong" | "ushort" | "var"           <sbr/>
+        "virtual" | "void" | "while" | "xor"
+        </rhs>
+      </production>
+    </productionset>
+  </sect1>
+
+  <sect1 id="literals">
+    <title>Literals</title>
+
+    <para>
+    Literals represent values of a simple type (<xref linkend="simple_types"/>),
+    the <type>String</type> type (), or the null type ().
+    </para>
+
+    <productionset>
+      <production>
+        <lhs>literal</lhs>
+        <rhs>
+        boolean-literal        <sbr/>
+        integer-literal        <sbr/>
+        floating-point-literal <sbr/>
+        character-literal      <sbr/>
+        string-literal         <sbr/>
+        null-literal
+        </rhs>
+      </production>
+    </productionset>
+
+    <sect2 id="boolean_literals">
+      <title>Boolean Literals</title>
+
+      <para>
+      A boolean literal represents one of the two boolean literals true
+      and false.
+      </para>
+
+      <productionset>
+        <production>
+          <lhs>boolean-literal</lhs>
+          <rhs>
+          "true" <sbr/>
+          "false"
+          </rhs>
+        </production>
+      </productionset>
+
+      <para>
+      The type of a boolean literal is bool.
+      </para>
+    </sect2>
+
+    <sect2 id="integer_literals">
+      <title>Integer Literals</title>
+
+      <para>
+      Integer literals represent values of types int, uint, long, and ulong.
+      They can be written either in decimal, binary, octal or hexadecimal
+      notation.
+      </para>
+
+      <productionset>
+        <production>
+          <lhs>integer-literal</lhs>
+          <rhs>
+          decimal-integer-literal     <sbr/>
+          binary-integer-literal      <sbr/>
+          octal-integer-literal       <sbr/>
+          hexadecimal-integer-literal
+          </rhs>
+        </production>
+
+        <production>
+          <lhs>decimal-integer-literal</lhs>
+          <rhs>
+          decimal-digit, {decimal-digit}
+          </rhs>
+        </production>
+
+        <production>
+          <lhs>decimal-digit</lhs>
+          <rhs>
+          "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+          </rhs>
+        </production>
+
+        <production>
+          <lhs>binary-integer-literal</lhs>
+          <rhs>
+          "0b", binary-digit, {binary-digit}
+          </rhs>
+        </production>
+
+        <production>
+          <lhs>hexadecimal-digit</lhs>
+          <rhs>
+          "0" | "1"
+          </rhs>
+        </production>
+
+        <production>
+          <lhs>octal-integer-literal</lhs>
+          <rhs>
+          "0c", octal-digit, {octal-digit}
+          </rhs>
+        </production>
+
+        <production>
+          <lhs>octal-digit</lhs>
+          <rhs>
+          "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7"
+          </rhs>
+        </production>
+
+        <production>
+          <lhs>hexadecimal-integer-literal</lhs>
+          <rhs>
+          "0x", hexadecimal-digit, {hexadecimal-digit}
+          </rhs>
+        </production>
+
+        <production>
+          <lhs>hexadecimal-digit</lhs>
+          <rhs>
+          decimal-digit | "A" | "B" | "C" | "D" | "E" | "F" | "a" | "b" | "c" |
+          "d" | "e" | "f"
+          </rhs>
+        </production>
+      </productionset>
+
+      <para>
+      The type of an integer literal is the first of the following types in
+      which the value can be represented:
+      </para>
+
+      <orderedlist>
+        <listitem><para><type>int</type></para></listitem>
+        <listitem><para><type>uint</type></para></listitem>
+        <listitem><para><type>long</type></para></listitem>
+        <listitem><para><type>ulong</type></para></listitem>
+      </orderedlist>
+
+      <para>
+      If the literal value cannot be represented by any of these types, a
+      compile-time error occurs.
+      </para>
+    </sect2>
+
+    <sect2 id="floating_point_literals">
+      <title>Floating-Point Literals</title>
+
+      <para>
+      Floating-point literals represent literals of type double.
+      </para>
+
+      <productionset>
+        <production>
+          <lhs>floating-point-literal</lhs>
+          <rhs>
+          {decimal-digit}, ".", [exponent-part] <sbr/>
+          {decimal-digit}, ["."], exponent-part          
+          </rhs>
+        </production>
+
+        <production>
+          <lhs>exponent-part</lhs>
+          <rhs>
+          ( "E" | "e" ), [sign], {decimal-digit}
+          </rhs>
+        </production>
+
+        <production>
+          <lhs>sign</lhs>
+          <rhs>
+          "+" | "-"
+          </rhs>
+        </production>
+      </productionset>
+
+      <para>
+      The type of a floating-point literal is <type>double</type>.
+      </para>
+    </sect2>
+
+    <sect2 id="character_literals">
+      <title>Character Literals</title>
+
+      <para>
+      A character literal represent single character.
+      </para>
+
+      <productionset>
+        <production>
+          <lhs>character-literal</lhs>
+          <rhs>
+          "'", character, "'" <sbr/>
+          </rhs>
+        </production>
+
+        <production>
+          <lhs>character</lhs>
+          <rhs>
+          single-character <sbr/>
+          escape-sequence
+          </rhs>
+        </production>
+
+        <production>
+          <lhs>single-character</lhs>
+          <rhs>
+          ? Any Unicode character except ' (U+0027), \ (U+005C) and
+          line-terminator ?
+          </rhs>
+        </production>
+      </productionset>
+
+      <para>
+      Each escape sequence represents a specific Unicode character, as described
+      in the table below.
+      </para>
+
+      <table>
+        <thead>
+          <tr>
+            <td>Escape Sequence</td>
+            <td>Unicode Character</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>\'</td>
+            <td>Single quote (U+0027)</td>
+          </tr>
+          <tr>
+            <td>\"</td>
+            <td>Double quote (U+0022)</td>
+          </tr>
+          <tr>
+            <td>\\</td>
+            <td>Backslash (U+005C)</td>
+          </tr>
+          <tr>
+            <td>\0</td>
+            <td>Null (U+0000)</td>
+          </tr>
+          <tr>
+            <td>\a</td>
+            <td>Alert (U+0007)</td>
+          </tr>
+          <tr>
+            <td>\b</td>
+            <td>Backspace (U+0008)</td>
+          </tr>
+          <tr>
+            <td>\f</td>
+            <td>Form feed (U+000C)</td>
+          </tr>
+          <tr>
+            <td>\n</td>
+            <td>New line (U+000A)</td>
+          </tr>
+          <tr>
+            <td>\r</td>
+            <td>Carriage return (U+000D)</td>
+          </tr>
+          <tr>
+            <td>\t</td>
+            <td>Horizontal tab (U+0009)</td>
+          </tr>
+          <tr>
+            <td>\v</td>
+            <td>Vertical tab (U+000B)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <para>
+      The type of a character literal is char.
+      </para>
+    </sect2>
+
+    <sect2 id="string_literals">
+      <title>String Literals</title>
+
+      <para>
+      String literals represent character strings.
+      </para>
+
+      <productionset>
+        <production>
+          <lhs>string-literal</lhs>
+          <rhs>
+          '"', {string-character}, '"' <sbr/>
+          </rhs>
+        </production>
+
+        <production>
+          <lhs>string-character</lhs>
+          <rhs>
+          simple-string-character <sbr/>
+          escape-sequence
+          </rhs>
+        </production>
+
+        <production>
+          <lhs>single-character</lhs>
+          <rhs>
+          ? Any Unicode character except " (U+0022) and \ (U+005C) ?
+          </rhs>
+        </production>
+      </productionset>
+
+      <para>
+      Escape sequences are specified in ().
+      </para>
+
+      <para>
+      The type of a string literal is the String class ().
+      </para>
+    </sect2>
+
+    <sect2 id="the_null_literal">
+      <title>The null literal</title>
+
+      <productionset>
+        <production>
+          <lhs>null-literal</lhs>
+          <rhs>
+          "null"
+          </rhs>
+        </production>
+      </productionset>
+
+      <para>
+      The type of a null literal is the null type ().
+      </para>
+    </sect2>
+  </sect1>
+
+  <sect1 id="punctators">
+    <title>Punctators</title>
+
+    <para>
+    Punctators are used to separate and group tokens.
+    </para>
+
+    <productionset>
+      <production>
+        <lhs>punctator</lhs>
+        <rhs>
+        "(" | ")" | "[" | "]" | "{" | "}" | "." | ".." | "," | ":" | ";" | "=>"
+        </rhs>
+      </production>
+    </productionset>
+  </sect1>
+
+  <sect1 id="operators">
+    <title>Operators</title>
+
+    <para>
+    Operators are used in expressions to describe certain operations or
+    expressing calls to certain instance methods in an elegant way. (For
+    example, the call expression <code>a.__add__(b)</code> can be expressed
+    as <code>a + b</code> using the + operator.)
+    </para>
+
+    <productionset>
+      <production>
+        <lhs>operator</lhs>
+        <rhs>
+        "+" | "-" | "*" | "/" | "%" | "&amp;" | "|" | "^" | "~" | "and"  <sbr/>
+        "or" | "xor" | "not" | "&lt;&lt;" | "&gt;&gt;" | "=" |"+="       <sbr/>
+        "-=" | "*=" | "/=" | "%=" | "&amp;=" | "|=" | "^=" | "&lt;&lt;=" <sbr/>
+         "&gt;&gt;=" | "==" | "!=" | "&lt;" | "&gt;" | "&lt;=" | "&gt;="
+        </rhs>
+      </production>
+    </productionset>
+  </sect1>
+</chapter>

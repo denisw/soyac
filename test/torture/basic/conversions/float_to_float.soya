@@ -1,0 +1,19 @@
+/*
+ * soyac - Soya Programming Language compiler
+ * Copyright (c) 2009 Denis Washington <dwashington@gmx.net>
+ *
+ * This file is distributed under the terms of the MIT license.
+ * See LICENSE.txt for details.
+ */
+
+extern function exit(code : int);
+
+var f : float = 1.04f;
+var d : double = 2.18;
+
+d = f;
+if (d != f) exit(1);
+d = 2.18;
+
+f = d as float;
+if (f != (d as float)) exit(2);

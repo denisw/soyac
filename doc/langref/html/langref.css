@@ -1,0 +1,76 @@
+a
+{
+  text-decoration: none;
+  color: #b65515;
+}
+
+a:hover
+{
+  text-decoration: underline;
+}
+
+h1, h2, h3, h4, h5, h6
+{
+  color: #e48242;
+}
+
+hr
+{
+  height: 2px;
+  border: none;
+  background-color: #f5c9ac;
+}
+
+li p
+{
+  margin: 0 0 0.5em 0;
+  padding: 0;
+}
+
+span.type
+{
+  font-style: italic;
+}
+
+p.remark
+{
+  border: 2px solid red;
+  background-color: #ffeeee;
+  padding: 6px;
+}
+
+.navheader
+{
+  color: #e48242;
+}
+
+.toc .chapter a
+{
+  display: block;
+  margin-top: 1em;
+}
+
+
+.toc .chapter a
+{
+  font-weight: bold;
+}
+
+.productionset
+{
+  margin-left: 2em;
+  font-style: italic;
+}
+
+.example
+{
+	padding: 6px;
+	border: 1px solid #f5c9ac;
+	background-color: #fdf9de;
+}
+
+.example .title
+{
+  color: #bd5a19;
+}
+

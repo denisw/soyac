@@ -1,0 +1,38 @@
+/*
+ * soyac - Soya Programming Language compiler
+ * Copyright (c) 2009 Denis Washington <dwashington@gmx.net>
+ *
+ * This file is distributed under the terms of the MIT license.
+ * See LICENSE.txt for details.
+ */
+
+extern function exit(code : int);
+
+struct Point
+{
+    var x : int;
+    var y : int;
+
+    constructor(x : int, y : int)
+    {
+        this.x = x;
+        this.y = y;
+    }
+}
+
+function offset_by(p : Point, x : int, y : int) : Point
+{
+    var offset = p;
+
+    offset.x = offset.x + x;
+    offset.y = offset.y + y;
+
+    return offset;
+}
+
+var p = new Point(1, 218);
+
+var p2 = offset_by(p, 10, 4);
+if (p2.x != 11) exit(1);
+if (p2.y != 222) exit(2);
+

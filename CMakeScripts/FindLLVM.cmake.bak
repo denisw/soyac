@@ -1,0 +1,97 @@
+# - Try to find LLVM
+# Once done this will define
+#
+#  LLVM_FOUND - system has LLVM
+#  LLVM_INCLUDE_DIRS - the LLVM include directory
+#  LLVM_LIBRARIES - Link these to use LLVM
+#  LLVM_DEFINITIONS - Compiler switches required for using LLVM
+#
+#  Copyright (c) 2008 Andreas Schneider <mail@cynapses.org>
+#  Copyright (c) 2008 Denis Washington <dwashington@gmx.net>
+#
+#  Redistribution and use is allowed according to the terms of the New
+#  BSD license.
+#  For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+#
+
+
+if (LLVM_LIBRARIES AND LLVM_INCLUDE_DIRS)
+  set (LLVM_FOUND TRUE)
+else (LLVM_LIBRARIES AND LLVM_INCLUDE_DIRS)
+
+  find_path (LLVM_INCLUDE_DIR
+    NAMES
+      llvm/Value.h
+    PATHS
+      /usr/include
+      /usr/local/include
+      /opt/local/include
+      /sw/include
+  )
+
+  find_library (LLVMCORE_LIBRARY
+    NAMES
+      LLVMCore
+    PATHS
+      /usr/lib
+      /usr/local/lib
+      /opt/local/lib
+      /sw/lib
+  )
+
+  find_library (LLVMSUPPORT_LIBRARY
+    NAMES
+      LLVMSupport
+    PATHS
+      /usr/lib
+      /usr/local/lib
+      /opt/local/lib
+      /sw/lib
+  )
+
+  find_library (LLVMSYSTEM_LIBRARY
+    NAMES
+      LLVMSystem
+    PATHS
+      /usr/lib
+      /usr/local/lib
+      /opt/local/lib
+      /sw/lib
+  )
+
+  if (LLVMCORE_LIBRARY AND LLVMSUPPORT_LIBRARY AND LLVMSYSTEM_LIBRARY)
+    set (LLVM_LIBRARIES
+      ${LLVM_LIBRARIES}
+      ${LLVMCORE_LIBRARY}
+      ${LLVMSUPPORT_LIBRARY}
+      ${LLVMSYSTEM_LIBRARY}
+    )
+  endif (SIGC-2.0_LIBRARY)
+
+  set(LLVM_INCLUDE_DIRS
+    ${LLVM_INCLUDE_DIR}
+  )
+
+  if (SIGC-2.0_FOUND)
+  endif (SIGC-2.0_FOUND)
+
+  if (LLVM_INCLUDE_DIRS AND LLVM_LIBRARIES)
+     set(LLVM_FOUND TRUE)
+  endif (LLVM_INCLUDE_DIRS AND LLVM_LIBRARIES)
+
+  if (LLVM_FOUND)
+    if (NOT LLVM_FIND_QUIETLY)
+      message(STATUS "Found LLVM: ${LLVM_LIBRARIES}")
+    endif (NOT LLVM_FIND_QUIETLY)
+  else (LLVM_FOUND)
+    if (LLVM_FIND_REQUIRED)
+      message(FATAL_ERROR "Could not find LLVM")
+    endif (LLVM_FIND_REQUIRED)
+  endif (LLVM_FOUND)
+
+  # show the LLVM_INCLUDE_DIRS and LLVM_LIBRARIES variables only in the advanced view
+  mark_as_advanced(LLVM_INCLUDE_DIRS LLVM_LIBRARIES)
+
+endif (LLVM_LIBRARIES AND LLVM_INCLUDE_DIRS)
+
+

@@ -1,0 +1,66 @@
+<chapter id="modules_and_packages">
+  <title>Modules and Packages</title>
+
+  <para>
+  A Soya Program consists of one or more modules. Modules may be grouped
+  in packages.
+  </para>
+
+  <sect1 id="modules">
+    <title>Modules</title>
+
+    <para>
+    A module is an unit of a Soya program. Every module has a body, which
+    consists of a sequence of zero or more statements.
+    </para>
+
+    <productionset>
+      <production>
+        <lhs>module</lhs>
+        <rhs>
+        {statement}
+        </rhs>
+      </production>
+    </productionset>
+
+    <para>
+    A module's body is executed by executing each of its statements in the
+    order they appear in the module (left to right).
+    </para>
+
+    <para>
+    A module may also have a name by which it can be referred to in an import
+    statement (). The name must match the <code>identifier</code> production
+    (<xref linkend="identifiers"/>).
+    </para>
+  </sect1>
+
+  <sect1 id="packages">
+  </sect1>
+
+  <sect1 id="representation_of_modules_and_packages_informative">
+    <title>Representation of Modules and Packages (Informative)</titles>
+
+    <para>
+    How modules and packages are represented depends on the implementation.
+    In the reference implementation, modules as source files on the file
+    system. Every source file must have a name of the form M.soya, where
+    M is an identifier (<xref linkend="identifiers"/>) which defines the
+    name of the module. All source files in the same directory belong to
+    the same package.
+    </para>
+
+    <itemizedlist>
+      <listitem><para>
+      Source files which are directly contained by a given root directory
+      (which is chosen by the implementation user) belong to the public
+      package.
+      </para></listitem>
+    </itemizedlist>
+
+    <para>
+    It is recommended for file-based implementations to follow the same
+    scheme to ensure interoperability.
+    </para>
+  </sect1>
+</chapter>

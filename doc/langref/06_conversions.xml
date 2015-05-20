@@ -1,0 +1,238 @@
+<chapter id="conversions">
+  <title>Conversions</title>
+
+  <para>
+  A conversion allows an expression of one type to be used as if it had
+  another type. There are implicit conversions, which are done automatically
+  in certain contexts, and explicit conversions, which are done by using a
+  cast expression ().
+  </para>
+
+  <sect1>
+    <title>Implicit Conversions</title>
+
+    <para>
+    The following conversions are classified as implicit:
+    </para>
+
+    <itemizedlist>
+      <listitem><para>Identity conversions</para></listitem>
+      <listitem><para>Widening numeric conversions</para></listitem>
+      <listitem><para>Widening reference conversions</para></listitem>
+      <listitem><para>Implicit constant expression conversions</para></listitem>
+    </itemizedlist>
+
+    <sect2>
+      <title>Identity Conversions</title>
+
+      <para>
+      An identity conversion is a conversion of a type to itself. Identity
+      conversions are possible for expressions of any type.
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>Widening Numeric Conversions</title>
+
+      <para>
+      A conversion of one numeric simple type to another which doesn't
+      possibly result in loss of the numeric value's mangitude is said
+      to be a widening numeric conversion. Widening numeric conversions are:
+      </para>
+
+      <itemizedlist>
+        <listitem><para>From sbyte to short, int, long, float, or double</para></listitem>
+        <listitem><para>From byte to short, ushort, int, uint, long, ulong, float, or double</para></listitem>
+        <listitem><para>From short to int, long, float, or double</para></listitem>
+        <listitem><para>From ushort to int, uint, long, ulong, float, or double</para></listitem>
+        <listitem><para>From int to long, float, or double</para></listitem>
+        <listitem><para>From uint to long, ulong, float, or double</para></listitem>
+        <listitem><para>From long to float or double</para></listitem>
+        <listitem><para>From ulong to float or double</para></listitem>
+        <listitem><para>From float to double</para></listitem>
+      </itemizedlist>
+
+      <para>
+      A widening numeric conversion is processed as follows:
+      </para>
+
+      <itemizedlist>
+        <listitem><para>
+        A conversion from an integral type S to a larger integral type T extends
+        the source value to T's size. If S is a signed integer type, this is done
+        using sign-extension. If S is unsigned, zero-extension is used.
+        </para></listitem>
+        <listitem><para>
+        A conversion from float and double creates a double value with the
+        source value's sign, mantissa and exponent, which is then the result
+        of the conversion. 
+        </para></listitem>
+      </itemizedlist>
+    </sect2>
+
+    <sect2 id="widening_reference_conversions">
+      <title>Widening Reference Conversions</title>
+
+      <para>
+      A value of a reference type S can be implicitly converted to any reference
+      type T, provided that S is a subtype of T.
+      </para>
+
+      <para>
+      A type S is said to be a subtype of another type T if one of the
+      following conditions is true:
+      </para>
+
+      <itemizedlist>
+        <listitem><para>
+        Both S and T are class types, and T is a base class of S.
+        </para></listitem>
+        <listitem><para>
+        Both S and T are interfaces, and T is a base interface of S.
+        </para></listitem>
+        <listitem><para>
+        S is a class type, and T is an interface implemented by S.
+        </para></listitem>
+        <listitem><para>
+        S is an array type with element type SE and T an array type of element
+        type TE, both SE and TE are reference types, and SE can be implicitly
+        converted to TE.
+        </para></listitem>
+      </itemizedlist>
+    </sect2>
+
+    <sect2>
+      <title>Implicit Constant Expression Conversions</title>
+
+      <para>
+      A constant expression of type int may be implicitly converted to
+      any other integer type, provided that the expression's value
+      is within the range of the destination type.
+      </para>
+
+      <para>
+      A constant expression of type long can be implicitly converted to ulong,
+      provided the expression's value is not negative.
+      </para>
+    </sect2>
+  </sect1>
+
+
+  <sect1>
+    <title>Explicit Conversions</title>
+
+    <para>
+    The following conversions are classified as explicit:
+    </para>
+
+    <itemizedlist>
+      <listitem><para>All implicit conversions</para></listitem>
+      <listitem><para>Narrowing numeric conversions</para></listitem>
+      <listitem><para>Narrowing reference conversions</para></listitem>
+      <listitem><para>Enumeration conversions</para></listitem>
+      <listitem><para>Conversions to <type>bool</type></para></listitem>
+    </itemizedlist>
+
+    <sect2>
+      <title>Narrowing Numeric Conversions</title>
+
+      <para>
+      A conversion of one numeric simple type to another which might
+      result in loss of the numeric value's mangitude is said to be a
+      narrowing numeric conversion. Narrowing numeric conversions are:
+      </para>
+
+      <itemizedlist>
+        <listitem><para>From sbyte to byte, ushort, uint, or ulong</para></listitem>
+        <listitem><para>From byte to sbyte</para></listitem>
+        <listitem><para>From short to sbyte, byte, ushort, uint, or ulong</para></listitem>
+        <listitem><para>From ushort to sbyte, byte, or short</para></listitem>
+        <listitem><para>From int to sbyte, byte, short, ushort, uint, or ulong</para></listitem>
+        <listitem><para>From uint to sbyte, byte, short, ushort, or int</para></listitem>
+        <listitem><para>From long to sbyte, byte, short, ushort, int, uint, or ulong</para></listitem>
+        <listitem><para>From ulong to sbyte, byte, short, ushort, int, uint, or long</para></listitem>
+        <listitem><para>From float to sbyte, byte, short, ushort, int, uint, long, or ulong</para></listitem>
+        <listitem><para>From double to sbyte, byte, short, ushort, int, uint, long, or ulong</para></listitem>
+        <listitem><para>From double to float</para></listitem>
+      </itemizedlist>
+
+      <para>
+      A narrowing numeric conversion is processed as follows:
+      </para>
+
+      <itemizedlist>
+        <listitem><para>
+        A conversion from an integral type S to a larger integral type T is
+        processed like described in ().
+        </para></listitem>
+        <listitem><para>
+        A conversion of an integer value to a smaller integral type T truncates
+        the value to the n least significant bits, whereas n is the bit size of T.
+        </para></listitem>
+        <listitem><para>
+        A conversion from a floating-point type S to an integral type T rounds
+        the value towards zero to the nearest integer value. If the resulting
+        value is within the range of T, it is the result of the conversion.
+        Otherwise, the result is an undefined value of type T.
+        </para></listitem>
+        <listitem><para>
+        A conversion from double to float rounds the value to the nearest float
+        value. If the value is too small to be represented as float, the result
+        is positive zero or negative zero. If the value is too large, the result
+        is positive infinity or negative infinity. If the value is NaN, the result
+        is also NaN.
+        </para></listitem>
+      </itemizedlist>
+    </sect2>
+
+    <sect2>
+      <title>Narrowing Reference Conversions</title>
+
+      <para>
+      Narrowing reference conversions are:
+      </para>
+
+      <itemizedlist>
+        <listitem><para>
+        From any reference type S to any reference type T, provided T is a
+        subtype () of S.
+        </para></listitem>
+        <listitem><para>
+        From any class type S to any interface type T, provided S is not final
+        and S does not implement T.
+        </para></listitem>
+        <listitem><para>
+        From any interface type S to any class type T, provided T is not final.
+        </para></listitem>
+      </itemizedlist>
+
+      <para>
+      A narrowing reference conversion only succeeds if the source value is null
+      or if the actual type of the object referenced by the source value can be
+      implicitly converted to the destination type. Otherwise, an
+      InvalidCastExpression () is thrown.
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>Enumeration Conversions</title>
+
+      <para>
+      A value of an enumeration type can be explicitly converted to any type
+      to which the enumeration type's underlying value could also be explicitly
+      converted. This kind of conversion is processed as if the source value was
+      of the enumeration type's underlying type. (For example, a conversion from
+      an enumeration type E with the underlying type int to long is treated exactly
+      like a conversion from int to long.)
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>Conversions to <type>bool</type></title>
+
+      <remark>
+      To be done.
+      </remark>
+    </sect2>
+  </sect1>
+</chapter>

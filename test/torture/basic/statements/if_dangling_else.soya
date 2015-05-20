@@ -1,0 +1,15 @@
+/*
+ * soyac - Soya Programming Language compiler
+ * Copyright (c) 2009 Denis Washington <dwashington@gmx.net>
+ *
+ * This file is distributed under the terms of the MIT license.
+ * See LICENSE.txt for details.
+ */
+
+extern function exit(code : int);
+
+if (false)
+    if (true)
+        exit(0);
+    else
+        exit(1);

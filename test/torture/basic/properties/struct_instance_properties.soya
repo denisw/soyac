@@ -1,0 +1,47 @@
+/*
+ * soyac - Soya Programming Language compiler
+ * Copyright (c) 2009 Denis Washington <dwashington@gmx.net>
+ *
+ * This file is distributed under the terms of the MIT license.
+ * See LICENSE.txt for details.
+ */
+
+extern function exit(code : int);
+
+struct Foo
+{
+    var mValue : int;
+
+    constructor(value : int)
+    {
+        mValue = value;
+    }
+    
+    property value : int
+    {
+        get { return mValue; }
+        set { mValue = value; }
+    }
+    
+    property doubleValue : int
+    {
+        get { return mValue * 2; }
+    }
+    
+    property halfValue : int
+    {
+        set { mValue = value * 2; }
+    }
+}
+
+var f = new Foo(218);
+
+if (f.value != 218) exit(1);
+f.value = 33;
+if (f.value != 33) exit(2);
+
+if (f.doubleValue != 66) exit(3);
+
+f.halfValue = 109;
+if (f.value != 218) exit(4);
+

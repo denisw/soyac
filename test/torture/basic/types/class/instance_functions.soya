@@ -1,0 +1,34 @@
+/*
+ * soyac - The Soya programming language compiler
+ * Copyright (c) 2009 Denis Washington <dwashington@gmx.net>
+ *
+ * This file is distributed under the terms of the MIT license.
+ * See LICENSE.txt for details.
+ */
+
+extern function exit(code : int);
+
+class Point
+{
+    var x : int;
+    var y : int;
+
+    function getDoubleY() : int
+    {
+        return y * 2;
+    }
+    
+    function setX(x : int)
+    {
+        this.x = x;
+    }
+}
+
+var p = new Point();
+
+p.y = 218;
+if (p.getDoubleY() != 436) exit(1);
+
+p.setX(812);
+if (p.x != 812) exit(2);
+

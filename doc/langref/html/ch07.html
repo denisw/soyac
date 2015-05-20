@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Chapter 7. Names</title><link rel="stylesheet" href="langref.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.73.2" /><link rel="start" href="index.html" title="The Soya Language Reference" /><link rel="up" href="index.html" title="The Soya Language Reference" /><link rel="prev" href="ch06.html" title="Chapter 6. Conversions" /><link rel="next" href="ch08.html" title="Chapter 8. Expressions" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter 7. Names</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch06.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ch08.html">Next</a></td></tr></table><hr /></div><div class="chapter" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="names"></a>Chapter 7. Names</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="ch07.html#declarations">7.1. Declarations</a></span></dt><dt><span class="sect1"><a href="ch07.html#scopes">7.2. Scopes</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch07.html#declaration_hiding">7.2.1. Declaration Hiding</a></span></dt></dl></dd><dt><span class="sect1"><a href="ch07.html#members">7.3. Members</a></span></dt><dt><span class="sect1"><a href="ch07.html#name_resolution">7.4. Name Resolution</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch07.html#member_lookup">7.4.1. Member Lookup</a></span></dt></dl></dd></dl></div><p>
+  Names refer to declared entities (<a class="xref" href="ch07.html#declarations" title="7.1. Declarations">Section 7.1, “Declarations”</a>). There are
+  two types of names: simple names,  which consist of a single identifier, and
+  qualified names, which consist of multiple identifiers separated by "." tokens.
+  </p><pre xmlns="" class="productionset">name
+    = identifier, {".", identifier} ;
+
+</pre><p class="remark"><i><span class="remark">
+  Need to move module names here.
+  </span></i></p><div class="sect1" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="declarations"></a>7.1. Declarations</h2></div></div></div><p>
+    Declarations introduce entities. Declared entities are variables
+    (<a class="xref" href="ch05.html" title="Chapter 5. Variables">Chapter 5, <i>Variables</i></a>), functions (), enumerations (), structs (),
+    classes (), constructors (), and aliases ().
+    </p></div><div class="sect1" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="scopes"></a>7.2. Scopes</h2></div></div></div><p>
+    The scope of a declaration is the region in the program text in which the
+    declared entity can be referred to using a simple name. The declared entity
+    is said to be in scope in that region.
+    </p><div class="itemizedlist"><ul type="disc"><li><p>
+      The scope of a declaration with no enclosing block or declaration is the
+      entire module in which the declaration occurs.
+      </p></li><li><p>
+      The scope of a declaration within a struct or class declaration is that
+      struct's or class' body.
+      </p></li><li><p>
+      The scope of a declaration within a block is that block.
+      </p></li><li><p>
+      The scope of a parameter declared in a function declaration () is that
+      function's body.
+      </p></li><li><p>
+      The scope of a variable declared in a <code class="code">switch-block</code> of a
+      switch statement () is that <code class="code">switch-block</code>.
+      </p></li><li><p>
+      The scope of a variable declared in a <code class="code">for-initializer</code> of a
+      for statement () is the for-initializer, the for-condition, the 
+      for-iterator, and the contained statement of that for statement.
+      </p></li></ul></div><p>
+    It is a compile-time error to use an entity at a point in the program which
+    precedes the entity's declaration. An entity is said to be used in the
+    following cases:
+    </p><div class="itemizedlist"><ul type="disc"><li><p>
+      The entity is referred to by a simple name expression
+      (<a class="xref" href="ch08.html#simple_name_expressions" title="8.3.3. Simple Name Expressions">Section 8.3.3, “Simple Name Expressions”</a>) or a member access
+      expression (<a class="xref" href="ch08.html#member_access_expressions" title="8.3.4. Member Access Expressions">Section 8.3.4, “Member Access Expressions”</a>).
+      </p></li><li><p>
+      The entity is referred to as part of a type name, excluding occurrences
+      of the entity's derived pointer type. (For instance, it is a compile-time
+      error to declare a variable of type T or <span class="type">T[]</span> before T is
+      declared, but it is not to declare a variable of type <span class="type">T*</span> or
+      <span class="type">T*[]</span> in the same case.)
+      </p></li><li><p>
+      An expression of the entity's derived pointer type is used as the operand
+      of a dereference expression ().
+      </p></li></ul></div><p class="remark"><i><span class="remark">
+    It needs to be described that references from function declarations are
+    not counted as uses.
+    </span></i></p><p>
+    It is a compile-time for two declared entities with the same name to have
+    the same scope.
+    </p><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="declaration_hiding"></a>7.2.1. Declaration Hiding</h3></div></div></div><p>
+      A declaration may be hidden by another declaration in parts of its scope,
+      in which the declared entity cannot be accessed by its simple name.
+      </p><div class="itemizedlist"><ul type="disc"><li><p>
+        A declaration D of an entity named N hides the declarations of all
+        entities named N which are in scope in the block or declaration body
+        where D is declared.
+        </p></li><li><p>
+        A declaration D of a non-method member named N hides the declarations
+        of all base type members named N throughout the declaration body in
+        which D is declared.
+        </p></li><li><p>
+        A declaration D of a method named N hides the declarations of all
+        non-method base type members named N and all base class methods with
+        the same signature throughout the declaration body in which D is
+        declared.
+        </p></li></ul></div><p>
+      In the context of declaration hiding, a type T is said to be a base type
+      of a type B if a value of type B can be implicitly converted to type T
+      using an widening reference conversion
+      (<a class="xref" href="ch06.html#widening_reference_conversions" title="6.1.3. Widening Reference Conversions">Section 6.1.3, “Widening Reference Conversions”</a>).
+      </p><p>
+      A hidden base class member declaration causes a warning to be reported
+      unless the hiding declaration includes the <code class="code">new</code> modifier.
+      </p></div></div><div class="sect1" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="members"></a>7.3. Members</h2></div></div></div><p>
+    Modules and types have members.
+    </p><div class="itemizedlist"><ul type="disc"><li><p>
+      The members of a module are the entities declared directly in the body
+      of the module.
+      </p></li><li><p>
+      The members of an enumeration are the constants declared in the
+      enumeration.
+      </p></li><li><p>
+      The members of a struct are the entities declared directly in the
+      declaration body of the struct.
+      </p></li><li><p>
+      The members of a class are the entities declared directly in the
+      declaration body of the class and the non-constructor members of its
+      base classes and interfaces.
+      </p></li><li><p>
+      The members of an interface are the entities declared directly in the
+      declaration bodies of the interface and its base interfaces.
+      </p></li><li><p>
+      The members of the simple types are specified in
+      <a class="xref" href="ch04.html#simple_types" title="4.1.1. Simple Types">Section 4.1.1, “Simple Types”</a>.
+      </p></li><li><p>
+      The members of the an array type are specified in ().
+      </p></li><li><p>
+      The members of the a pointer type are specified in ().
+      </p></li><li><p>
+      Function types have no members.
+      </p></li></ul></div></div><div class="sect1" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="name_resolution"></a>7.4. Name Resolution</h2></div></div></div><p>
+    Name resolution is the process of determining the meaning of a name. A
+    name N is resolved as follows:
+    </p><div class="itemizedlist"><ul type="disc"><li><p>
+        If N is a simple name:
+        </p><div class="itemizedlist"><ul type="circle"><li><p>
+          If a non-function entity named N is in scope at the point where
+          N occurs, the meaning of N is that entity.
+          </p></li><li><p>
+          If a group of one or more functions named N are in scope at the point
+          where N occurs, the meaning of N is that group of functions.
+          </p></li><li><p>
+          Otherwise, if N is the name of a module in the same package as the
+          module in which N occurs, the meaning of N is that module. If no such
+          module exists and N is the name of a module in the public package, the
+          meaning of N is that module.
+          </p></li><li><p>
+          Otherwise, N has no meaning, and a compile-time error occurs.
+          </p></li></ul></div></li><li><p>
+        If N is a qualified name, the meaning of it's left-most identifier is
+        determined as if it were a simple name. Then, from left to right, the
+        meaning of the remaining identifiers is determined. For each identifier
+        I immediately preceded by an identifier P, the following rules are
+        applied:
+        </p><div class="itemizedlist"><ul type="circle"><li><p>
+          If P refers to a module and I is the name of a non-function member of
+          that module, the meaning of I is that member.
+          </p></li><li><p>
+          If P refers to a module and I is the name of a group of functions in
+          that module, the meaning of I is that group of functions.
+          </p></li><li><p>
+          If P refers to a type and a member lookup (<a class="xref" href="ch07.html#member_lookup" title="7.4.1. Member Lookup">Section 7.4.1, “Member Lookup”</a>)
+          of I in that type has a result, the meaning of I is the result of
+          that member lookup.
+          </p></li><li><p>
+          Otherwise, the qualified name is invalid, and a compile-time error
+          occurs.
+          </p></li></ul></div><p>
+        The meaning of the qualified name is the meaning of the name's
+        right-most identifier.
+        </p></li></ul></div><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="member_lookup"></a>7.4.1. Member Lookup</h3></div></div></div><p>
+      A member lookup is the process of determining the meaning of a name in
+      the context of a type.
+      </p><p>
+      A member lookup of a name N in a type T consists of the following steps:
+      </p><div class="orderedlist"><ol type="1"><li><p>
+          All accessible members () of T named N are gathered, excluding:
+          </p><div class="itemizedlist"><ul type="disc"><li><p>
+            Members hidden inside the declaration body of T
+            (<a class="xref" href="ch07.html#declaration_hiding" title="7.2.1. Declaration Hiding">Section 7.2.1, “Declaration Hiding”</a>).
+            </p></li><li><p>
+            Members declared with the <code class="code">override</code> modifier.
+            </p></li></ul></div></li><li><p>
+          From the set of members gathered in the first step, the result of
+          the member lookup is determined:
+          </p><div class="itemizedlist"><ul type="disc"><li><p>
+            If the set of members consists of a single non-method member, that
+            member is the result of the member lookup.
+            </p></li><li><p>
+            If the set of members consists of a group of one or more methods,
+            that group of methods is the result of the member lookup.
+            </p></li><li><p>
+            Otherwise, the member lookup has no result.
+            </p></li></ul></div></li></ol></div></div></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch06.html">Prev</a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="ch08.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter 6. Conversions </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Chapter 8. Expressions</td></tr></table></div></body></html>

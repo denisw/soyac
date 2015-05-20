@@ -1,0 +1,17 @@
+/*
+ * soyac - Soya Programming Language compiler
+ * Copyright (c) 2009 Denis Washington <dwashington@gmx.net>
+ *
+ * This file is distributed under the terms of the MIT license.
+ * See LICENSE.txt for details.
+ */
+
+import samples::foo.func;
+import samples::bar.Struct;
+
+extern function exit(code : int);
+
+if (func() != 218) exit(1);
+
+var s = new Struct(33);
+if (s.value != 33) exit(2);

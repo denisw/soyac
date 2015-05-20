@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Chapter 5. Variables</title><link rel="stylesheet" href="langref.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.73.2" /><link rel="start" href="index.html" title="The Soya Language Reference" /><link rel="up" href="index.html" title="The Soya Language Reference" /><link rel="prev" href="ch04.html" title="Chapter 4. Types" /><link rel="next" href="ch06.html" title="Chapter 6. Conversions" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter 5. Variables</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch04.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ch06.html">Next</a></td></tr></table><hr /></div><div class="chapter" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="variables"></a>Chapter 5. Variables</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="ch05.html#id3375356">5.1. Variable Categories</a></span></dt><dt><span class="sect1"><a href="ch05.html#id3375401">5.2. Default Values</a></span></dt></dl></div><p>
+  Variables are storage locations with an associated type. A variable may
+  contain any value whose type is compatible to the variable's type. The
+  value of a variable can be changed by an assignment ().
+  </p><div class="sect1" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="id3375356"></a>5.1. Variable Categories</h2></div></div></div><p>
+    There are five categories of variables in Soya:
+    </p><div class="itemizedlist"><ul type="disc"><li><p>
+      A static variable is variable declared in a module's public namespace
+      or a field declared with the static modifier. A static variable comes into
+      existence when its declaration statement is executed, and ceases to exist
+      when the program's execution ends.
+      </p></li><li><p>
+      An instance variable is a field declared without the static modifier. An
+      instance variable of a class comes to existence when a new instance of the
+      class is created, and ceases to exist when there are no references to that
+      instance. An instance variable of a struct has the same lifetime as the
+      struct variable to which it belongs.
+      </p></li><li><p>
+      Array elements are unnamed variables that come to existence when a new
+      instance of an array is created, and cease to exist if there are no
+      references to that instance.
+      </p></li><li><p>
+      A parameter variable
+      </p></li><li><p>
+      A local variable is a variable is a variable declared inside a composite
+      statement (). A local variable comes to existence when the its
+      declaration statement is executed, and ceases to exist when the execution
+      of the enclosing composite statement is complete.
+      </p></li></ul></div></div><div class="sect1" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="id3375401"></a>5.2. Default Values</h2></div></div></div><p>
+    Every variable has an initial value to which it is automatically assigned.
+    The default value of a variable is determined as folllows:
+    </p><div class="itemizedlist"><ul type="disc"><li><p>
+      For variables of an integral or floating-point type, the default value
+      is zero, that is, the value of <code class="code">(T) 0</code>, where T is the
+      variable's type.
+      </p></li><li><p>
+      For variables of the <span class="type">bool</span> type, the default value is false.
+      </p></li><li><p>
+      For variables of a struct type, the default value is the value returned
+      by that struct type's default constructor (). If the struct type has no
+      default constructor, the variable must be declared with an initial value,
+      otherwise its declaration is a compile-time error.
+      </p></li><li><p>
+      For variables of a reference type, the default value is null.
+      </p></li></ul></div></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch04.html">Prev</a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="ch06.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter 4. Types </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Chapter 6. Conversions</td></tr></table></div></body></html>

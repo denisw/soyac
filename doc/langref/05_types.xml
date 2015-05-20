@@ -1,0 +1,542 @@
+<chapter id="types">
+  <title>Types</title>
+
+  <para>
+  Soya is a strongly-typed programming language, that is, every expression and
+  variable has a type known at compile time. There are two kinds of types in
+  Soya: value types and reference types.
+  </para>
+
+  <productionset>
+    <production>
+      <lhs>type</lhs>
+      <rhs>
+      value-type <sbr/>
+      reference-type
+      </rhs>
+    </production>
+  </productionset>
+
+  <sect1>
+    <title>Value Types</title>
+
+    <para>
+    A value type is an simple type, enumeration type or struct type.
+    </para>
+
+    <productionset>
+      <production>
+        <lhs>value-type</lhs>
+        <rhs>
+        simple-type |      <sbr/>
+        enumeration-type <sbr/>
+        struct-type
+        </rhs>
+      </production>
+    </productionset>
+
+    <para>
+    Contrary to a reference type value, which is a reference to an object (),
+    a value of a value type is the type instance itself. Thus, multiple
+    value type variables with the same value are independent from each
+    other as every variable has it's own copy of that value. 
+    </para>
+
+    <sect2 id="simple_types">
+      <title>Simple Types</title>
+
+      <para>
+      The simple types are predefined by the Soya programming language. They
+      are identified through reserved keywords. Simple types are integral types,
+      floating point types, and the <type>bool</type> type.
+      </para>
+
+      <productionset>
+        <production>
+          <lhs>simple-type</lhs>
+          <rhs>
+          integral-type       <sbr/>
+          floating-point-type <sbr/>
+          "bool"
+          </rhs>
+        </production>
+      </productionset>
+
+      <sect3>
+        <title>Integral Types</title>
+
+        <para>
+        Soya's integral types are <type>sbyte</type>, <type>byte</type>,
+        <type>short</type>, <type>ushort</type>, <type>int</type>,
+        <type>uint</type>, <type>long</type>, and <type>ulong</type>.
+        </para>
+
+        <productionset>
+          <production>
+            <lhs>integral-type</lhs>
+            <rhs>
+            "sbyte"  <sbr/>
+            "byte"   <sbr/>
+            "short"  <sbr/>
+            "ushort" <sbr/>
+            "int"    <sbr/>
+            "uint"   <sbr/>
+            "long"   <sbr/>
+            "ulong"  <sbr/>
+            "char"
+            </rhs>
+          </production>
+        </productionset>
+
+        <para>
+        The integral types have the following representations and values: 
+        </para>
+
+        <itemizedlist>
+          <listitem><para>
+          The <type>sbyte</type> type's values are 8-bit two's-complement
+          integers between -128 and 127.
+          </para></listitem>
+          <listitem><para>
+          The <type>byte</type> type's values are 8-bit two's-complement
+          integers between 0 and 255.
+          </para></listitem>
+          <listitem><para>
+          The <type>short</type> type's values are 16-bit two's-complement
+          integers between -32768 and 32767.
+          </para></listitem>
+          <listitem><para>
+          The <type>ushort</type> type's values are 16-bit two's-complement
+          integers between 0 and 65535.
+          </para></listitem>
+          <listitem><para>
+          The <type>int</type> type's values are 32-bit two's-complement
+          integers between -2147483648 and 2147483647.
+          </para></listitem>
+          <listitem><para>
+          The <type>uint</type> type's values are 32-bit two's-complement
+          integers between 0 and 4294967295.
+          </para></listitem>
+          <listitem><para>
+          The <type>long</type> type's values are 64-bit two's-complement
+          integers between -9223372036854775808 and 9223372036854775807.
+          </para></listitem>
+          <listitem><para>
+          The <type>ulong</type> type's values are 32-bit two's-complement
+          integers between 0 and 18446744073709551615.
+          </para></listitem>
+          <listitem><para>
+          The <type>char</type> type's values are 32-bit two's-complement
+          integers between 0 and 4294967295. It's values correspond to the
+          character codes of the Unicode character set.
+          </para></listitem>
+        </itemizedlist>
+
+        <para>
+        Each integral type has the following instance methods which are
+        called with a value of type T as argument, where T is any integral
+        type to which the called instance can be implicitly converted ():
+        </para>
+
+        <itemizedlist>
+          <listitem><para>
+          The __add__ method adds the passed argument's value to the value of
+          the called instance. The resulting value is then returned as an
+          instance of type T.
+          </para></listitem>          
+          <listitem><para>
+          The __sub__ method subtracts the passed argument's value from the
+          value of the called instance. The resulting value is then returned
+          as an instance of type T.
+          </para></listitem>          
+          <listitem><para>
+          The __mul__ method multiplies the values of the called instance and
+          the passed argument. The resulting value is then returned as an
+          instance of type T.
+          </para></listitem>          
+          <listitem><para>
+          The __div__ method performs an integer division of the called
+          instance's value by the value of the passed argument. The resulting
+          value is then returned as an instance of type T.
+          </para></listitem>
+          <listitem><para>
+          The __mod__ method calculates the remainder of a divion of the
+          called instance's value by the value of the passed argument. The
+          resulting value is then returned as an instance of type T.
+          </para></listitem>
+          <listitem><para>
+          The __eq__ method checks if the called instance's value is equal
+          to the value of the passed argument. If this condition is met,
+          the method returns true. Otherwise, the method returns false.
+          </para></listitem>
+          <listitem><para>
+          The __ne__ method checks if the called instance's value is unequal
+          to the value of the passed argument. If this condition is met,
+          the method returns true. Otherwise, the method returns false.
+          </para></listitem>
+          <listitem><para>
+          The __gt__ method checks if the called instance's value is greater
+          than the value of the passed argument. If this condition is met,
+          the method returns true. Otherwise, the method returns false.
+          </para></listitem>
+          <listitem><para>
+          The __lt__ method checks if the called instance's value is less
+          than the value of the passed argument. If this condition is met,
+          the method returns true. Otherwise, the method returns false.
+          </para></listitem>
+          <listitem><para>
+          The __ge__ method checks if the called instance's value is equal
+          to or greater than the value of the passed argument. If this
+          condition is met, the method returns true. Otherwise, the method
+          returns false.
+          </para></listitem>
+          <listitem><para>
+          The __le__ method checks if the called instance's value is equal
+          to or less than the value of the passed argument. If this
+          condition is met, the method returns true. Otherwise, the method
+          returns false.
+          </para></listitem>
+          <listitem><para>
+          The __lshift__ method left-shifts the called instance's value by
+          n bits, where n is the value of the passed argument. This operation
+          is equivalent to multiplying the called instance's value by two to the
+          power of n. The resulting value is then returned as an instance of
+          the called instance's type.
+          </para></listitem>
+          <listitem><para>
+          The __rshift__ method right-shifts the called instance's value by
+          n bits, where n is the value of the passed argument. This operation
+          is equivalent to dividing the called instance's value by two to the
+          power of n. The resulting value is then returned as an instance of
+          the called instance's type.
+          </para></listitem>
+          <listitem><para>
+          The __and__ method creates a value of type T whose bits are determined
+          by performing a logical AND operation on the bits of the called
+          instance and the passed argument. More specifically, the n-th bit of
+          the created value is 1 if the n-th bits of the called instance
+          and the passed argument are both 1, and 0 otherwise. The created
+          value is then returned as an instance of type T.
+          </para></listitem>
+          <listitem><para>
+          The __or__ method creates a value of type T whose bits are determined
+          by performing a logical OR operation on the bits of the called
+          instance and the passed argument. More specifically, the n-th bit of
+          the created value is 1 if either the n-th bit of the called instance
+          or the n-th bit the passed argument is 1 or if both bits are 1, and 0
+          otherwise. The created value is then returned as an instance of type
+          T.
+          </para></listitem>
+          <listitem><para>
+          The __xor__ method creates a value of type T whose bits are determined
+          by performing a logical XOR operation on the bits of the called
+          instance and the passed argument. More specifically, the n-th bit of
+          the created value is 1 if either the n-th bit of the called instance
+          or the n-th bit the passed argument is 1, and 0 otherwise. The created
+          value is then returned as an instance of type T.
+          </para></listitem>
+        </itemizedlist>
+
+        <para>
+        Additionaly, each signed integral type has a __neg__ instance method,
+        which is called without arguments. The __neg__ method negates the called
+        instance's value and returns the resulting value as an instance of the
+        called instance's type.
+        </para>
+
+        <para>
+        The integral types' methods never change the called instance's value.
+        </para>
+      </sect3>
+
+      <sect3>
+        <title>Floating-Point Types</title>
+
+        <para>
+        Soya has two floating point types: <type>float</type> and
+        <type>double</type>.
+        </para>
+
+        <productionset>
+          <production>
+            <lhs>floating-point-type</lhs>
+            <rhs>
+            "float"  <sbr/>
+            "double"
+            </rhs>
+          </production>
+        </productionset>
+
+        <para>
+        The <type>float</type> and <type>double</type> types' values are those
+        of the single-precision and double-precision IEEE 754 formats,
+        respectively. (ANSI/IEEE 754-1985)
+        </para>
+
+        <para>
+        Both floating-point types have the following instance methods which are
+        called with a value of type T as argument, where T is either
+        <type>float</type> or <type>double</type> for the <type>float</type>
+        type and <type>double</type> for the <type>double</type> type:
+        </para>
+
+        <itemizedlist>
+          <listitem><para>
+          The __add__ method adds the passed argument's value to the value of
+          the called instance. The resulting value is then returned as an
+          instance of type T.
+          </para></listitem>          
+          <listitem><para>
+          The __sub__ method subtracts the passed argument's value from the
+          value of the called instance. The resulting value is then returned as
+          an instance of type T.
+          </para></listitem>          
+          <listitem><para>
+          The __mul__ method multiplies the values of the called instance and
+          the passed argument. The resulting value is then returned as an
+          instance of type T.
+          </para></listitem>          
+          <listitem><para>
+          The __div__ method performs an integer division of the called
+          instance's value by the value of the passed argument. The resulting
+          value is then returned as an instance of type T.
+          </para></listitem>
+          <listitem><para>
+          The __eq__ method checks if the called instance's value is equal
+          to the value of the passed argument. If this condition is met,
+          the method returns true. Otherwise, the method returns false.
+          </para></listitem>
+          <listitem><para>
+          The __ne__ method checks if the called instance's value is unequal
+          to the value of the passed argument. If this condition is met,
+          the method returns true. Otherwise, the method returns false.
+          </para></listitem>
+          <listitem><para>
+          The __gt__ method checks if the called instance's value is greater
+          than the value of the passed argument. If this condition is met,
+          the method returns true. Otherwise, the method returns false.
+          </para></listitem>
+          <listitem><para>
+          The __lt__ method checks if the called instance's value is less
+          than the value of the passed argument. If this condition is met,
+          the method returns true. Otherwise, the method returns false.
+          </para></listitem>
+          <listitem><para>
+          The __ge__ method checks if the called instance's value is equal
+          to or greater than the value of the passed argument. If this
+          condition is met, the method returns true. Otherwise, the method
+          returns false.
+          </para></listitem>
+          <listitem><para>
+          The __le__ method checks if the called instance's value is equal
+          to or less than the value of the passed argument. If this
+          condition is met, the method returns true. Otherwise, the method
+          returns false.
+          </para></listitem>
+        </itemizedlist>
+
+        <para>
+        Additionaly, both floating-point typeshave  a __neg__ instance method,
+        which is called without arguments. The __neg__ method negates the called
+        instance's value and returns the resulting value as an instance of the
+        called instance's type.
+        </para>
+
+        <para>
+        All arithmetic operations and comparisons performed in the
+        floating-point types' methods are processed like defined in
+        the IEEE 754 standard.
+        </para>
+
+        <para>
+        The floating-point types' methods never change the called instance's
+        value.
+        </para>
+      </sect3>
+
+      <sect3>
+        <title>The <type>bool</type> Type</title>
+
+        <para>
+        The <type>bool</type> represents a logical quantity whose only values
+        are true and false.
+        </para>
+
+        <para>
+        The <type>bool</type> type supports the following instance methods
+        which are called with a another value of the <type>bool</type> type
+        as argument:
+        </para>
+
+        <itemizedlist>
+          <listitem><para>
+          The __eq__ method checks if the called instance's value is equal
+          to the value of the passed argument. If this condition is met,
+          the method returns true. Otherwise, the method returns false.
+          </para></listitem>
+          <listitem><para>
+          The __ne__ method checks if the called instance's value is unequal
+          to the value of the passed argument. If this condition is met,
+          the method returns true. Otherwise, the method returns false.
+          </para></listitem>
+          <listitem><para>
+          The __and__ method performs a logical AND operation on the called
+          instance's value and the value of the passed argument. If both
+          values are true, the method returns true. Otherwise, the method
+          returns false.
+          </para></listitem>
+          <listitem><para>
+          The __or__ method performs a logical OR operation on the called
+          instance's value and the value of the passed argument. If at least
+          one of the two values is true, the method returns true. Otherwise,
+          the method returns false.
+          </para></listitem>
+          <listitem><para>
+          The __xor__ method performs a logical XOR operation on the called
+          instance's value and the value of the passed argument. If exactly
+          one of the two values is true, the method returns true. Otherwise,
+          the method returns false.
+          </para></listitem>
+        </itemizedlist>
+
+        <para>
+        The <type>bool</type> type's methods never change the called instance's
+        value.
+        </para>
+      </sect3>
+    </sect2>
+
+    <sect2>
+      <title>Enumeration Types</title>
+
+      <para>
+      An enumeration type is a type whose values are a set of named constants.
+      Every enumeration type is represented by one of the integral types, which
+      is said to be its underlying type.
+      </para>
+
+      <para>
+      Enumeration types are defined through enumeration declarations ().
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>Struct Types</title>
+
+      <para>
+      A struct type is a user-defined value type for which fields, methods,
+      properties, instance constructors, static constructors, and nested types
+      may be declared.
+      </para>
+
+      <para>
+      Struct types a described in ().
+      </para>
+    </sect2>
+  </sect1>
+
+  <sect1>
+    <title>Reference Types</title>
+
+    <para>
+    A reference type is a class type, an interface type, an array type, or a
+    function type.
+    </para>
+
+    <productionset>
+      <production>
+        <lhs>value-type</lhs>
+        <rhs>
+        class-or-interface-type <sbr/>
+        array-type              <sbr/>
+        function-type
+        </rhs>
+      </production>
+
+      <production>
+        <lhs>class-or-interface-type</lhs>
+        <rhs>
+        type-name
+        </rhs>
+      </production>   
+    </productionset>
+
+    <para>
+    A value of a reference type is a reference to an instance of the type
+    (referred to as object). This means that variables of a reference type
+    that have the same value also share the same object.
+    </para>
+
+    <sect2>
+      <title>Array Types</title>
+
+      <para>
+      An array is a data structure that contains one or more values of one
+      type, which is said to be the element type of the array. Individual
+      values of an array can be accessed using indices.
+      </para>
+
+      <para>
+      Array types are described in ().
+      </para>
+    </sect2>
+
+    <sect2>
+        <title>Function Types</title>
+
+        <para>
+        A value of a function type refers to a function with a specific
+        return type and set of arguments. If the referred-to function is
+        an instance method, it also refers to it's corresponding instance. 
+        </para>
+
+        <para>
+        Function types are described in ().
+        </para>
+    </sect2>
+
+    <sect2>
+        <title>Pointer Types</title>
+
+        <para>
+        A value of a pointer type is a reference to an value of a specific type,
+        which is said to be the underlying type of the pointer type. Pointers
+        enable the creation of references to instances of value types. 
+        </para>
+
+        <para>
+        Pointer types are described in ().
+        </para>
+    </sect2>
+
+    <sect2>
+      <title>Class Types</title>
+
+      <para>
+      A class type is a user-defined reference type for which fields, methods,
+      properties, instance constructors, destructors, static constructors,
+      and nested types may be declared. Using inheritance, classes can be
+      defined to be specialize or extend an existing class type. 
+      </para>
+
+      <para>
+      Class types are described in ().
+      </para>
+    </sect2>
+
+    <sect2>
+      <title>Interface Types</title>
+
+      <para>
+      An interface type is a set of requirements that a class type must fulfill
+      in order to implement the interface. Like class types (), interface types
+      support inheritance, meaning that an interface type   can be defined to be
+      an extension of one or more other interface types.
+      </para>
+
+      <para>
+      Interface types are described in ().
+      </para>
+    </sect2>
+  </sect1>
+</chapter>

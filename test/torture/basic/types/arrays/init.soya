@@ -1,0 +1,22 @@
+/*
+ * soyac - The Soya programming language compiler
+ * Copyright (c) 2009 Denis Washington <dwashington@gmx.net>
+ *
+ * This file is distributed under the terms of the MIT license.
+ * See LICENSE.txt for details.
+ */
+
+extern function exit(code : int);
+
+var a = new int[3];
+if (a[0] != 0) exit(1);
+if (a[1] != 0) exit(2);
+if (a[2] != 0) exit(3);
+
+a = new int[](1, 2, 3, 4, 218);
+if (a[0] != 1) exit(4);
+if (a[1] != 2) exit(5);
+if (a[2] != 3) exit(6);
+if (a[3] != 4) exit(7);
+if (a[4] != 218) exit(8);
+

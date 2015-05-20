@@ -1,0 +1,30 @@
+/*
+ * soyac - The Soya programming language compiler
+ * Copyright (c) 2009 Denis Washington <dwashington@gmx.net>
+ *
+ * This file is distributed under the terms of the MIT license.
+ * See LICENSE.txt for details.
+ */
+
+extern function exit(code : int);
+
+struct Foo
+{
+    var value : int;
+    
+    constructor(value : int)
+    {
+        this.value = value;
+    }
+    
+    function getMultipliedValue(factor : int) : int
+    {
+        return value * factor;
+    }
+}
+
+var s = new Foo(109);
+
+var f = s.getMultipliedValue;
+var i = f(2);
+if (i != 218) exit(1);

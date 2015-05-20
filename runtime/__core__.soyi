@@ -1,0 +1,15 @@
+module __core__;
+
+extern function print(b : bool);
+extern function print(i : int);
+extern function print(d : double);
+extern function print(c : char);
+extern function print(l : long);
+extern function print(u : ulong);
+
+extern function exit(i : int);
+
+class Object
+{
+    extern function toString();
+}

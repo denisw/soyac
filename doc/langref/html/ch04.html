@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Chapter 4. Types</title><link rel="stylesheet" href="langref.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.73.2" /><link rel="start" href="index.html" title="The Soya Language Reference" /><link rel="up" href="index.html" title="The Soya Language Reference" /><link rel="prev" href="ch03.html" title="Chapter 3. Lexical Structure" /><link rel="next" href="ch05.html" title="Chapter 5. Variables" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter 4. Types</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch03.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ch05.html">Next</a></td></tr></table><hr /></div><div class="chapter" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="types"></a>Chapter 4. Types</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="ch04.html#id3374603">4.1. Value Types</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch04.html#simple_types">4.1.1. Simple Types</a></span></dt><dt><span class="sect2"><a href="ch04.html#id3375210">4.1.2. Enumeration Types</a></span></dt><dt><span class="sect2"><a href="ch04.html#id3375223">4.1.3. Struct Types</a></span></dt></dl></dd><dt><span class="sect1"><a href="ch04.html#id3375235">4.2. Reference Types</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch04.html#id3375278">4.2.1. Array Types</a></span></dt><dt><span class="sect2"><a href="ch04.html#id3375291">4.2.2. Function Types</a></span></dt><dt><span class="sect2"><a href="ch04.html#id3375304">4.2.3. Pointer Types</a></span></dt><dt><span class="sect2"><a href="ch04.html#id3375317">4.2.4. Class Types</a></span></dt><dt><span class="sect2"><a href="ch04.html#id3375331">4.2.5. Interface Types</a></span></dt></dl></dd></dl></div><p>
+  Soya is a strongly-typed programming language, that is, every expression and
+  variable has a type known at compile time. There are two kinds of types in
+  Soya: value types and reference types.
+  </p><pre xmlns="" class="productionset">type
+    = value-type
+    | reference-type ;
+
+</pre><div class="sect1" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="id3374603"></a>4.1. Value Types</h2></div></div></div><p>
+    A value type is an simple type, enumeration type or struct type.
+    </p><pre xmlns="" class="productionset">value-type
+    = simple-type |
+    | enumeration-type
+    | struct-type ;
+
+</pre><p>
+    Contrary to a reference type value, which is a reference to an object (),
+    a value of a value type is the type instance itself. Thus, multiple
+    value type variables with the same value are independent from each
+    other as every variable has it's own copy of that value. 
+    </p><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="simple_types"></a>4.1.1. Simple Types</h3></div></div></div><p>
+      The simple types are predefined by the Soya programming language. They
+      are identified through reserved keywords. Simple types are integral types,
+      floating point types, and the <span class="type">bool</span> type.
+      </p><pre xmlns="" class="productionset">simple-type
+    = integral-type
+    | floating-point-type
+    | "bool" ;
+
+</pre><div class="sect3" lang="en" xml:lang="en"><div class="titlepage"><div><div><h4 class="title"><a id="id3374673"></a>4.1.1.1. Integral Types</h4></div></div></div><p>
+        Soya's integral types are <span class="type">sbyte</span>, <span class="type">byte</span>,
+        <span class="type">short</span>, <span class="type">ushort</span>, <span class="type">int</span>,
+        <span class="type">uint</span>, <span class="type">long</span>, and <span class="type">ulong</span>.
+        </p><pre xmlns="" class="productionset">integral-type
+    = "sbyte"
+    | "byte"
+    | "short"
+    | "ushort"
+    | "int"
+    | "uint"
+    | "long"
+    | "ulong"
+    | "char" ;
+
+</pre><p>
+        The integral types have the following representations and values: 
+        </p><div class="itemizedlist"><ul type="disc"><li><p>
+          The <span class="type">sbyte</span> type's values are 8-bit two's-complement
+          integers between -128 and 127.
+          </p></li><li><p>
+          The <span class="type">byte</span> type's values are 8-bit two's-complement
+          integers between 0 and 255.
+          </p></li><li><p>
+          The <span class="type">short</span> type's values are 16-bit two's-complement
+          integers between -32768 and 32767.
+          </p></li><li><p>
+          The <span class="type">ushort</span> type's values are 16-bit two's-complement
+          integers between 0 and 65535.
+          </p></li><li><p>
+          The <span class="type">int</span> type's values are 32-bit two's-complement
+          integers between -2147483648 and 2147483647.
+          </p></li><li><p>
+          The <span class="type">uint</span> type's values are 32-bit two's-complement
+          integers between 0 and 4294967295.
+          </p></li><li><p>
+          The <span class="type">long</span> type's values are 64-bit two's-complement
+          integers between -9223372036854775808 and 9223372036854775807.
+          </p></li><li><p>
+          The <span class="type">ulong</span> type's values are 32-bit two's-complement
+          integers between 0 and 18446744073709551615.
+          </p></li><li><p>
+          The <span class="type">char</span> type's values are 32-bit two's-complement
+          integers between 0 and 4294967295. It's values correspond to the
+          character codes of the Unicode character set.
+          </p></li></ul></div><p>
+        Each integral type has the following instance methods which are
+        called with a value of type T as argument, where T is any integral
+        type to which the called instance can be implicitly converted ():
+        </p><div class="itemizedlist"><ul type="disc"><li><p>
+          The __add__ method adds the passed argument's value to the value of
+          the called instance. The resulting value is then returned as an
+          instance of type T.
+          </p></li><li><p>
+          The __sub__ method subtracts the passed argument's value from the
+          value of the called instance. The resulting value is then returned
+          as an instance of type T.
+          </p></li><li><p>
+          The __mul__ method multiplies the values of the called instance and
+          the passed argument. The resulting value is then returned as an
+          instance of type T.
+          </p></li><li><p>
+          The __div__ method performs an integer division of the called
+          instance's value by the value of the passed argument. The resulting
+          value is then returned as an instance of type T.
+          </p></li><li><p>
+          The __mod__ method calculates the remainder of a divion of the
+          called instance's value by the value of the passed argument. The
+          resulting value is then returned as an instance of type T.
+          </p></li><li><p>
+          The __eq__ method checks if the called instance's value is equal
+          to the value of the passed argument. If this condition is met,
+          the method returns true. Otherwise, the method returns false.
+          </p></li><li><p>
+          The __ne__ method checks if the called instance's value is unequal
+          to the value of the passed argument. If this condition is met,
+          the method returns true. Otherwise, the method returns false.
+          </p></li><li><p>
+          The __gt__ method checks if the called instance's value is greater
+          than the value of the passed argument. If this condition is met,
+          the method returns true. Otherwise, the method returns false.
+          </p></li><li><p>
+          The __lt__ method checks if the called instance's value is less
+          than the value of the passed argument. If this condition is met,
+          the method returns true. Otherwise, the method returns false.
+          </p></li><li><p>
+          The __ge__ method checks if the called instance's value is equal
+          to or greater than the value of the passed argument. If this
+          condition is met, the method returns true. Otherwise, the method
+          returns false.
+          </p></li><li><p>
+          The __le__ method checks if the called instance's value is equal
+          to or less than the value of the passed argument. If this
+          condition is met, the method returns true. Otherwise, the method
+          returns false.
+          </p></li><li><p>
+          The __lshift__ method left-shifts the called instance's value by
+          n bits, where n is the value of the passed argument. This operation
+          is equivalent to multiplying the called instance's value by two to the
+          power of n. The resulting value is then returned as an instance of
+          the called instance's type.
+          </p></li><li><p>
+          The __rshift__ method right-shifts the called instance's value by
+          n bits, where n is the value of the passed argument. This operation
+          is equivalent to dividing the called instance's value by two to the
+          power of n. The resulting value is then returned as an instance of
+          the called instance's type.
+          </p></li><li><p>
+          The __and__ method creates a value of type T whose bits are determined
+          by performing a logical AND operation on the bits of the called
+          instance and the passed argument. More specifically, the n-th bit of
+          the created value is 1 if the n-th bits of the called instance
+          and the passed argument are both 1, and 0 otherwise. The created
+          value is then returned as an instance of type T.
+          </p></li><li><p>
+          The __or__ method creates a value of type T whose bits are determined
+          by performing a logical OR operation on the bits of the called
+          instance and the passed argument. More specifically, the n-th bit of
+          the created value is 1 if either the n-th bit of the called instance
+          or the n-th bit the passed argument is 1 or if both bits are 1, and 0
+          otherwise. The created value is then returned as an instance of type
+          T.
+          </p></li><li><p>
+          The __xor__ method creates a value of type T whose bits are determined
+          by performing a logical XOR operation on the bits of the called
+          instance and the passed argument. More specifically, the n-th bit of
+          the created value is 1 if either the n-th bit of the called instance
+          or the n-th bit the passed argument is 1, and 0 otherwise. The created
+          value is then returned as an instance of type T.
+          </p></li></ul></div><p>
+        Additionaly, each signed integral type has a __neg__ instance method,
+        which is called without arguments. The __neg__ method negates the called
+        instance's value and returns the resulting value as an instance of the
+        called instance's type.
+        </p><p>
+        The integral types' methods never change the called instance's value.
+        </p></div><div class="sect3" lang="en" xml:lang="en"><div class="titlepage"><div><div><h4 class="title"><a id="id3374982"></a>4.1.1.2. Floating-Point Types</h4></div></div></div><p>
+        Soya has two floating point types: <span class="type">float</span> and
+        <span class="type">double</span>.
+        </p><pre xmlns="" class="productionset">floating-point-type
+    = "float"
+    | "double" ;
+
+</pre><p>
+        The <span class="type">float</span> and <span class="type">double</span> types' values are those
+        of the single-precision and double-precision IEEE 754 formats,
+        respectively. (ANSI/IEEE 754-1985)
+        </p><p>
+        Both floating-point types have the following instance methods which are
+        called with a value of type T as argument, where T is either
+        <span class="type">float</span> or <span class="type">double</span> for the <span class="type">float</span>
+        type and <span class="type">double</span> for the <span class="type">double</span> type:
+        </p><div class="itemizedlist"><ul type="disc"><li><p>
+          The __add__ method adds the passed argument's value to the value of
+          the called instance. The resulting value is then returned as an
+          instance of type T.
+          </p></li><li><p>
+          The __sub__ method subtracts the passed argument's value from the
+          value of the called instance. The resulting value is then returned as
+          an instance of type T.
+          </p></li><li><p>
+          The __mul__ method multiplies the values of the called instance and
+          the passed argument. The resulting value is then returned as an
+          instance of type T.
+          </p></li><li><p>
+          The __div__ method performs an integer division of the called
+          instance's value by the value of the passed argument. The resulting
+          value is then returned as an instance of type T.
+          </p></li><li><p>
+          The __eq__ method checks if the called instance's value is equal
+          to the value of the passed argument. If this condition is met,
+          the method returns true. Otherwise, the method returns false.
+          </p></li><li><p>
+          The __ne__ method checks if the called instance's value is unequal
+          to the value of the passed argument. If this condition is met,
+          the method returns true. Otherwise, the method returns false.
+          </p></li><li><p>
+          The __gt__ method checks if the called instance's value is greater
+          than the value of the passed argument. If this condition is met,
+          the method returns true. Otherwise, the method returns false.
+          </p></li><li><p>
+          The __lt__ method checks if the called instance's value is less
+          than the value of the passed argument. If this condition is met,
+          the method returns true. Otherwise, the method returns false.
+          </p></li><li><p>
+          The __ge__ method checks if the called instance's value is equal
+          to or greater than the value of the passed argument. If this
+          condition is met, the method returns true. Otherwise, the method
+          returns false.
+          </p></li><li><p>
+          The __le__ method checks if the called instance's value is equal
+          to or less than the value of the passed argument. If this
+          condition is met, the method returns true. Otherwise, the method
+          returns false.
+          </p></li></ul></div><p>
+        Additionaly, both floating-point typeshave  a __neg__ instance method,
+        which is called without arguments. The __neg__ method negates the called
+        instance's value and returns the resulting value as an instance of the
+        called instance's type.
+        </p><p>
+        All arithmetic operations and comparisons performed in the
+        floating-point types' methods are processed like defined in
+        the IEEE 754 standard.
+        </p><p>
+        The floating-point types' methods never change the called instance's
+        value.
+        </p></div><div class="sect3" lang="en" xml:lang="en"><div class="titlepage"><div><div><h4 class="title"><a id="id3375137"></a>4.1.1.3. The <span class="type">bool</span> Type</h4></div></div></div><p>
+        The <span class="type">bool</span> represents a logical quantity whose only values
+        are true and false.
+        </p><p>
+        The <span class="type">bool</span> type supports the following instance methods
+        which are called with a another value of the <span class="type">bool</span> type
+        as argument:
+        </p><div class="itemizedlist"><ul type="disc"><li><p>
+          The __eq__ method checks if the called instance's value is equal
+          to the value of the passed argument. If this condition is met,
+          the method returns true. Otherwise, the method returns false.
+          </p></li><li><p>
+          The __ne__ method checks if the called instance's value is unequal
+          to the value of the passed argument. If this condition is met,
+          the method returns true. Otherwise, the method returns false.
+          </p></li><li><p>
+          The __and__ method performs a logical AND operation on the called
+          instance's value and the value of the passed argument. If both
+          values are true, the method returns true. Otherwise, the method
+          returns false.
+          </p></li><li><p>
+          The __or__ method performs a logical OR operation on the called
+          instance's value and the value of the passed argument. If at least
+          one of the two values is true, the method returns true. Otherwise,
+          the method returns false.
+          </p></li><li><p>
+          The __xor__ method performs a logical XOR operation on the called
+          instance's value and the value of the passed argument. If exactly
+          one of the two values is true, the method returns true. Otherwise,
+          the method returns false.
+          </p></li></ul></div><p>
+        The <span class="type">bool</span> type's methods never change the called instance's
+        value.
+        </p></div></div><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="id3375210"></a>4.1.2. Enumeration Types</h3></div></div></div><p>
+      An enumeration type is a type whose values are a set of named constants.
+      Every enumeration type is represented by one of the integral types, which
+      is said to be its underlying type.
+      </p><p>
+      Enumeration types are defined through enumeration declarations ().
+      </p></div><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="id3375223"></a>4.1.3. Struct Types</h3></div></div></div><p>
+      A struct type is a user-defined value type for which fields, methods,
+      properties, instance constructors, static constructors, and nested types
+      may be declared.
+      </p><p>
+      Struct types a described in ().
+      </p></div></div><div class="sect1" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="id3375235"></a>4.2. Reference Types</h2></div></div></div><p>
+    A reference type is a class type, an interface type, an array type, or a
+    function type.
+    </p><pre xmlns="" class="productionset">value-type
+    = class-or-interface-type
+    | array-type
+    | function-type ;
+
+class-or-interface-type
+    = type-name ;
+
+</pre><p>
+    A value of a reference type is a reference to an instance of the type
+    (referred to as object). This means that variables of a reference type
+    that have the same value also share the same object.
+    </p><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="id3375278"></a>4.2.1. Array Types</h3></div></div></div><p>
+      An array is a data structure that contains one or more values of one
+      type, which is said to be the element type of the array. Individual
+      values of an array can be accessed using indices.
+      </p><p>
+      Array types are described in ().
+      </p></div><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="id3375291"></a>4.2.2. Function Types</h3></div></div></div><p>
+        A value of a function type refers to a function with a specific
+        return type and set of arguments. If the referred-to function is
+        an instance method, it also refers to it's corresponding instance. 
+        </p><p>
+        Function types are described in ().
+        </p></div><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="id3375304"></a>4.2.3. Pointer Types</h3></div></div></div><p>
+        A value of a pointer type is a reference to an value of a specific type,
+        which is said to be the underlying type of the pointer type. Pointers
+        enable the creation of references to instances of value types. 
+        </p><p>
+        Pointer types are described in ().
+        </p></div><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="id3375317"></a>4.2.4. Class Types</h3></div></div></div><p>
+      A class type is a user-defined reference type for which fields, methods,
+      properties, instance constructors, destructors, static constructors,
+      and nested types may be declared. Using inheritance, classes can be
+      defined to be specialize or extend an existing class type. 
+      </p><p>
+      Class types are described in ().
+      </p></div><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="id3375331"></a>4.2.5. Interface Types</h3></div></div></div><p>
+      An interface type is a set of requirements that a class type must fulfill
+      in order to implement the interface. Like class types (), interface types
+      support inheritance, meaning that an interface type   can be defined to be
+      an extension of one or more other interface types.
+      </p><p>
+      Interface types are described in ().
+      </p></div></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch03.html">Prev</a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="ch05.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter 3. Lexical Structure </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Chapter 5. Variables</td></tr></table></div></body></html>

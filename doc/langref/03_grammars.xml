@@ -1,0 +1,49 @@
+<chapter id="grammars">
+  <title>Grammars</title>
+
+  <para>
+  The structure of a Soya module () is defined by two context-free grammars.
+  The <firstterm>lexical grammar</firstterm> defines how a sequence of
+  characters is to be translated into a sequence of tokens. The <firstterm>
+  syntactic grammar</firstterm> specifies how these tokens are then translated
+  into a valid Soya module.
+  </para>
+
+  <para>
+  Both grammars are specified using the Extended BNF metalanguage (ISO/IEC
+  14977). The terms "production", "terminal symbol", and "non-terminal symbol"
+  are used in this specification as defined in the EBNF standard.
+  </para>
+
+  <sect1>
+    <title>Lexical Grammar</title>
+
+    <para>
+    The lexical grammar of Soya is presented in (3). It's terminal symbols are
+    the characters of the Unicode character set. The productions of the lexical
+    grammar specify how these characters are translated into a sequence of
+    input elements, consisting of tokens (), white space () and comments ().
+    </para>
+
+    <para>
+    Every Soya module must conform with the input production of the lexical
+    grammar ().
+    </para>
+  </sect1>
+
+  <sect1>
+    <title>Syntactic Grammar</title>
+
+    <para>
+    The syntactical grammar of Soya is presented in chapters 4 through ?.
+    It's terminal symbols are the tokens defined by the lexical grammar.
+    The productions of the grammar specify how these tokens are translated
+    to a valid Soya module. 
+    </para>
+
+    <para>
+    Every Soya module must conform with the module production of the syntactic
+    grammar (). 
+    </para>
+  </sect1>
+</chapter>

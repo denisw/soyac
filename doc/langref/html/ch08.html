@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Chapter 8. Expressions</title><link rel="stylesheet" href="langref.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.73.2" /><link rel="start" href="index.html" title="The Soya Language Reference" /><link rel="up" href="index.html" title="The Soya Language Reference" /><link rel="prev" href="ch07.html" title="Chapter 7. Names" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter 8. Expressions</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch07.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> </td></tr></table><hr /></div><div class="chapter" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="expressions"></a>Chapter 8. Expressions</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="ch08.html#expression_results">8.1. Expression Results</a></span></dt><dt><span class="sect1"><a href="ch08.html#evaluation_order">8.2. Evaluation Order</a></span></dt><dt><span class="sect1"><a href="ch08.html#primary_expressions">8.3. Primary Expressions</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch08.html#parenthized_expressions">8.3.1. Parenthized Expressions</a></span></dt><dt><span class="sect2"><a href="ch08.html#literal_expressions">8.3.2. Literal Expressions</a></span></dt><dt><span class="sect2"><a href="ch08.html#simple_name_expressions">8.3.3. Simple Name Expressions</a></span></dt><dt><span class="sect2"><a href="ch08.html#member_access_expressions">8.3.4. Member Access Expressions</a></span></dt><dt><span class="sect2"><a href="ch08.html#call_expressions">8.3.5. Call Expressions</a></span></dt></dl></dd></dl></div><p>
+  Expressions are used to produce side effects, like assignments, or to produce
+  values, which can be used as part of statements or larger expressions.
+  </p><p>
+  This chapter specifies the meaning and evaluation of expressions.
+  </p><div class="sect1" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="expression_results"></a>8.1. Expression Results</h2></div></div></div><p>
+    The result of an expression denotes one of the following:
+    </p><div class="itemizedlist"><ul type="disc"><li><p>
+      A value.
+      </p></li><li><p>
+      A variable.
+      </p></li><li><p>
+      A function.
+      </p></li><li><p>
+      A function group, which is a set of two or more overloaded functions.
+      An expression denoting a function group may only appear as the operand
+      of a call expression () or the operand of a cast expression (), otherwise
+      it causes a compile-time error.
+      </p></li><li><p>
+      A type. An expression denoting a type may only appear as the left hand
+      of a member access expression (), otherwise it causes a compile-time
+      error.
+      </p></li><li><p>
+      A module. An expression denoting a module may only appear as the left hand
+      of a member access expression (), otherwise it causes a compile-time
+      error.
+      </p></li><li><p>
+      Nothing. This occurs when a function of type <span class="type">void</span> is called.
+      An expression denoting nothing may only occur as the top-level expression
+      of an expression statement ().
+      </p></li></ul></div><p class="remark"><i><span class="remark">
+    Add properties here if added later on.
+    </span></i></p></div><div class="sect1" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="evaluation_order"></a>8.2. Evaluation Order</h2></div></div></div><p>
+    It is guaranteed that all expressions behave as if they were evaluated in
+    a specific evaluation order. More specifically, if an expression consists
+    of multiple operands, these operands are evaluated left-to-right.
+    Furthermore, each expression has a certain level of precedence, which
+    emerges from the Soya programming language's syntactic grammar.
+    </p><p>
+    Implementations may choose to evaluate certain expressions in any other
+    order than the specified one, provided that the chosen order is provenly
+    equivalent regarding side effects and the produced value of the expression,
+    including situations with multiple threads of control.
+    </p></div><div class="sect1" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="primary_expressions"></a>8.3. Primary Expressions</h2></div></div></div><p>
+    Primary expressions are the simplest form of expressions.
+    </p><pre xmlns="" class="productionset">primary-expression
+    = parenthized-expression
+    | literal-expression
+    | simple-name-expression
+    | member-access-expression
+    | call-expression
+    | element-access-expression
+    | self-expression
+    | super-expression
+    | creation-expression ;
+
+</pre><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="parenthized_expressions"></a>8.3.1. Parenthized Expressions</h3></div></div></div><p>
+      A parenthized expression is an expression enclosed in parenthes.
+      </p><pre xmlns="" class="productionset">parenthized-expression
+    = "(", expression, ")" ;
+
+</pre><p>
+      A parenthized expression is evaluated by evaluating the enclosed
+      expression. If the result of the enclosed expression denotes a type,
+      a module or a function group, a compile-time error occurs. Otherwise,
+      the result of the parenthized expression is the the result of the
+      enclosed expression.
+      </p></div><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="literal_expressions"></a>8.3.2. Literal Expressions</h3></div></div></div><p>
+      A literal expression denotes a constant value.
+      </p><pre xmlns="" class="productionset">literal-expression
+    = literal ;
+
+</pre><p>
+      The result of a literal expression is the value represented by the
+      literal (<a class="xref" href="ch03.html#literals" title="3.6. Literals">Section 3.6, “Literals”</a>).
+      </p></div><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="simple_name_expressions"></a>8.3.3. Simple Name Expressions</h3></div></div></div><p>
+      A simple name expression denotes a module or a declared entity in scope.
+      It consists of a single identifier.
+      </p><pre xmlns="" class="productionset">simple-name-expression
+    = identifier ;
+
+</pre><p>
+      A simple name expression is evaluated by resolving the simple name of
+      which it consists (<a class="xref" href="ch07.html#name_resolution" title="7.4. Name Resolution">Section 7.4, “Name Resolution”</a>). If the result of
+      the name resolution is an instance member, the simple name expression
+      is evaluated as if it were a member access expression of the form
+      <code class="code">self.N</code>, where N is the simple name. Otherwise, the result
+      of the simple name expression is the result of the name resolution.
+      </p></div><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="member_access_expressions"></a>8.3.4. Member Access Expressions</h3></div></div></div><p>
+      A member access expression denotes a member of a type or module. It
+      consists of an operand expression and an identifier, separated by a
+      "." token.
+      </p><pre xmlns="" class="productionset">member-access-expression
+    = (primary-expression | module-name-expression), ".", identifier ;
+
+</pre><p>
+      A member access expression of the form E.I, where E is an expression and
+      I is an identifier, is evaluated as follows:
+      </p><div class="itemizedlist"><ul type="disc"><li><p>
+        If the result of E denotes a module and I is the name of an accessible
+        member of that module, the result of the member access expression is
+        that member.
+        </p></li><li><p>
+        If the result of E denotes a type, a member lookup of I in that type
+        is performed (<a class="xref" href="ch07.html#member_lookup" title="7.4.1. Member Lookup">Section 7.4.1, “Member Lookup”</a>). If the member lookup
+        produces no result, a compile-time error occurs. If the result of the
+        member lookup is a single instance member, a compile-time error occurs.
+        Otherwise, the result of the member access expression is the result of
+        the member lookup.
+        </p></li><li><p>
+        If the result of E denotes a value, a member lookup of I in the type of
+        that value is performed (<a class="xref" href="ch07.html#member_lookup" title="7.4.1. Member Lookup">Section 7.4.1, “Member Lookup”</a>). If the member
+        lookup produces no result, or if the result of the member lookup is a
+        static member, a compile-time error occurs. Otherwise, the result of
+        the member access expression is the result of the member lookup with
+        the result of E as attached instance.
+        </p></li><li><p>
+        If the result of E denotes a variable, the member access expression is
+        evaluated as if E would refer to the value of that variable.
+        </p></li><li><p>
+        Otherwise, the member access expression is invalid, and a compile-time
+        error occurs.
+        </p></li></ul></div><div class="sect3" lang="en" xml:lang="en"><div class="titlepage"><div><div><h4 class="title"><a id="module_name_expressions"></a>8.3.4.1. Module Name Expressions</h4></div></div></div><p class="remark"><i><span class="remark">
+        Module names need to be moved to chapter 7, "Names".
+        </span></i></p><p>
+        A module name expression denotes a module. It consists of multiple
+        identifiers separated by the "::" token, possibly prefixed by a
+        "public" token.
+        </p><pre xmlns="" class="productionset">module-name-expression
+    = ["public", "::"], identifier, "::", identifier, {"::", identifier} ;
+
+</pre><p>
+        A module name expression is evaluated by performing the following
+        steps: 
+        </p><div class="orderedlist"><ol type="1"><li><p>
+          The meaning of the left-most identifier is determined as follows:
+          </p><div class="itemizedlist"><ul type="disc"><li><p>
+            If the module name expression is not prefixed with "public" and the
+            identifier is the name of a package contained by the package of the
+            module in which the identifier occurs, the meaning of the identifier
+            is that package.
+            </p></li><li><p>
+            Otherwise, if the identifier is the name of a package contained by
+            the public package, the meaning of the identifier is that package.
+            </p></li><li><p>
+            Otherwise, the identifier does not refer to a package, and a
+            compile-time error occurs.
+            </p></li></ul></div></li><li><p>
+            For each of the following identifiers except the right-most (if
+            any), determine its meaning as follows:
+            </p><div class="itemizedlist"><ul type="disc"><li><p>
+              If the identifier is the name of a package contained by the
+              package referred to by the preceding identifier, the meaning of
+              the identifier is that package.
+              </p></li><li><p>
+              Otherwise, the module name expression is invalid, and a
+              compile-time error occurs.
+              </p></li></ul></div></li><li>
+          If the right-most identifier is the name of a module in the package
+          referred to by the preceding identifier, the result of the module name
+          expression is that module. Otherwise, a compile-time error occurs.
+          </li></ol></div><p>
+        A module name expression may only appear as the operand of a member
+        access expression.
+        </p></div></div><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="call_expressions"></a>8.3.5. Call Expressions</h3></div></div></div><p>
+      A call expression is used to call a function.
+      </p><pre xmlns="" class="productionset">call-expression
+    = primary-expression, "(", [argument-list], ")" ;
+
+</pre><p>
+      The operand of the call expression (the <code class="code">primary-expression</code>
+      preceding the "(" token) must denote a function group or a value of a
+      function type. If the operand refers to a function group, the call
+      expression is said to be a direct call; if the operand refers to a value
+      of a function type, it is an indirect call.
+      </p><p>
+      The argument list enclosed by the parenthes of a call expression are
+      used to provide values for the called function's parameters.
+      </p><p>
+      If the called function has <span class="type">void</span> as it's return type, the
+      result of the call expression is nothing. Otherwise, the result of the
+      call expression is the value returned by the called function.
+      </p><div class="sect3" lang="en" xml:lang="en"><div class="titlepage"><div><div><h4 class="title"><a id="direct_calls"></a>8.3.5.1. Direct Calls</h4></div></div></div><p>
+        An direct call is performed when evaluating a call expression whose
+        operand denotes a function group. At compile time, the function from
+        this group to be called is determined, based on the arguments specified
+        for the call expression.
+        </p><p>
+        The correct function for a call expression <code class="code">F(A)</code>, where F is
+        a function group and A is an optional argument list, is determined by
+        performing the following steps:
+        </p><div class="orderedlist"><ol type="1"><li><p>
+          From the functions belonging to the function group, all functions
+          applicable to A () are gathered.
+          </p></li><li><p>
+          For every method M in the set of functions gathered in the first step,
+          all methods declared in a base type of T are removed, where T is the
+          type in which M is declared. If the resulting set of functions is
+          empty, no function in the function group is applicable to A, and a
+          compile-time error occurs.
+          </p></li><li><p>
+          From the set of functions resulting from the second step, the best
+          function with respect to A is determined using the overload resolution
+          rules described in (). If no single best method can be identified,
+          the call is ambiguous, and a compile-time error occurs.
+          </p></li><li><p>
+          
+          </p></li></ol></div></div><div class="sect3" lang="en" xml:lang="en"><div class="titlepage"><div><div><h4 class="title"><a id="indirect_calls"></a>8.3.5.2. Indirect Calls</h4></div></div></div><p>
+        An indirect call is performed when evaluating a call expression whose
+        operand denotes a value of a function type ().
+        </p></div></div></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch07.html">Prev</a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> </td></tr><tr><td width="40%" align="left" valign="top">Chapter 7. Names </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> </td></tr></table></div></body></html>

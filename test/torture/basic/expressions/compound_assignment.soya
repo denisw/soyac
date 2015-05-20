@@ -1,0 +1,32 @@
+/*
+ * soyac - Soya Programming Language compiler
+ * Copyright (c) 2009 Denis Washington <dwashington@gmx.net>
+ *
+ * This file is distributed under the terms of the MIT license.
+ * See LICENSE.txt for details.
+ */
+
+extern function exit(code : int);
+
+var i = 210;
+
+if ((i += 8) != 218) exit(1);
+if (i != 218) exit(2);
+
+if ((i -= 8) != 210) exit(3);
+if (i != 210) exit(4);
+
+if ((i *= 2) != 420) exit(5);
+if (i != 420) exit(6);
+
+if ((i /= 4) != 105) exit(7);
+if (i != 105) exit(8);
+
+if ((i %= 6) != 3) exit(9);
+if (i != 3) exit(10);
+
+if ((i <<= 2) != 12) exit(11);
+if (i != 12) exit(12);
+
+if ((i >>= 2) != 3) exit(13);
+if (i != 3) exit(14);

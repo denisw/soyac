@@ -1,0 +1,76 @@
+<chapter id="variables">
+  <title>Variables</title>
+
+  <para>
+  Variables are storage locations with an associated type. A variable may
+  contain any value whose type is compatible to the variable's type. The
+  value of a variable can be changed by an assignment ().
+  </para>
+
+  <sect1>
+    <title>Variable Categories</title>
+
+    <para>
+    There are five categories of variables in Soya:
+    </para>
+
+    <itemizedlist>
+      <listitem><para>
+      A static variable is variable declared in a module's public namespace
+      or a field declared with the static modifier. A static variable comes into
+      existence when its declaration statement is executed, and ceases to exist
+      when the program's execution ends.
+      </para></listitem>
+      <listitem><para>
+      An instance variable is a field declared without the static modifier. An
+      instance variable of a class comes to existence when a new instance of the
+      class is created, and ceases to exist when there are no references to that
+      instance. An instance variable of a struct has the same lifetime as the
+      struct variable to which it belongs.
+      </para></listitem>
+      <listitem><para>
+      Array elements are unnamed variables that come to existence when a new
+      instance of an array is created, and cease to exist if there are no
+      references to that instance.
+      </para></listitem>
+      <listitem><para>
+      A parameter variable
+      </para></listitem>      
+      <listitem><para>
+      A local variable is a variable is a variable declared inside a composite
+      statement (). A local variable comes to existence when the its
+      declaration statement is executed, and ceases to exist when the execution
+      of the enclosing composite statement is complete.
+      </para></listitem>
+    </itemizedlist>
+  </sect1>
+
+  <sect1>
+    <title>Default Values</title>
+
+    <para>
+    Every variable has an initial value to which it is automatically assigned.
+    The default value of a variable is determined as folllows:
+    </para>
+
+    <itemizedlist>
+      <listitem><para>
+      For variables of an integral or floating-point type, the default value
+      is zero, that is, the value of <code>(T) 0</code>, where T is the
+      variable's type.
+      </para></listitem>
+      <listitem><para>
+      For variables of the <type>bool</type> type, the default value is false.
+      </para></listitem> 
+      <listitem><para>
+      For variables of a struct type, the default value is the value returned
+      by that struct type's default constructor (). If the struct type has no
+      default constructor, the variable must be declared with an initial value,
+      otherwise its declaration is a compile-time error.
+      </para></listitem>
+      <listitem><para>
+      For variables of a reference type, the default value is null.
+      </para></listitem>
+    </itemizedlist>
+  </sect1>
+</chapter>

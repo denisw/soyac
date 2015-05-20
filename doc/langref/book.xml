@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE book [
+<!ENTITY chapter1 SYSTEM "01_introduction.xml">
+<!ENTITY chapter2 SYSTEM "02_grammars.xml">
+<!ENTITY chapter3 SYSTEM "03_lexical_structure.xml">
+<!ENTITY chapter4 SYSTEM "04_types.xml">
+<!ENTITY chapter5 SYSTEM "05_variables.xml">
+<!ENTITY chapter6 SYSTEM "06_conversions.xml">
+<!ENTITY chapter7 SYSTEM "07_names.xml">
+<!ENTITY chapter8 SYSTEM "08_expressions.xml">
+]>
+
+<book xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink/">
+
+  <info>
+    <title>The Soya Language Reference</title>
+    <releaseinfo>Draft 1</releaseinfo>
+    
+    
+    <authorgroup>
+      <author>
+        <firstname>Denis</firstname>
+        <surname>Washington</surname>
+      </author>
+    </authorgroup>
+
+  </info>
+
+  <preface>
+    <title>Preface</title>
+
+    <para>
+    This document describes the syntax and semantics of the Soya, a
+    general-purpose, object-oriented programming language. It does
+    NOT specify how the language should be implemented; however,
+    guidelines are given where they are needed to ensure compatibility
+    between different implementations.
+    </para>
+  </preface>
+
+  &chapter1;
+  &chapter2;
+  &chapter3;
+  &chapter4;
+  &chapter5;
+  &chapter6;
+  &chapter7;
+  &chapter8;
+
+</book>

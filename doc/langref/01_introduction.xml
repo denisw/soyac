@@ -1,0 +1,32 @@
+<chapter id="introduction">
+  <title>Introduction</title>
+
+  <para>
+  Soya is a general-purpose, object-oriented, safe programming language. It is
+  designed to be simple, consistent and easy to use, while providing the power
+  and safety to develop both low-level performance-critical systems and
+  high-level applications of any size.
+  </para>
+
+  <para>
+  This document describes the syntax and semantics of Soya. Using the
+  information in this document, it should be possible for any interested
+  party to implement programs that process Soya source code, for instance
+  compilers, interpreters or code analyzers.
+  </para>
+
+  <sect1>
+    <title>References</title>
+
+    <itemizedlist>
+      <listitem><para>
+      ECMA-334, C# Language Specification.
+      </para></listitem>
+      <listitem><para>
+      James Gosling, Bill Joy, Guy Steele, and Gilad Bracha. The Java Language
+      Specification, Third Edition. Prentince Hall, Englewood Cliffs, New
+      Jersey, 2005, ISBN 978-0321246783.
+      </para></listitem>
+    </itemizedlist>
+  </sect1>
+</chapter>

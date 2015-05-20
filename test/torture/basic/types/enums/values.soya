@@ -1,0 +1,23 @@
+/*
+ * soyac - The Soya programming language compiler
+ * Copyright (c) 2009 Denis Washington <dwashington@gmx.net>
+ *
+ * This file is distributed under the terms of the MIT license.
+ * See LICENSE.txt for details.
+ */
+
+extern function exit(code : int);
+
+enum Foo
+{
+    FIRST,
+    SECOND,
+    THIRD = 218,
+    FOURTH
+}
+
+if ((Foo.FIRST as int) != 0) exit(1);
+if ((Foo.SECOND as int) != 1) exit(2);
+if ((Foo.THIRD as int) != 218) exit(3);
+if ((Foo.FOURTH as int) != 219) exit(4);
+

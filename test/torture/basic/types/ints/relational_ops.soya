@@ -1,0 +1,110 @@
+/*
+ * soyac - The Soya programming language compiler
+ * Copyright (c) 2009 Denis Washington <dwashington@gmx.net>
+ *
+ * This file is distributed under the terms of the MIT license.
+ * See LICENSE.txt for details.
+ */
+
+extern function exit(code : int);
+
+var i8  : int8    = 1;
+var u8  : uint8   = 2;
+var i16 : int16   = 3;
+var u16 : uint16  = 4;
+var i32 : int32   = 5;
+var u32 : uint32  = 6;
+var i64 : int64   = 7;
+var u64 : uint64  = 8;
+
+var i : int = 9;
+var u : uint = 10;
+var l : long = 11;
+var ul : ulong = 12;
+
+var foo = 1;
+var bar = 2;
+
+// ==
+if (!(i8 == foo) || i8 == bar) exit(1);
+if (!(u8 == 2) || u8 == 3) exit(2);
+if (!(i16 == 3) || i16 == 4) exit(3);
+if (!(u16 == 4) || u16 == 5) exit(4);
+if (!(i32 == 5) || i32 == 6) exit(5);
+if (!(u32 == 6) || u32 == 7) exit(6);
+if (!(i64 == 7) || i64 == 8) exit(7);
+if (!(u64 == 8) || u64 == 9) exit(8);
+if (!(i == 9) || i == 10) exit(9);
+if (!(u == 10) || u == 11) exit(10);
+if (!(l == 11) || l == 12) exit(11);
+if (!(ul == 12) || ul == 13) exit(12);
+
+// ==
+if (!(i8 != 2) || i8 != 1) exit(13);
+if (!(u8 != 3) || u8 != 2) exit(14);
+if (!(i16 != 4) || i16 != 3) exit(15);
+if (!(u16 != 5) || u16 != 4) exit(16);
+if (!(i32 != 6) || i32 != 5) exit(17);
+if (!(u32 != 7) || u32 != 6) exit(18);
+if (!(i64 != 8) || i64 != 7) exit(19);
+if (!(u64 != 9) || u64 != 8) exit(20);
+if (!(i != 10) || i != 9) exit(21);
+if (!(u != 11) || u != 10) exit(22);
+if (!(l != 12) || l != 11) exit(23);
+if (!(ul != 13) || ul != 12) exit(24);
+
+// <
+if (!(i8 < 2) || i8 < 1 || i8 < 0) exit(25);
+if (!(u8 < 3) || u8 < 2 || u8 < 1) exit(26);
+if (!(i16 < 4) || i16 < 3 || i16 < 2) exit(27);
+if (!(u16 < 5) || u16 < 4 || u16 < 3) exit(28);
+if (!(i32 < 6) || i32 < 5 || i32 < 4) exit(29);
+if (!(u32 < 7) || u32 < 6 || u32 < 5) exit(30);
+if (!(i64 < 8) || i64 < 7 || i64 < 6) exit(31);
+if (!(u64 < 9) || u64 < 8 || u64 < 7) exit(32);
+if (!(i < 10) || i < 9 || i < 8) exit(33);
+if (!(u < 11) || u < 10 || u < 9) exit(34);
+if (!(l < 12) || l < 11 || l < 10) exit(35);
+if (!(ul < 13) || ul < 12 || ul < 11) exit(36);
+
+// <=
+if (!(i8 <= 2) || !(i8 <= 1) || i8 <= 0) exit(37);
+if (!(u8 <= 3) || !(u8 <= 2) || u8 <= 1) exit(38);
+if (!(i16 <= 4) || !(i16 <= 3) || i16 <= 2) exit(39);
+if (!(u16 <= 5) || !(u16 <= 4) || u16 <= 3) exit(40);
+if (!(i32 <= 6) || !(i32 <= 5) || i32 <= 4) exit(41);
+if (!(u32 <= 7) || !(u32 <= 6) || u32 <= 5) exit(42);
+if (!(i64 <= 8) || !(i64 <= 7) || i64 <= 6) exit(43);
+if (!(u64 <= 9) || !(u64 <= 8) || u64 <= 7) exit(44);
+if (!(i <= 10) || !(i <= 9) || i <= 8) exit(45);
+if (!(u <= 11) || !(u <= 10) || u <= 9) exit(46);
+if (!(l <= 12) || !(l <= 11) || l <= 10) exit(47);
+if (!(ul <= 13) || !(ul <= 12) || ul <= 11) exit(48);
+
+// >=
+if (!(i8 > 0) || i8 > 1 || i8 > 2) exit(49);
+if (!(u8 > 1) || u8 > 2 || u8 > 3) exit(50);
+if (!(i16 > 2) || i16 > 3 || i16 > 4) exit(51);
+if (!(u16 > 3) || u16 > 4 || u16 > 5) exit(52);
+if (!(i32 > 4) || i32 > 5 || i32 > 6) exit(53);
+if (!(u32 > 5) || u32 > 6 || u32 > 7) exit(54);
+if (!(i64 > 6) || i64 > 7 || i64 > 8) exit(55);
+if (!(u64 > 7) || u64 > 8 || u64 > 9) exit(56);
+if (!(i > 8) || i > 9 || i > 10) exit(57);
+if (!(u > 9) || u > 10 || u > 11) exit(58);
+if (!(l > 10) || l > 11 || l > 12) exit(59);
+if (!(ul > 11) || ul > 12 || ul > 13) exit(60);
+
+// >
+if (!(i8 >= 0) || !(i8 >= 1) || i8 >= 2) exit(61);
+if (!(u8 >= 1) || !(u8 >= 2) || u8 >= 3) exit(62);
+if (!(i16 >= 2) || !(i16 >= 3) || i16 >= 4) exit(63);
+if (!(u16 >= 3) || !(u16 >= 4) || u16 >= 5) exit(64);
+if (!(i32 >= 4) || !(i32 >= 5) || i32 >= 6) exit(65);
+if (!(u32 >= 5) || !(u32 >= 6) || u32 >= 7) exit(66);
+if (!(i64 >= 6) || !(i64 >= 7) || i64 >= 8) exit(67);
+if (!(u64 >= 7) || !(u64 >= 8) || u64 >= 9) exit(68);
+if (!(i >= 8) || !(i >= 9) || i >= 10) exit(69);
+if (!(u >= 9) || !(u >= 10) || u >= 11) exit(70);
+if (!(l >= 10) || !(l >= 11) || l >= 12) exit(71);
+if (!(ul >= 11) || !(ul >= 12) || ul >= 13) exit(72);

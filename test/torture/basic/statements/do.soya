@@ -1,0 +1,30 @@
+/*
+ * soyac - Soya Programming Language compiler
+ * Copyright (c) 2009 Denis Washington <dwashington@gmx.net>
+ *
+ * This file is distributed under the terms of the MIT license.
+ * See LICENSE.txt for details.
+ */
+
+extern function exit(code : int);
+
+var i = 0;
+
+do
+{
+    i = i + 1;
+}
+while (i < 10);
+
+if (i != 10)
+    exit(1);
+
+do
+{
+    i = i + 1;
+}
+while (i < 10);
+
+if (i != 11)
+    exit(1);
+

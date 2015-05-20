@@ -1,0 +1,8 @@
+*.cmake
+CMakeFiles
+Makefile
+cmake_install.cmake
+*.cpp
+
+/.vagrant
+/build

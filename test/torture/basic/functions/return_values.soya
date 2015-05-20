@@ -1,0 +1,16 @@
+/*
+ * soyac - Soya Programming Language compiler
+ * Copyright (c) 2009 Denis Washington <dwashington@gmx.net>
+ *
+ * This file is distributed under the terms of the MIT license.
+ * See LICENSE.txt for details.
+ */
+
+extern function exit(code : int);
+
+function get_twice(x : int) : int
+{
+    return x * 2;
+}
+
+if (get_twice(109) != 218) exit(1);

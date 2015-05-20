@@ -1,0 +1,396 @@
+<chapter id="expressions">
+  <title>Expressions</title>
+  
+  <para>
+  Expressions are used to produce side effects, like assignments, or to produce
+  values, which can be used as part of statements or larger expressions.
+  </para>
+
+  <para>
+  This chapter specifies the meaning and evaluation of expressions.
+  </para>
+
+  <sect1 id="expression_results">
+    <title>Expression Results</title>
+
+    <para>
+    The result of an expression denotes one of the following:
+    </para>
+
+    <itemizedlist>
+      <listitem><para>
+      A value.
+      </para></listitem>
+      <listitem><para>
+      A variable.
+      </para></listitem>
+      <listitem><para>
+      A function.
+      </para></listitem>
+      <listitem><para>
+      A function group, which is a set of two or more overloaded functions.
+      An expression denoting a function group may only appear as the operand
+      of a call expression () or the operand of a cast expression (), otherwise
+      it causes a compile-time error.
+      </para></listitem>
+      <listitem><para>
+      A type. An expression denoting a type may only appear as the left hand
+      of a member access expression (), otherwise it causes a compile-time
+      error.
+      </para></listitem>
+      <listitem><para>
+      A module. An expression denoting a module may only appear as the left hand
+      of a member access expression (), otherwise it causes a compile-time
+      error.
+      </para></listitem>
+      <listitem><para>
+      Nothing. This occurs when a function of type <type>void</type> is called.
+      An expression denoting nothing may only occur as the top-level expression
+      of an expression statement ().
+      </para></listitem>
+    </itemizedlist>
+
+    <remark>
+    Add properties here if added later on.
+    </remark>
+  </sect1>
+
+  <sect1 id="evaluation_order">
+    <title>Evaluation Order</title>
+
+    <para>
+    It is guaranteed that all expressions behave as if they were evaluated in
+    a specific evaluation order. More specifically, if an expression consists
+    of multiple operands, these operands are evaluated left-to-right.
+    Furthermore, each expression has a certain level of precedence, which
+    emerges from the Soya programming language's syntactic grammar.
+    </para>
+
+    <para>
+    Implementations may choose to evaluate certain expressions in any other
+    order than the specified one, provided that the chosen order is provenly
+    equivalent regarding side effects and the produced value of the expression,
+    including situations with multiple threads of control.
+    </para>
+  </sect1>
+
+  <sect1 id="primary_expressions">
+    <title>Primary Expressions</title>
+
+    <para>
+    Primary expressions are the simplest form of expressions.
+    </para>
+
+    <productionset>
+      <production>
+        <lhs>primary-expression</lhs>
+        <rhs>
+        parenthized-expression    <sbr/>
+        literal-expression        <sbr/>
+        simple-name-expression    <sbr/>
+        member-access-expression  <sbr/>
+        call-expression           <sbr/>
+        element-access-expression <sbr/>
+        self-expression           <sbr/>
+        super-expression          <sbr/>
+        creation-expression
+        </rhs>
+      </production>
+    </productionset>
+
+    <sect2 id="parenthized_expressions">
+      <title>Parenthized Expressions</title>
+
+      <para>
+      A parenthized expression is an expression enclosed in parenthes.
+      </para>
+
+      <productionset>
+        <production>
+          <lhs>parenthized-expression</lhs>
+          <rhs>
+          "(", expression, ")"
+          </rhs>
+        </production>
+      </productionset>
+
+      <para>
+      A parenthized expression is evaluated by evaluating the enclosed
+      expression. If the result of the enclosed expression denotes a type,
+      a module or a function group, a compile-time error occurs. Otherwise,
+      the result of the parenthized expression is the the result of the
+      enclosed expression.
+      </para>
+    </sect2>
+
+    <sect2 id="literal_expressions">
+      <title>Literal Expressions</title>
+
+      <para>
+      A literal expression denotes a constant value.
+      </para>
+
+      <productionset>
+        <production>
+          <lhs>literal-expression</lhs>
+          <rhs>
+          literal
+          </rhs>
+        </production>
+      </productionset>
+
+      <para>
+      The result of a literal expression is the value represented by the
+      literal (<xref linkend="literals"/>).
+      </para>
+    </sect2>
+
+    <sect2 id="simple_name_expressions">
+      <title>Simple Name Expressions</title>
+
+      <para>
+      A simple name expression denotes a module or a declared entity in scope.
+      It consists of a single identifier.
+      </para>
+
+      <productionset>
+        <production>
+          <lhs>simple-name-expression</lhs>
+          <rhs>
+          identifier
+          </rhs>
+        </production>
+      </productionset>
+
+      <para>
+      A simple name expression is evaluated by resolving the simple name of
+      which it consists (<xref linkend="name_resolution"/>). If the result of
+      the name resolution is an instance member, the simple name expression
+      is evaluated as if it were a member access expression of the form
+      <code>self.N</code>, where N is the simple name. Otherwise, the result
+      of the simple name expression is the result of the name resolution.
+      </para>
+    </sect2>
+
+    <sect2 id="member_access_expressions">
+      <title>Member Access Expressions</title>
+
+      <para>
+      A member access expression denotes a member of a type or module. It
+      consists of an operand expression and an identifier, separated by a
+      "." token.
+      </para>
+
+      <productionset>
+        <production>
+          <lhs>member-access-expression</lhs>
+          <rhs>
+          (primary-expression | module-name-expression), ".", identifier
+          </rhs>
+        </production>
+      </productionset>
+
+      <para>
+      A member access expression of the form E.I, where E is an expression and
+      I is an identifier, is evaluated as follows:
+      </para>
+
+      <itemizedlist>
+        <listitem><para>
+        If the result of E denotes a module and I is the name of an accessible
+        member of that module, the result of the member access expression is
+        that member.
+        </para></listitem>
+        <listitem><para>
+        If the result of E denotes a type, a member lookup of I in that type
+        is performed (<xref linkend="member_lookup"/>). If the member lookup
+        produces no result, a compile-time error occurs. If the result of the
+        member lookup is a single instance member, a compile-time error occurs.
+        Otherwise, the result of the member access expression is the result of
+        the member lookup.
+        </para></listitem>
+        <listitem><para>
+        If the result of E denotes a value, a member lookup of I in the type of
+        that value is performed (<xref linkend="member_lookup"/>). If the member
+        lookup produces no result, or if the result of the member lookup is a
+        static member, a compile-time error occurs. Otherwise, the result of
+        the member access expression is the result of the member lookup with
+        the result of E as attached instance.
+        </para></listitem>
+        <listitem><para>
+        If the result of E denotes a variable, the member access expression is
+        evaluated as if E would refer to the value of that variable.
+        </para></listitem>
+        <listitem><para>
+        Otherwise, the member access expression is invalid, and a compile-time
+        error occurs.
+        </para></listitem>        
+      </itemizedlist>
+
+      <sect3 id="module_name_expressions">
+        <title>Module Name Expressions</title>
+
+        <remark>
+        Module names need to be moved to chapter 7, "Names".
+        </remark>
+
+        <para>
+        A module name expression denotes a module. It consists of multiple
+        identifiers separated by the "::" token, possibly with a "public::"
+        prefix.
+        </para>
+
+        <productionset>
+          <production>
+            <lhs>module-name-expression</lhs>
+            <rhs>
+            ["public", "::"], identifier, "::", identifier, {"::", identifier}
+            </rhs>
+          </production>
+        </productionset>
+
+        <para>
+        A module name expression is evaluated by performing the following
+        steps: 
+        </para>
+
+        <orderedlist>
+          <listitem>
+          <para>
+          The meaning of the left-most identifier is determined as follows:
+          </para>
+          <itemizedlist>
+            <listitem><para>
+            If the module name expression is not prefixed with "public" and the
+            identifier is the name of a package contained by the package of the
+            module in which the identifier occurs, the meaning of the identifier
+            is that package.
+            </para></listitem>
+            <listitem><para>
+            Otherwise, if the identifier is the name of a package contained by
+            the public package, the meaning of the identifier is that package.
+            </para></listitem>
+            <listitem><para>
+            Otherwise, the identifier does not refer to a package, and a
+            compile-time error occurs.
+            </para></listitem>
+          </itemizedlist>
+          </listitem>
+          <listitem>
+            <para>
+            For each of the following identifiers except the right-most (if
+            any), determine its meaning as follows:
+            </para>
+            <itemizedlist>
+              <listitem><para>
+              If the identifier is the name of a package contained by the
+              package referred to by the preceding identifier, the meaning of
+              the identifier is that package.
+              </para></listitem>
+              <listitem><para>
+              Otherwise, the module name expression is invalid, and a
+              compile-time error occurs.
+              </para></listitem>
+            </itemizedlist>
+          </listitem>          
+          <listitem>
+          If the right-most identifier is the name of a module in the package
+          referred to by the preceding identifier, the result of the module name
+          expression is that module. Otherwise, a compile-time error occurs.
+          </listitem>
+        </orderedlist>
+
+        <para>
+        A module name expression may only appear as the operand of a member
+        access expression.
+        </para>
+      </sect3>
+    </sect2>
+
+    <sect2 id="call_expressions">
+      <title>Call Expressions</title>
+
+      <para>
+      A call expression is used to call a function.
+      </para>
+
+      <productionset>
+        <production>
+          <lhs>call-expression</lhs>
+          <rhs>
+          primary-expression, "(", [argument-list], ")"
+          </rhs>
+        </production>
+      </productionset>
+
+      <para>
+      The operand of the call expression (the <code>primary-expression</code>
+      preceding the "(" token) must denote a function group or a value of a
+      function type. If the operand refers to a function group, the call
+      expression is said to be a direct call; if the operand refers to a value
+      of a function type, it is an indirect call.
+      </para>
+
+      <para>
+      The argument list enclosed by the parenthes of a call expression are
+      used to provide values for the called function's parameters.
+      </para>
+
+      <para>
+      If the called function has <type>void</type> as it's return type, the
+      result of the call expression is nothing. Otherwise, the result of the
+      call expression is the value returned by the called function.
+      </para>
+
+      <sect3 id="direct_calls">
+        <title>Direct Calls</title>
+
+        <para>
+        An direct call is performed when evaluating a call expression whose
+        operand denotes a function group. At compile time, the function from
+        this group to be called is determined, based on the arguments specified
+        for the call expression.
+        </para>
+
+        <para>
+        The correct function for a call expression <code>F(A)</code>, where F is
+        a function group and A is an optional argument list, is determined by
+        performing the following steps:
+        </para>
+
+        <orderedlist>
+          <listitem><para>
+          From the functions belonging to the function group, all functions
+          applicable to A () are gathered.
+          </para></listitem>
+          <listitem><para>
+          For every method M in the set of functions gathered in the first step,
+          all methods declared in a base type of T are removed, where T is the
+          type in which M is declared. If the resulting set of functions is
+          empty, no function in the function group is applicable to A, and a
+          compile-time error occurs.
+          </para></listitem>
+          <listitem><para>
+          From the set of functions resulting from the second step, the best
+          function with respect to A is determined using the overload resolution
+          rules described in (). If no single best method can be identified,
+          the call is ambiguous, and a compile-time error occurs.
+          </para></listitem>
+          <listitem><para>
+          
+          </para></listitem>
+        </orderedlist>
+      </sect3>
+
+      <sect3 id="indirect_calls">
+        <title>Indirect Calls</title>
+
+        <para>
+        An indirect call is performed when evaluating a call expression whose
+        operand denotes a value of a function type ().
+        </para>
+      </sect3>
+    </sect2>
+  </sect1>
+
+</chapter>

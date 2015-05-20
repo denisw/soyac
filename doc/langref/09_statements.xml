@@ -1,0 +1,39 @@
+<chapter id="statements">
+  <title>Statements</title>
+
+  <para>
+  Statements are used to declare entities () and to produce side effects that
+  control the program's execution.
+  </para>
+
+  <productionset>
+    <production>
+      <lhs>statement</lhs>
+      <rhs>
+      block
+      </rhs>
+    </production>
+  </productionset>
+
+  <sect1 id="blocks">
+    <title>Blocks</title>
+
+    <para>
+    A block is a is a sequence of statements.
+    </para>
+
+    <productionset>
+      <production>
+        <lhs>block</lhs>
+        <rhs>
+        "{", {statement}, "}"
+        </rhs>
+      </production>
+    </productionset>
+
+    <para>
+    A block is executed by executing each of its statements in the order in
+    which they appear within the block (left to right).
+    </para>
+  </sect1>
+</chapter>
