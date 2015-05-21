@@ -1,8 +1,25 @@
+# Binaries
 *.cmake
+*.a
+*.o
+*.so
+a.out
+/soyac
+/test-soyac
+
+# Build system files
+.scons*
 CMakeFiles
 Makefile
 cmake_install.cmake
-*.cpp
 
+# Bison output
+/src/parser/location.hh
+/src/parser/parser.h
+/src/parser/parser.hpp
+/src/parser/parser.cpp
+/src/parser/position.hh
+/src/parser/stack.hh
+
+# Vagrant stuff
 /.vagrant
-/build

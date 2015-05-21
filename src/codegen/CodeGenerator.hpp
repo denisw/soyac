@@ -12,8 +12,7 @@
 #include <stdint.h>
 #include <llvm/Function.h>
 #include <llvm/Module.h>
-#include <llvm/IRBuilder.h>
-#include <llvm/LLVMContext.h>
+#include <llvm/Support/IRBuilder.h>
 #include <ast/NamedEntity.hpp>
 #include <ast/FunctionParameter.hpp>
 #include <ast/NodeList.hpp>
@@ -36,7 +35,7 @@ public:
     /**
      * Creates a CodeGenerator.
      */
-    CodeGenerator(llvm::LLVMContext& context);
+    CodeGenerator();
 
     /**
      * Generates LLVM IR tree matching the passed Soya module and returns the
@@ -355,7 +354,6 @@ protected:
 private:
     friend class LLValueExpression;
 
-    llvm::LLVMContext& mContext;
     llvm::IRBuilder<> mBuilder;
     llvm::Module* mModule;
     llvm::Function* mFunction;
@@ -395,7 +393,7 @@ private:
      * @param type  The Soya type.
      * @return      The matching LLVM type.
      */
-    llvm::Type* lltype(Type* type);
+    const llvm::Type* lltype(Type* type);
 
     /**
      * Returns an LLVM struct type which mirrors the passed class' or
@@ -404,7 +402,7 @@ private:
      * @param type  The type.
      * @return      The corresponding LLVM struct type.
      */
-    llvm::Type* llstructtype(UserDefinedType* type);
+    const llvm::Type* llstructtype(UserDefinedType* type);
 
     /**
      * Returns the LLVM "size type", that is, the LLVM integer type whose
@@ -414,7 +412,7 @@ private:
      *
      * @return  The "size type".
      */
-    llvm::Type* sizeType() const;
+    const llvm::Type* sizeType() const;
 
     /**
      * Returns the default value for the passed type.

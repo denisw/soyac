@@ -45,7 +45,7 @@ public:
      * is stored at the passed location.
      *
      * If the parser encounters an unrecoverable error state and thus cannot
-     * complete the parsing process, null is returned. 
+     * complete the parsing process, null is returned.
      *
      * If any I/O errors occur while reading from the input file, a
      * std::ifstream::failure exception is thrown.
