@@ -33,7 +33,7 @@ class NodeList
 {
 private:
     typename std::list<Link<N>*> mData;
-    typename sigc::signal<void, N*, N*> mChanged;
+    typename sigc::signal<void(N*, N*)> mChanged;
 
     void onTargetChanged(Node* oldTarget, Node* newTarget)
     {
@@ -83,7 +83,7 @@ public:
         bool operator==(const_iterator it)
         {
             return mIterator == it.mIterator;
-        }        
+        }
 
         /**
          * Returns @c true if the iterator does not equal the passed other
@@ -92,7 +92,7 @@ public:
         bool operator!=(const_iterator it)
         {
             return !(*this == it);
-        }        
+        }
 
     private:
         friend class NodeList;
@@ -178,7 +178,7 @@ public:
         Link<N> *l = new Link<N>(n);
 
         l->targetChanged().connect(
-          sigc::mem_fun(this, &NodeList::onTargetChanged));
+          sigc::mem_fun(*this, &NodeList::onTargetChanged));
 
         mData.push_back(l);
         changed()(NULL, n);
@@ -201,7 +201,7 @@ public:
 
                 changed()(n, NULL);
                 delete removed;
-            } 
+            }
             else
                 it++;
         }
@@ -221,7 +221,7 @@ public:
      *
      * @return  The "changed" signal.
      */
-    typename sigc::signal<void, N*, N*>& changed()
+    typename sigc::signal<void(N*, N*)>& changed()
     {
         return mChanged;
     }

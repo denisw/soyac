@@ -81,7 +81,7 @@ public:
      * @param decl  The declaration statement to add.
      */
     void addDeclaration(DeclarationStatement* decl);
-     
+
     /**
      * Returns the "declarationListChanged" signal, which is emitted
      * whenever a declaration statement has been added to, removed from
@@ -89,7 +89,7 @@ public:
      *
      * @see  NodeList::elementChanged()
      */
-    sigc::signal<void, DeclarationStatement*, DeclarationStatement*>&
+    sigc::signal<void(DeclarationStatement*, DeclarationStatement*)>&
     declarationListChanged();
 
 private:

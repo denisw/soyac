@@ -8,13 +8,10 @@
 
 #include <iostream>
 #include <cstdlib>
-#include <llvm/System/Path.h>
-#include <llvm/System/Program.h>
+#include <string>
+#include <llvm/Support/Program.h>
 #include "link.hpp"
 #include "config.hpp"
-
-using llvm::sys::Path;
-using llvm::sys::Program;
 
 namespace soyac {
 namespace driver
@@ -24,15 +21,15 @@ namespace driver
 void
 linkFiles(const std::list<std::string>& objectFiles)
 {
-    Path gcc = Program::FindProgramByName("cc");
+  llvm::ErrorOr<std::string> gcc = llvm::sys::findProgramByName("cc");
 
-    if (!gcc.isValid())
+    if (std::error_code code = gcc.getError())
     {
         std::cerr << config::programName << ": could not find cc" << std::endl;
         std::exit(1);
     }
 
-    std::vector<const char*> args;
+    std::vector<llvm::StringRef> args;
     args.push_back("cc");
 
     for (std::list<std::string>::const_iterator it = objectFiles.begin();
@@ -43,18 +40,10 @@ linkFiles(const std::list<std::string>& objectFiles)
 
     args.push_back("-lsr");
     args.push_back("-lgc");
-
     args.push_back("-o");
     args.push_back(config::outputPath);
 
-    args.push_back(NULL);
-
-    const char** argv = new const char*[args.size()];
-    std::copy(args.begin(), args.end(), argv);
-
-    Program::ExecuteAndWait(gcc, argv);
-    delete [] argv;
+    llvm::sys::ExecuteAndWait(*gcc, args);
 }
-
 
 }}

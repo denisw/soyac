@@ -191,6 +191,8 @@ protected:
     friend class VoidType;
     friend class WhileStatement;
 
+    virtual ~Visitor() {}
+
     /**
      * Visits an ArrayCreationExpression.
      *

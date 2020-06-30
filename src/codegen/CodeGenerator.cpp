@@ -11,10 +11,16 @@
 #include <sstream>
 #include <vector>
 
-#include <llvm/DerivedTypes.h>
-#include <llvm/Instructions.h>
-#include <llvm/IntrinsicInst.h>
-#include <llvm/ValueSymbolTable.h>
+#include <llvm/IR/GlobalVariable.h>
+#include <llvm/IR/DerivedTypes.h>
+#include <llvm/IR/Instructions.h>
+#include <llvm/IR/IntrinsicInst.h>
+#include <llvm/IR/LegacyPassManager.h>
+#include <llvm/IR/ValueSymbolTable.h>
+#include <llvm/Support/raw_ostream.h>
+#include <llvm/Target/TargetMachine.h>
+#include <llvm/Support/TargetRegistry.h>
+#include <llvm/Support/TargetSelect.h>
 
 #include <ast/ast.hpp>
 #include "CodeGenerator.hpp"
@@ -24,13 +30,77 @@ namespace codegen
 {
 
 
-  CodeGenerator::CodeGenerator()
-    : mBuilder(),
-      mEnclosing(NULL),
-      mLValue(false)
+CodeGenerator::CodeGenerator()
+  : mContext(),
+    mBuilder(mContext),
+    mEnclosing(NULL),
+    mLValue(false)
 {
+    llvm::InitializeNativeTarget();
+    llvm::InitializeNativeTargetAsmPrinter();
 }
 
+void
+CodeGenerator::toLLVMAssembly(Module* module,
+                              path destination,
+                              std::error_code& error)
+{
+    llvm::Module* llvmModule = generateCode(module);
+    
+    if (!llvmModule) {
+        return;
+    }
+    
+    llvm::raw_fd_ostream out(destination.string(), error);
+    
+    if (error) {
+        return;
+    }
+    
+    llvmModule->print(out, nullptr);
+}
+
+void
+CodeGenerator::toObjectCode(Module* module,
+                            path destination,
+                            std::error_code& error)
+{
+    llvm::Module* llvmModule = generateCode(module);
+
+    std::string errorCode;
+    auto targetTriple = llvm::sys::getDefaultTargetTriple();
+    auto target = llvm::TargetRegistry::lookupTarget(targetTriple, errorCode);
+    
+    if (!errorCode.empty()) {
+        throw std::runtime_error("Unsupported target");
+    }
+    
+    llvm::TargetOptions options;
+    std::unique_ptr<llvm::TargetMachine> targetMachine{
+            target->createTargetMachine(targetTriple,
+                                        "generic", "",
+                                        options,
+                                        llvm::Reloc::PIC_)
+    };
+    
+    llvm::raw_fd_ostream out(destination.string(), error);
+    
+    if (error) {
+        return;
+    }
+    
+    llvm::legacy::PassManager passManager;
+    targetMachine->addPassesToEmitFile(passManager,
+                                       out,
+                                       nullptr,
+                                       llvm::CodeGenFileType::CGFT_ObjectFile,
+                                       true,
+                                       nullptr);
+    
+    llvmModule->setTargetTriple(targetTriple);
+    llvmModule->setDataLayout(targetMachine->createDataLayout());
+    passManager.run(*llvmModule);
+}
 
 llvm::Module*
 CodeGenerator::generateCode(Module* m)
@@ -124,7 +194,7 @@ CodeGenerator::mangledName(NamedEntity* entity)
             }
             while ((mID = std::strtok(0, ":")) != 0);
 
-            delete modname;
+            delete[] modname;
         }
 
         it++;
@@ -202,44 +272,48 @@ CodeGenerator::mangledSimpleName(const std::string& name)
 }
 
 
-const llvm::Type*
+llvm::Type*
 CodeGenerator::lltype(Type* type)
 {
+
     /*
      * 'bool'
      */
     if (type == TYPE_BOOL)
-        return llvm::Type::Int1Ty;
+        return llvm::Type::getInt1Ty(mContext);
 
     /*
      * 'char'
      */
     else if (type == TYPE_CHAR)
-        return llvm::Type::Int32Ty;
+        return llvm::Type::getInt32Ty(mContext);
 
     /*
      * 'float'
      */
     else if (type == TYPE_FLOAT)
-        return llvm::Type::FloatTy;
+        return llvm::Type::getFloatTy(mContext);
 
     /*
      * 'double'
      */
     else if (type == TYPE_DOUBLE)
-        return llvm::Type::DoubleTy;
+        return llvm::Type::getDoubleTy(mContext);
 
     /*
      * 'void'
      */
     else if (type == TYPE_VOID)
-        return llvm::Type::VoidTy;
+        return llvm::Type::getVoidTy(mContext);
 
     /*
      * Integer Types
      */
     else if (dynamic_cast<IntegerType*>(type) != NULL)
-        return llvm::IntegerType::get(((IntegerType*) type)->size());
+    {
+    	int numBits = ((IntegerType*) type)->size();
+        return llvm::IntegerType::get(mContext, numBits);
+    }
 
     /*
      * Enum Types
@@ -252,15 +326,15 @@ CodeGenerator::lltype(Type* type)
      */
     else if (dynamic_cast<ArrayType*>(type) != NULL)
     {
-        std::vector<const llvm::Type*> memberTypes;
+        std::vector<llvm::Type*> memberTypes;
 
         memberTypes.push_back(sizeType());
         memberTypes.push_back(
           llvm::ArrayType::get(
             lltype(((ArrayType*) type)->elementType()), 0));
 
-        const llvm::Type* arrayStruct =
-          llvm::StructType::get(memberTypes, false);
+        llvm::Type* arrayStruct =
+          llvm::StructType::get(mContext, memberTypes, false);
 
         return llvm::PointerType::getUnqual(arrayStruct);
     }
@@ -271,7 +345,7 @@ CodeGenerator::lltype(Type* type)
     else if (dynamic_cast<FunctionType*>(type) != NULL)
     {
         FunctionType* ftype = (FunctionType*) type;
-        std::vector<const llvm::Type*> params;
+        std::vector<llvm::Type*> params;
 
         for (FunctionType::parameterTypes_iterator it =
                ftype->parameterTypes_begin();
@@ -285,11 +359,11 @@ CodeGenerator::lltype(Type* type)
                                   params,
                                   false);
 
-        std::vector<const llvm::Type*> members;
+        std::vector<llvm::Type*> members;
         members.push_back(llvm::PointerType::getUnqual(llftype));
-        members.push_back(llvm::PointerType::getUnqual(llvm::Type::Int8Ty));
+        members.push_back(llvm::PointerType::getUnqual(llvm::Type::getInt8Ty(mContext)));
 
-        return llvm::StructType::get(members, false);
+        return llvm::StructType::get(mContext, members, false);
     }
 
     /*
@@ -303,7 +377,7 @@ CodeGenerator::lltype(Type* type)
      */
     else if (dynamic_cast<ClassType*>(type) != NULL)
     {
-        const llvm::Type* llvmType =
+        llvm::Type* llvmType =
           mModule->getTypeByName(mangledName(type));
 
         if (llvmType == NULL)
@@ -325,17 +399,17 @@ CodeGenerator::lltype(Type* type)
                 ctype = (ClassType*) ctype->baseClass();
             }
 
-            const llvm::Type* i8 = llvm::Type::Int8Ty;
-            const llvm::Type* i8p = llvm::PointerType::getUnqual(i8);
+            llvm::Type* i8 = llvm::Type::getInt8Ty(mContext);
+            llvm::Type* i8p = llvm::PointerType::getUnqual(i8);
 
-            const llvm::Type* refType =
+            llvm::Type* refType =
               llvm::PointerType::getUnqual(
                 llvm::ArrayType::get(i8p, numClasses));
 
-            const llvm::StructType* wrapperStruct =
+            llvm::StructType* wrapperStruct =
               llvm::StructType::get(refType);
 
-            mModule->addTypeName(mangledName(type), wrapperStruct);
+            wrapperStruct->setName(mangledName(type));
             llvmType = wrapperStruct;
         }
 
@@ -350,7 +424,7 @@ CodeGenerator::lltype(Type* type)
 }
 
 
-const llvm::Type*
+llvm::Type*
 CodeGenerator::llstructtype(UserDefinedType* type)
 {
     std::string name;
@@ -360,12 +434,12 @@ CodeGenerator::llstructtype(UserDefinedType* type)
     else
         name = mangledName(type);
 
-    const llvm::Type* llvmType = mModule->getTypeByName(name);
+    llvm::Type* llvmType = mModule->getTypeByName(name);
 
     if (llvmType == NULL)
     {
         UserDefinedType* utype = (UserDefinedType*) type;
-        std::vector<const llvm::Type*> memberTypes;
+        std::vector<llvm::Type*> memberTypes;
 
         for (DeclarationBlock::declarations_iterator it =
                utype->body()->declarations_begin();
@@ -378,18 +452,18 @@ CodeGenerator::llstructtype(UserDefinedType* type)
                 memberTypes.push_back(lltype(var->type()));
         }
 
-        llvmType = llvm::StructType::get(memberTypes);
+        llvmType = llvm::StructType::create(memberTypes);
     }
 
     return llvmType;
 }
 
 
-const llvm::Type*
-CodeGenerator::sizeType() const
+llvm::Type*
+CodeGenerator::sizeType()
 {
     // FIXME: 64-bit awareness!
-    return llvm::Type::Int32Ty;
+    return llvm::Type::getInt32Ty(mContext);
 }
 
 
@@ -400,7 +474,7 @@ CodeGenerator::defaultValue(Type* type)
      * 'bool'
      */
     if (type == TYPE_BOOL)
-        return llvm::ConstantInt::getFalse();
+        return llvm::ConstantInt::getFalse(mContext);
 
     /*
      * 'char'
@@ -434,7 +508,7 @@ CodeGenerator::defaultValue(Type* type)
              dynamic_cast<ClassType*>(type) != NULL)
     {
         return llvm::ConstantPointerNull::get(
-          (const llvm::PointerType*) lltype(type));
+          (llvm::PointerType*) lltype(type));
     }
 
     /*
@@ -462,7 +536,7 @@ CodeGenerator::llfunction(Function* func)
 
     if (llfunc == NULL)
     {
-        std::vector<const llvm::Type*> params;
+        std::vector<llvm::Type*> params;
         Type* enclosingType;
 
         /*
@@ -483,7 +557,7 @@ CodeGenerator::llfunction(Function* func)
          */
         if (enclosingType != NULL)
         {
-            const llvm::Type* thisType;
+            llvm::Type* thisType;
 
             if (dynamic_cast<StructType*>(enclosingType) != NULL)
             {
@@ -504,7 +578,7 @@ CodeGenerator::llfunction(Function* func)
             params.push_back(lltype((*it)->type()));
         }
 
-        const llvm::FunctionType* llftype =
+        llvm::FunctionType* llftype =
           llvm::FunctionType::get(lltype(func->returnType()),
                                   params,
                                   false);
@@ -548,8 +622,8 @@ CodeGenerator::llinitializer(UserDefinedType* type)
 
     if (llfunc == NULL)
     {
-        std::vector<const llvm::Type*> params;
-        const llvm::Type* thisType;
+        std::vector<llvm::Type*> params;
+        llvm::Type* thisType;
 
         if (dynamic_cast<StructType*>(type) != NULL)
         {
@@ -562,7 +636,7 @@ CodeGenerator::llinitializer(UserDefinedType* type)
         params.push_back(thisType);
 
         llvm::FunctionType* llftype =
-          llvm::FunctionType::get(llvm::Type::VoidTy,
+          llvm::FunctionType::get(llvm::Type::getVoidTy(mContext),
                                   params,
                                   false);
 
@@ -588,7 +662,7 @@ CodeGenerator::llallocator(ClassType* type)
 
     if (llfunc == NULL)
     {
-        std::vector<const llvm::Type*> params;
+        std::vector<llvm::Type*> params;
 
         llvm::FunctionType* llftype =
           llvm::FunctionType::get(lltype(type),
@@ -624,8 +698,7 @@ CodeGenerator::classPrivate(llvm::Value* instance,
     indices.push_back(llvm::ConstantInt::get(sizeType(), 0, false));
     indices.push_back(llvm::ConstantInt::get(sizeType(), classIndex, false));
 
-    llvm::Value* ret =
-      mBuilder.CreateGEP(instance, indices.begin(), indices.end());
+    llvm::Value* ret = mBuilder.CreateGEP(instance, indices);
 
     ret =
       mBuilder.CreateBitCast(
@@ -647,7 +720,7 @@ CodeGenerator::createInitializer(UserDefinedType* type)
     mFunction = llinitializer(type);
 
     llvm::BasicBlock* tmpBlock = mBuilder.GetInsertBlock();
-    mBuilder.SetInsertPoint(llvm::BasicBlock::Create("", mFunction));
+    mBuilder.SetInsertPoint(llvm::BasicBlock::Create(mContext, "", mFunction));
 
     if (dynamic_cast<ClassType*>(type) != NULL)
     {
@@ -957,8 +1030,7 @@ CodeGenerator::createBuiltInMethodCall(Expression* operand,
             indices.push_back(llvm::ConstantInt::get(sizeType(), 1, false));
             indices.push_back(rh);
 
-            llvm::Value* address =
-              mBuilder.CreateGEP(lh, indices.begin(), indices.end());
+            llvm::Value* address = mBuilder.CreateGEP(lh, indices);
 
             return mBuilder.CreateLoad(address);
         }
@@ -969,8 +1041,7 @@ CodeGenerator::createBuiltInMethodCall(Expression* operand,
             indices.push_back(llvm::ConstantInt::get(sizeType(), 1, false));
             indices.push_back(rh);
 
-            llvm::Value* address =
-              mBuilder.CreateGEP(lh, indices.begin(), indices.end());
+            llvm::Value* address = mBuilder.CreateGEP(lh, indices);
 
             Type* elemType = ((ArrayType*) operand->type())->elementType();
 
@@ -1017,7 +1088,7 @@ CodeGenerator::createBuiltInPropertyCall(Expression* operand,
         {
             llvm::Value* lengthField = mBuilder.CreateStructGEP(op, 0);
             llvm::Value* length = mBuilder.CreateLoad(lengthField);
-            return mBuilder.CreateZExt(length, llvm::IntegerType::Int64Ty);
+            return mBuilder.CreateZExt(length, llvm::IntegerType::getInt64Ty(mContext));
         }
     }
 
@@ -1026,25 +1097,25 @@ CodeGenerator::createBuiltInPropertyCall(Expression* operand,
 
 
 llvm::Value*
-CodeGenerator::createSizeof(const llvm::Type* type)
+CodeGenerator::createSizeof(llvm::Type* type)
 {
-    const llvm::PointerType* ptrType = llvm::PointerType::getUnqual(type);
+    llvm::PointerType* ptrType = llvm::PointerType::getUnqual(type);
 
     llvm::Value* tmp =
       mBuilder.CreateGEP(llvm::ConstantPointerNull::get(ptrType),
-                         llvm::ConstantInt::get(llvm::IntegerType::Int32Ty,
+                         llvm::ConstantInt::get(llvm::IntegerType::getInt32Ty(mContext),
                                                 1, false));
 
     // FIXME: No 64-bit awareness!
-    return mBuilder.CreatePtrToInt(tmp, llvm::IntegerType::Int32Ty);
+    return mBuilder.CreatePtrToInt(tmp, llvm::IntegerType::getInt32Ty(mContext));
 }
 
 
 llvm::Value*
 CodeGenerator::createGCMalloc(llvm::Value* size)
 {
-    const llvm::Type* i8p =
-      llvm::PointerType::getUnqual(llvm::IntegerType::Int8Ty);
+    llvm::Type* i8p =
+      llvm::PointerType::getUnqual(llvm::IntegerType::getInt8Ty(mContext));
 
     std::vector<llvm::Value*> args;
     args.push_back(size);
@@ -1053,7 +1124,7 @@ CodeGenerator::createGCMalloc(llvm::Value* size)
 
     if (gcMalloc == NULL)
     {
-        std::vector<const llvm::Type*> params;
+        std::vector<llvm::Type*> params;
         params.push_back(sizeType());
 
 
@@ -1066,12 +1137,12 @@ CodeGenerator::createGCMalloc(llvm::Value* size)
                                           mModule);
     }
 
-    return mBuilder.CreateCall(gcMalloc, args.begin(), args.end());
+    return mBuilder.CreateCall(gcMalloc, args);
 }
 
 
 llvm::Value*
-CodeGenerator::createGCMalloc(const llvm::Type* type, llvm::Value* n)
+CodeGenerator::createGCMalloc(llvm::Type* type, llvm::Value* n)
 {
     llvm::Value* size = createSizeof(type);
 
@@ -1090,23 +1161,23 @@ CodeGenerator::createGCMalloc(const llvm::Type* type, llvm::Value* n)
 void*
 CodeGenerator::visitModule(soyac::ast::Module* m)
 {
-    mModule = new llvm::Module(m->name().str());
+    mModule = new llvm::Module(m->name().str(), mContext);
 
     std::string initFuncName;
-    std::vector<const llvm::Type*> params;
+    std::vector<llvm::Type*> params;
     llvm::FunctionType* initFuncType;
 
     if (m == Module::getProgram())
     {
         initFuncName = "main";
-        initFuncType = llvm::FunctionType::get(llvm::Type::Int32Ty,
+        initFuncType = llvm::FunctionType::get(llvm::Type::getInt32Ty(mContext),
                                                params,
                                                false);
     }
     else
     {
         initFuncName = mangledName(m) + "_init";
-        initFuncType = llvm::FunctionType::get(llvm::Type::VoidTy,
+        initFuncType = llvm::FunctionType::get(llvm::Type::getVoidTy(mContext),
                                                params,
                                                false);
     }
@@ -1117,7 +1188,7 @@ CodeGenerator::visitModule(soyac::ast::Module* m)
                              initFuncName,
                              mModule);
 
-    llvm::BasicBlock* body = llvm::BasicBlock::Create("", mFunction);
+    llvm::BasicBlock* body = llvm::BasicBlock::Create(mContext, "", mFunction);
     mBuilder.SetInsertPoint(body);
 
     m->body()->visit(this);
@@ -1125,7 +1196,7 @@ CodeGenerator::visitModule(soyac::ast::Module* m)
     mBuilder.SetInsertPoint(&mFunction->back());
 
     if (m == Module::getProgram())
-        mBuilder.CreateRet(llvm::ConstantInt::get(llvm::Type::Int32Ty, 0, true));
+        mBuilder.CreateRet(llvm::ConstantInt::get(llvm::Type::getInt32Ty(mContext), 0, true));
     else
         mBuilder.CreateRetVoid();
 
@@ -1163,7 +1234,7 @@ CodeGenerator::visitDoStatement(DoStatement* stmt)
     llvm::BasicBlock* start;
     llvm::BasicBlock* end;
 
-    start = llvm::BasicBlock::Create("", mFunction);
+    start = llvm::BasicBlock::Create(mContext, "", mFunction);
     mBuilder.CreateBr(start);
 
     mBuilder.SetInsertPoint(start);
@@ -1171,7 +1242,7 @@ CodeGenerator::visitDoStatement(DoStatement* stmt)
 
     llvm::Value* cond = (llvm::Value*) stmt->condition()->visit(this);
 
-    end = llvm::BasicBlock::Create("", mFunction);
+    end = llvm::BasicBlock::Create(mContext, "", mFunction);
     mBuilder.CreateCondBr(cond, start, end);
     mBuilder.SetInsertPoint(end);
 
@@ -1200,13 +1271,13 @@ CodeGenerator::visitForStatement(ForStatement* stmt)
         (*it)->visit(this);
     }
 
-    start = llvm::BasicBlock::Create("", mFunction);
+    start = llvm::BasicBlock::Create(mContext, "", mFunction);
     mBuilder.CreateBr(start);
 
     mBuilder.SetInsertPoint(start);
     llvm::Value* cond = (llvm::Value*) stmt->condition()->visit(this);
 
-    loop = llvm::BasicBlock::Create("", mFunction);
+    loop = llvm::BasicBlock::Create(mContext, "", mFunction);
     mBuilder.SetInsertPoint(loop);
 
     stmt->body()->visit(this);
@@ -1219,7 +1290,7 @@ CodeGenerator::visitForStatement(ForStatement* stmt)
 
     mBuilder.CreateBr(start);
 
-    end = llvm::BasicBlock::Create("", mFunction);
+    end = llvm::BasicBlock::Create(mContext, "", mFunction);
 
     mBuilder.SetInsertPoint(start);
     mBuilder.CreateCondBr(cond, loop, end);
@@ -1234,8 +1305,8 @@ CodeGenerator::visitIfStatement(IfStatement* stmt)
 {
     llvm::Value* cond = (llvm::Value*) stmt->condition()->visit(this);
 
-    llvm::BasicBlock* ifTrue = llvm::BasicBlock::Create("", mFunction);
-    llvm::BasicBlock* ifFalse = llvm::BasicBlock::Create("", mFunction);
+    llvm::BasicBlock* ifTrue = llvm::BasicBlock::Create(mContext, "", mFunction);
+    llvm::BasicBlock* ifFalse = llvm::BasicBlock::Create(mContext, "", mFunction);
 
     mBuilder.CreateCondBr(cond, ifTrue, ifFalse);
 
@@ -1244,7 +1315,7 @@ CodeGenerator::visitIfStatement(IfStatement* stmt)
 
     if (stmt->elseBody() != NULL)
     {
-        llvm::BasicBlock* ifEnd = llvm::BasicBlock::Create("", mFunction);
+        llvm::BasicBlock* ifEnd = llvm::BasicBlock::Create(mContext, "", mFunction);
         mBuilder.CreateBr(ifEnd);
 
         mBuilder.SetInsertPoint(ifFalse);
@@ -1286,18 +1357,18 @@ CodeGenerator::visitWhileStatement(WhileStatement* stmt)
     llvm::BasicBlock* loop;
     llvm::BasicBlock* end;
 
-    start = llvm::BasicBlock::Create("", mFunction);
+    start = llvm::BasicBlock::Create(mContext, "", mFunction);
     mBuilder.CreateBr(start);
 
     mBuilder.SetInsertPoint(start);
     llvm::Value* cond = (llvm::Value*) stmt->condition()->visit(this);
 
-    loop = llvm::BasicBlock::Create("", mFunction);
+    loop = llvm::BasicBlock::Create(mContext, "", mFunction);
     mBuilder.SetInsertPoint(loop);
     stmt->body()->visit(this);
     mBuilder.CreateBr(start);
 
-    end = llvm::BasicBlock::Create("", mFunction);
+    end = llvm::BasicBlock::Create(mContext, "", mFunction);
 
     mBuilder.SetInsertPoint(start);
     mBuilder.CreateCondBr(cond, loop, end);
@@ -1325,7 +1396,7 @@ CodeGenerator::visitClassType(ClassType* type)
     llvm::Function* tmpFunction = mFunction;
     mFunction = llallocator(type);
 
-    llvm::BasicBlock* body = llvm::BasicBlock::Create("", mFunction);
+    llvm::BasicBlock* body = llvm::BasicBlock::Create(mContext, "", mFunction);
     llvm::BasicBlock* tmpBlock = mBuilder.GetInsertBlock();
     mBuilder.SetInsertPoint(body);
 
@@ -1415,7 +1486,7 @@ CodeGenerator::visitConstructor(Constructor* cons)
 
     mBuilder.CreateCall(
       llinitializer((UserDefinedType*) cons->parent()),
-      args.begin(), args.end());
+      args);
 
     mBuilder.SetInsertPoint(tmpBlock);
     mFunction = tmpFunction;
@@ -1438,7 +1509,7 @@ CodeGenerator::visitFunction(Function* func)
 
     if (func->body() != NULL)
     {
-        llvm::BasicBlock* body = llvm::BasicBlock::Create("", mFunction);
+        llvm::BasicBlock* body = llvm::BasicBlock::Create(mContext, "", mFunction);
 
         llvm::BasicBlock* tmp = mBuilder.GetInsertBlock();
         mBuilder.SetInsertPoint(body);
@@ -1522,12 +1593,12 @@ CodeGenerator::visitVariable(Variable* var)
 
     if (mFunction == mInitFunction)
     {
-        v = new llvm::GlobalVariable(lltype(var->type()),
+        v = new llvm::GlobalVariable(*mModule,
+        		                     lltype(var->type()),
                                      false,
                                      llvm::GlobalVariable::ExternalLinkage,
                                      defaultValue(var->type()),
-                                     mangledName(var),
-                                     mModule);
+                                     mangledName(var));
     }
     else
     {
@@ -1617,8 +1688,7 @@ CodeGenerator::visitArrayCreationExpression(ArrayCreationExpression* expr)
         indices.push_back(llvm::ConstantInt::get(sizeType(), 0, false));
         indices.push_back(llvm::ConstantInt::get(sizeType(), index, false));
 
-        llvm::Value* elemLH =
-          mBuilder.CreateGEP(dataField, indices.begin(), indices.end());
+        llvm::Value* elemLH = mBuilder.CreateGEP(dataField, indices);
 
         Expression* lh = new LLValueExpression(type->elementType(), elemLH);
         Expression* rh = new LLValueExpression(type->elementType(),
@@ -1650,9 +1720,9 @@ void*
 CodeGenerator::visitBooleanLiteral(BooleanLiteral* lit)
 {
     if (lit->value() == true)
-        return llvm::ConstantInt::getTrue();
+        return llvm::ConstantInt::getTrue(mContext);
     else
-        return llvm::ConstantInt::getFalse();
+        return llvm::ConstantInt::getFalse(mContext);
 }
 
 
@@ -1723,12 +1793,12 @@ CodeGenerator::visitCallExpression(CallExpression* expr)
           (const llvm::FunctionType*)
             ((llvm::PointerType*) fptr->getType())->getElementType();
 
-        const llvm::Type* rtype =
+        llvm::Type* rtype =
           ftype->getReturnType();
-        const llvm::Type* i8p =
-          llvm::PointerType::getUnqual(llvm::IntegerType::Int8Ty);
+        llvm::Type* i8p =
+          llvm::PointerType::getUnqual(llvm::IntegerType::getInt8Ty(mContext));
 
-        std::vector<const llvm::Type*> params(
+        std::vector<llvm::Type*> params(
           ftype->param_begin(),
           ftype->param_end());
 
@@ -1740,26 +1810,26 @@ CodeGenerator::visitCallExpression(CallExpression* expr)
             llvm::PointerType::getUnqual(
               llvm::FunctionType::get(rtype, params, false)));
 
-        llvm::BasicBlock* withEnv = llvm::BasicBlock::Create("", mFunction);
-        llvm::BasicBlock* withoutEnv = llvm::BasicBlock::Create("", mFunction);
-        llvm::BasicBlock* end = llvm::BasicBlock::Create("", mFunction);
+        llvm::BasicBlock* withEnv = llvm::BasicBlock::Create(mContext, "", mFunction);
+        llvm::BasicBlock* withoutEnv = llvm::BasicBlock::Create(mContext, "", mFunction);
+        llvm::BasicBlock* end = llvm::BasicBlock::Create(mContext, "", mFunction);
 
         llvm::Value* envNull = mBuilder.CreateIsNull(env);
         mBuilder.CreateCondBr(envNull, withoutEnv, withEnv);
 
         mBuilder.SetInsertPoint(withoutEnv);
-        llvm::Value* ret1 = mBuilder.CreateCall(fptr, args.begin(), args.end());
+        llvm::Value* ret1 = mBuilder.CreateCall(fptr, args);
         mBuilder.CreateBr(end);
 
         mBuilder.SetInsertPoint(withEnv);
         args.insert(args.begin(), mBuilder.CreateBitCast(env, i8p));
         llvm::Value* ret2 =
-          mBuilder.CreateCall(fptrEnv, args.begin(), args.end());
+          mBuilder.CreateCall(fptrEnv, args);
         mBuilder.CreateBr(end);
 
         mBuilder.SetInsertPoint(end);
 
-        llvm::PHINode* phi = mBuilder.CreatePHI(rtype);
+        llvm::PHINode* phi = mBuilder.CreatePHI(rtype, 2);
         phi->addIncoming(ret1, withoutEnv);
         phi->addIncoming(ret2, withEnv);
 
@@ -1804,7 +1874,7 @@ CodeGenerator::visitCallExpression(CallExpression* expr)
                 instanceVal =
                   (llvm::Value*) instanceFunc->instance()->visit(this);
 
-                const llvm::Type* instanceType =
+                llvm::Type* instanceType =
                   ((llvm::Function*) callee)->getFunctionType()->getParamType(0);
 
                 if (instanceVal->getType() != instanceType)
@@ -1814,7 +1884,7 @@ CodeGenerator::visitCallExpression(CallExpression* expr)
             args.insert(args.begin(), instanceVal);
         }
 
-        return mBuilder.CreateCall(callee, args.begin(), args.end());
+        return mBuilder.CreateCall(callee, args);
     }
 }
 
@@ -1823,7 +1893,7 @@ void*
 CodeGenerator::visitCastExpression(CastExpression* expr)
 {
     llvm::Value* op = (llvm::Value*) expr->operand()->visit(this);
-    const llvm::Type* ctype = lltype(expr->type());
+    llvm::Type* ctype = lltype(expr->type());
 
     /*
      * If the internal representation of the source and destination type
@@ -1857,8 +1927,8 @@ CodeGenerator::visitCastExpression(CastExpression* expr)
         /*
          * Integer => Floating-Point
          */
-        else if (op->getType() == llvm::Type::FloatTy ||
-                 op->getType() == llvm::Type::DoubleTy)
+        else if (op->getType() == llvm::Type::getFloatTy(mContext) ||
+                 op->getType() == llvm::Type::getDoubleTy(mContext))
         {
             if (((IntegerType*) expr->type())->isSigned())
                 return mBuilder.CreateFPToSI(op, ctype);
@@ -1868,19 +1938,19 @@ CodeGenerator::visitCastExpression(CastExpression* expr)
         }
     }
 
-    else if (ctype == llvm::Type::FloatTy ||
-             ctype == llvm::Type::DoubleTy)
+    else if (ctype == llvm::Type::getFloatTy(mContext) ||
+             ctype == llvm::Type::getDoubleTy(mContext))
     {
         /*
          * 'double' => 'float'
          */
-        if (op->getType() == llvm::Type::FloatTy)
+        if (op->getType() == llvm::Type::getFloatTy(mContext))
             return mBuilder.CreateFPExt(op, ctype);
 
         /*
          * 'float' => 'double'
          */
-        else if (op->getType() == llvm::Type::DoubleTy)
+        else if (op->getType() == llvm::Type::getDoubleTy(mContext))
             return mBuilder.CreateFPTrunc(op, ctype);
 
         /*
@@ -1908,7 +1978,7 @@ CodeGenerator::visitCastExpression(CastExpression* expr)
 void*
 CodeGenerator::visitCharacterLiteral(CharacterLiteral* lit)
 {
-    return llvm::ConstantInt::get(llvm::IntegerType::Int32Ty,
+    return llvm::ConstantInt::get(llvm::IntegerType::getInt32Ty(mContext),
                                   lit->value(),
                                   false);
 }
@@ -2043,7 +2113,7 @@ CodeGenerator::visitFunctionExpression(FunctionExpression* expr)
     llvm::Value* env =
       llvm::ConstantPointerNull::get(
         llvm::PointerType::getUnqual(
-          llvm::IntegerType::Int8Ty));
+          llvm::IntegerType::getInt8Ty(mContext)));
 
     mBuilder.CreateStore(fptr, fptrField);
     mBuilder.CreateStore(env, envField);
@@ -2056,14 +2126,14 @@ void*
 CodeGenerator::visitFunctionParameterExpression(
     FunctionParameterExpression* expr)
 {
-    return mFunction->getValueSymbolTable().lookup(mangledName(expr->target()));
+    return mFunction->getValueSymbolTable()->lookup(mangledName(expr->target()));
 }
 
 
 void*
 CodeGenerator::visitInstanceFunctionExpression(InstanceFunctionExpression* expr)
 {
-    const llvm::Type* funcType = lltype(expr->type());
+    llvm::Type* funcType = lltype(expr->type());
     llvm::Value* funcVal = mBuilder.CreateAlloca(funcType);
 
     llvm::Value* fptrField = mBuilder.CreateStructGEP(funcVal, 0);
@@ -2084,7 +2154,7 @@ CodeGenerator::visitInstanceFunctionExpression(InstanceFunctionExpression* expr)
     llvm::Value* env =
       mBuilder.CreateBitCast(
         (llvm::Value*) expr->instance()->visit(this),
-        llvm::PointerType::getUnqual(llvm::IntegerType::Int8Ty));
+        llvm::PointerType::getUnqual(llvm::IntegerType::getInt8Ty(mContext)));
     mLValue = false;
 
     mBuilder.CreateStore(fptrCast, fptrField);
@@ -2173,8 +2243,8 @@ CodeGenerator::visitLogicalExpression(LogicalExpression* expr)
 
     llvm::BasicBlock* previous = mBuilder.GetInsertBlock();
 
-    llvm::BasicBlock* rhNeeded = llvm::BasicBlock::Create("", mFunction);
-    llvm::BasicBlock* end = llvm::BasicBlock::Create("", mFunction);
+    llvm::BasicBlock* rhNeeded = llvm::BasicBlock::Create(mContext, "", mFunction);
+    llvm::BasicBlock* end = llvm::BasicBlock::Create(mContext, "", mFunction);
 
     if (expr->kind() == LogicalExpression::AND)
         mBuilder.CreateCondBr(lh, rhNeeded, end);
@@ -2187,7 +2257,7 @@ CodeGenerator::visitLogicalExpression(LogicalExpression* expr)
 
     mBuilder.SetInsertPoint(end);
 
-    llvm::PHINode* phi = mBuilder.CreatePHI(lh->getType());
+    llvm::PHINode* phi = mBuilder.CreatePHI(lh->getType(), 2);
     phi->addIncoming(lh, previous);
     phi->addIncoming(rh, rhNeeded);
 
@@ -2216,7 +2286,7 @@ CodeGenerator::visitLogicalNotExpression(LogicalNotExpression* expr)
     }
 
     llvm::Value* op = (llvm::Value*) expr->operand()->visit(this);
-    return mBuilder.CreateXor(op, llvm::ConstantInt::getTrue());
+    return mBuilder.CreateXor(op, llvm::ConstantInt::getTrue(mContext));
 }
 
 
@@ -2253,7 +2323,7 @@ CodeGenerator::visitObjectCreationExpression(ObjectCreationExpression* expr)
             args.push_back((llvm::Value*) (*it)->visit(this));
         }
 
-        mBuilder.CreateCall(constructorFunc, args.begin(), args.end());
+        mBuilder.CreateCall(constructorFunc, args);
 
         if (dynamic_cast<StructType*>(expr->type()) != NULL &&
             !mLValue)
@@ -2274,7 +2344,7 @@ CodeGenerator::visitObjectCreationExpression(ObjectCreationExpression* expr)
 void*
 CodeGenerator::visitThisExpression(ThisExpression* expr)
 {
-    return mFunction->getValueSymbolTable().lookup("this");
+    return mFunction->getValueSymbolTable()->lookup("this");
 }
 
 
@@ -2282,7 +2352,7 @@ void*
 CodeGenerator::visitVariableExpression(VariableExpression* expr)
 {
     std::string name = mangledName(expr->target());
-    llvm::Value* ret = mFunction->getValueSymbolTable().lookup(name);
+    llvm::Value* ret = mFunction->getValueSymbolTable()->lookup(name);
 
     if (ret == NULL)
         ret = mModule->getGlobalVariable(name);

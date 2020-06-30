@@ -13,12 +13,12 @@
 #include "Expression.hpp"
 #include "NodeList.hpp"
 #include "Type.hpp"
+#include "UnknownType.hpp"
 
 namespace soyac {
 namespace ast
 {
 
-class UnknownType;
 
 /**
  * Represents an expression creating an object of a to-be-determined

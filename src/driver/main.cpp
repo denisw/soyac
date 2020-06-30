@@ -9,9 +9,14 @@
 #include <algorithm>
 #include <cerrno>
 #include <cstring>
+#include <filesystem>
 #include <iostream>
 #include <string>
-#include <popt.h>
+#include <vector>
+
+#include <boost/program_options.hpp>
+#include <llvm/Support/TargetRegistry.h>
+#include <llvm/Support/TargetSelect.h>
 
 #include <analysis/ModulesRequiredException.hpp>
 #include "config.hpp"
@@ -20,6 +25,8 @@
 #include "ProblemReport.hpp"
 
 #define SOYAC_VERSION  "0.1"
+
+namespace po = boost::program_options;
 
 using namespace soyac;
 using namespace soyac::driver;
@@ -38,77 +45,71 @@ static std::list<std::string> sObjectFiles;
  * @param argv  The argument vector.
  * @return      The input files.
  */
-static std::list<std::string>
+static std::vector<std::string>
 parse_command_line(int argc, const char** argv)
 {
-    struct poptOption options[] = {
-        {"emit-llvm", '\0',
-         POPT_ARG_NONE | POPT_ARGFLAG_ONEDASH,
-         &config::emitLLVM, 0,
-         "Compile to LLVM assembly only, do not assemble or link"},
+    po::options_description desc(
+        "Compiler for the Soya toy programming language");
 
-        {NULL, 'c',
-         POPT_ARG_NONE,
-         &config::compileOnly, 0,
-         "Compile and assemble only, do not link"},
+    desc.add_options()
+    (
+        "help",
+        "Show this help message and exit"
+    )(
+        "emit-llvm",
+        "Compile to LLVM assembly only, do not assemble or link"
+    )(
+        "compile-only,c",
+        "Compile and assemble only, do not link"
+    )(
+        "include,I",
+        po::value<std::vector<std::string>>(),
+         "Add <directory> to the interface file search path"
+    )(
+        "o",
+        po::value<std::string>(),
+         "Output the linked binary to <file>"
+    )(
+        "s",
+        po::value<std::vector<std::string>>(),
+        "Add <directory> to the source file search path"
+    )(
+        "S",
+        "Compile to native assembly only, do not assemble or link"
+    )(
+        "input-file",
+        po::value<std::vector<std::string>>(),
+        "Input files"
+    );
 
-        {NULL, 'I',
-         POPT_ARG_ARGV,
-         &config::interfacePaths, 0,
-         "Add <directory> to the interface file search path",
-         "<directory>"},
+    po::positional_options_description p;
+    p.add("input-file", -1);
 
-        {NULL, 'o',
-         POPT_ARG_STRING,
-         &config::outputPath, 0,
-         "Output the linked binary to <file>",
-         "<file>"},
+    po::variables_map vars;
+    po::command_line_parser parser(argc, argv);
+    po::store(parser.options(desc).positional(p).run(), vars);
+    po::notify(vars);
 
-        {NULL, 's',
-         POPT_ARG_ARGV,
-         &config::sourcePaths, 0,
-         "Add <directory> to the source file search path",
-         "<directory>"},
-
-        {NULL, 'S',
-         POPT_ARG_NONE,
-         &config::emitAssembly, 0,
-         "Compile to native assembly only, do not assemble or link"},
-
-        POPT_AUTOHELP
-        {0, 0, 0, 0, 0}
-    };
-
-    poptContext context = poptGetContext(0, argc, argv, options, 0);
-    int rc;
-
-    /*
-     * Parse the options specified on the command line, and exit with an
-     * error message if any errors are encountered.
-     */
-    while ((rc = poptGetNextOpt(context)) != -1)
-    {
-        if (rc < 0)
-        {
-            std::cerr << config::programName << ": " <<
-                         poptBadOption(context, 0) << ": " <<
-                         poptStrerror(rc) << std::endl;
-            std::exit(1);
-        }
+    if (vars.count("help")) {
+        std::cout << desc << "\n";
+        return {};
     }
 
-    /*
-     * Read all input files from the command line and return them.
-     */
+    if (vars.count("emit-llvm")) {
+        config::emitLLVM = true;
+    }
 
-    std::list<std::string> inputFiles;
-    const char* f;
+    // config::emitLLVM = vars["emit-llvm"].as<bool>();
+    // config::compileOnly = vars["compile-only"].as<bool>();
+    // config::interfacePaths = vars["include"].as<std::vector<std::string>>();
+    // config::outputPath = vars["o"].as<std::string>();
+    // config::sourcePaths = vars["s"].as<std::vector<std::string>>();
+    // config::emitAssembly = vars["S"].as<bool>();
 
-    while ((f = poptGetArg(context)) != 0)
-        inputFiles.push_back(std::string(f));
-
-    poptFreeContext(context);
-    return inputFiles;
+    if (vars.count("input-file"))
+        return vars["input-file"].as<std::vector<std::string>>();
+    else
+        return {};
 }
 
 
@@ -133,69 +134,62 @@ find_module(const std::string& moduleName)
     std::string modulePath = moduleName;
     std::replace(modulePath.begin(), modulePath.end(), ':', '/');
 
-
     /*
      * First, search for the module in the current working directory. We
      * look for a source file first and, if we don't find any, for an
      * interface file.
      */
 
-    llvm::sys::Path filePath;
-    filePath.set(modulePath + ".soya");
+    std::filesystem::path filePath(modulePath);
 
-    if (filePath.exists())
-        return filePath.toString();
+    filePath.replace_extension(".soya");
+    if (std::filesystem::exists(filePath))
+        return filePath.string();
 
-    filePath.set(modulePath + ".soyi");
-
-    if (filePath.exists())
-        return filePath.toString();
+    filePath.replace_extension(".soyi");
+    if (std::filesystem::exists(filePath))
+        return filePath.string();
 
     /*
      * If we couldn't find the module in the current working directory, search
      * for it in the source file search path (if specified).
      */
-    if (config::sourcePaths != NULL)
+    for (std::string p : config::sourcePaths)
     {
-        for (const char** p = config::sourcePaths; *p; p++)
-        {
-            filePath.set(std::string(*p) + '/' + modulePath + ".soya");
+        filePath = (std::filesystem::path(p)) / modulePath;
 
-            if (filePath.exists())
-                return filePath.toString();
+        filePath.replace_extension(".soya");
+        if (std::filesystem::exists(filePath))
+            return filePath.string();
 
-            filePath.set(std::string(*p) + '/' + modulePath + ".soyi");
-
-            if (filePath.exists())
-                return filePath.toString();
-        }
+        filePath.replace_extension(".soyi");
+        if (std::filesystem::exists(filePath))
+            return filePath.string();
     }
 
     /*
      * If the module couldn't be found in the source file search path either,
      * we look for it in the interface file search path (if specified).
      */
-    if (config::interfacePaths != NULL)
+    for (std::string p : config::interfacePaths)
     {
-        for (const char** p = config::interfacePaths; *p; p++)
-        {
-            filePath.set(std::string(*p) + '/' + modulePath + ".soyi");
+        filePath = (std::filesystem::path(p)) / modulePath;
 
-            if (filePath.exists())
-                return filePath.toString();
-        }
+        filePath.replace_extension(".soyi");
+        if (std::filesystem::exists(filePath))
+            return filePath.string();
     }
 
     /*
      * Last but not least, we look in the default interface paths.
      */
-      for (const char** p = config::defaultInterfacePaths; *p; p++)
-      {
-          filePath.set(std::string(*p) + '/' + modulePath + ".soyi");
+    for (std::string p : config::defaultInterfacePaths) {
+        filePath = (std::filesystem::path(p)) / modulePath;
 
-          if (filePath.exists())
-              return filePath.toString();
-      }
+        filePath.replace_extension(".soyi");
+        if (std::filesystem::exists(filePath))
+            return filePath.string();
+    }
 
     /*
      * If the module cannot be found anywhere, return an empty string.
@@ -213,14 +207,14 @@ find_module(const std::string& moduleName)
  * @param files  The files to process.
  */
 static void
-process_files(std::list<std::string>& files)
+process_files(std::vector<std::string>& files)
 {
-    std::list<std::string> required;
+    std::vector<std::string> required;
 
     /*
      * Try to process the passed files.
      */
-    for (std::list<std::string>::iterator it = files.begin();
+    for (std::vector<std::string>::iterator it = files.begin();
          it != files.end();)
     {
         try
@@ -281,8 +275,7 @@ process_files(std::list<std::string>& files)
      * In the list of required modules, replace all module names with
      * paths to corresponding source files using find_module().
      */
-    for (std::list<std::string>::iterator it = required.begin();
-         it != required.end();)
+    for (auto it = required.begin(); it != required.end();)
     {
         /*
          * It could be that the required module was already provided by one
@@ -328,9 +321,12 @@ process_files(std::list<std::string>& files)
 int
 main(int argc, const char** argv)
 {
+    llvm::InitializeNativeTarget();
+    llvm::InitializeNativeTargetAsmPrinter();
+
     config::programName = argv[0];
 
-    std::list<std::string> inputFiles = parse_command_line(argc, argv);
+    std::vector<std::string> inputFiles = parse_command_line(argc, argv);
 
     if (inputFiles.size() == 0)
     {

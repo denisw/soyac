@@ -90,7 +90,7 @@ FunctionType::isSubtypeOf(Type* other) const
     if (returnType() != ftype->returnType() &&
         !returnType()->isSubtypeOf(ftype->returnType()))
     {
-       return false; 
+       return false;
     }
 
     parameterTypes_iterator it1 = this->parameterTypes_begin();

@@ -6,7 +6,6 @@
  * See LICENSE.txt for details.
  */
 
-#include <cstdlib>
 #include "config.hpp"
 
 namespace soyac {
@@ -17,14 +16,16 @@ namespace config
 bool compileOnly = false;
 bool emitAssembly = false;
 bool emitLLVM = false;
-const char* defaultInterfacePaths[] = {
+std::vector<std::string> interfacePaths{};
+std::string outputPath("./a.out");
+std::string programName("soyac");
+std::vector<std::string> sourcePaths{};
+
+std::vector<std::string> defaultInterfacePaths = {
     "/usr/local/include/soya",
+    "/usr/local/include",
     "/usr/include/soya",
-    NULL
+    "/usr/include"
 };
-const char** interfacePaths = NULL;
-const char* outputPath = "./a.out";
-const char* programName = "soyac";
-const char** sourcePaths = NULL;
 
 }}}

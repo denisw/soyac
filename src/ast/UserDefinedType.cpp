@@ -23,7 +23,7 @@ UserDefinedType::UserDefinedType(const Name& name, DeclarationBlock* body)
     assert (body != NULL);
 
     body->declarationListChanged().connect(
-      sigc::mem_fun(this, &UserDefinedType::onBodyChanged));
+      sigc::mem_fun(*this, &UserDefinedType::onBodyChanged));
 
     /*
      * As onBodyChanged() is not automatically called for declarations which

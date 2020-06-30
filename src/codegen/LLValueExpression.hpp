@@ -9,7 +9,7 @@
 #ifndef _LL_VALUE_EXPRESSION_HPP
 #define _LL_VALUE_EXPRESSION_HPP
 
-#include <llvm/Value.h>
+#include <llvm/IR/Value.h>
 #include <ast/Expression.hpp>
 #include <ast/Type.hpp>
 

@@ -9,10 +9,12 @@
 #ifndef _CODE_GENERATOR_HPP
 #define _CODE_GENERATOR_HPP
 
+#include <filesystem>
 #include <stdint.h>
-#include <llvm/Function.h>
-#include <llvm/Module.h>
-#include <llvm/Support/IRBuilder.h>
+
+#include <llvm/IR/Function.h>
+#include <llvm/IR/IRBuilder.h>
+#include <llvm/IR/Module.h>
 #include <ast/NamedEntity.hpp>
 #include <ast/FunctionParameter.hpp>
 #include <ast/NodeList.hpp>
@@ -20,11 +22,12 @@
 #include <ast/Visitor.hpp>
 #include "LLValueExpression.hpp"
 
-using namespace soyac::ast;
-
 namespace soyac {
 namespace codegen
 {
+
+using namespace soyac::ast;
+using std::filesystem::path;
 
 /**
  * Translates an abstract syntax tree to its LLVM IR representation.
@@ -45,6 +48,14 @@ public:
      * @return   The LLVM IR representation.
      */
     llvm::Module* generateCode(Module* m);
+    
+    void toLLVMAssembly(Module *module,
+                        path destination,
+                        std::error_code& error);
+    
+    void toObjectCode(Module *module,
+                      path destination,
+                      std::error_code& error);
 
 protected:
     /**
@@ -354,6 +365,7 @@ protected:
 private:
     friend class LLValueExpression;
 
+    llvm::LLVMContext mContext;
     llvm::IRBuilder<> mBuilder;
     llvm::Module* mModule;
     llvm::Function* mFunction;
@@ -393,7 +405,7 @@ private:
      * @param type  The Soya type.
      * @return      The matching LLVM type.
      */
-    const llvm::Type* lltype(Type* type);
+    llvm::Type* lltype(Type* type);
 
     /**
      * Returns an LLVM struct type which mirrors the passed class' or
@@ -402,7 +414,7 @@ private:
      * @param type  The type.
      * @return      The corresponding LLVM struct type.
      */
-    const llvm::Type* llstructtype(UserDefinedType* type);
+    llvm::Type* llstructtype(UserDefinedType* type);
 
     /**
      * Returns the LLVM "size type", that is, the LLVM integer type whose
@@ -412,7 +424,7 @@ private:
      *
      * @return  The "size type".
      */
-    const llvm::Type* sizeType() const;
+    llvm::Type* sizeType();
 
     /**
      * Returns the default value for the passed type.
@@ -521,7 +533,7 @@ private:
      * @param type  The LLVM type whose size should be determined
      * @return      An LLVM value representing the type's object size.
      */
-    llvm::Value* createSizeof(const llvm::Type* type);
+    llvm::Value* createSizeof(llvm::Type* type);
 
     /**
      * Creates instructions to allocate a garbage-colloected chunk of
@@ -541,7 +553,7 @@ private:
      * @param type  The type for which memory should be allocated.
      * @param n     The size multiplier.
      */
-    llvm::Value* createGCMalloc(const llvm::Type* type, llvm::Value* n = NULL);
+    llvm::Value* createGCMalloc(llvm::Type* type, llvm::Value* n = nullptr);
 };
 
 

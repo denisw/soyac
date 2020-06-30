@@ -10,8 +10,7 @@
 #define _LINK_HPP
 
 #include <cassert>
-#include <sigc++/connection.h>
-#include <sigc++/signal.h>
+#include <sigc++/sigc++.h>
 #include "Node.hpp"
 
 namespace soyac {
@@ -102,7 +101,7 @@ public:
             {
                 ((Node*) target)->ref();
                 mConnection = ((Node*) target)->replaceRequested().connect(
-                  sigc::mem_fun(this, &Link::onReplaceRequested));
+                  sigc::mem_fun(*this, &Link::onReplaceRequested));
             }
 
             T* oldTarget = mTarget;
@@ -126,14 +125,14 @@ public:
      *
      * @return  The "targetChanged" signal.
      */
-    typename sigc::signal<void, T*, T*>& targetChanged()
+    typename sigc::signal<void(T*, T*)>& targetChanged()
     {
         return mTargetChanged;
     }
 
 private:
     T* mTarget;
-    typename sigc::signal<void, T*, T*> mTargetChanged;
+    typename sigc::signal<void(T*, T*)> mTargetChanged;
     sigc::connection mConnection;
 
     /**

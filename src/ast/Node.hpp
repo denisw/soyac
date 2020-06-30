@@ -10,7 +10,7 @@
 #define _AST_NODE_HPP
 
 #include <list>
-#include <sigc++/signal.h>
+#include <sigc++/sigc++.h>
 #include "Location.hpp"
 
 namespace soyac {
@@ -70,8 +70,8 @@ public:
      * <strong>Do only manually call unref() after a manual call to ref()!
      * </strong> Otherwise a Node object still referred to by an abstract
      * syntax tree might be destroyed, which will render the tree
-     * inconsistent! 
-     * 
+     * inconsistent!
+     *
      */
     void unref();
 
@@ -136,12 +136,12 @@ public:
      *
      * @return  The "replaceRequested" signal.
      */
-    sigc::signal<void, Node*, Node*>& replaceRequested();
+    sigc::signal<void(Node*, Node*)>& replaceRequested();
 
 private:
     int mRefCount;
     Location mLocation;
-    sigc::signal<void, Node*, Node*> mReplaceRequested;
+    sigc::signal<void(Node*, Node*)> mReplaceRequested;
 
     /**
      * The concrete implementation of replaceWith().

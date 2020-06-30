@@ -101,7 +101,7 @@ private:
     {
     public:
         bool operator()(const std::pair<Type*, NodeList<Type>*>& sig1,
-                        const std::pair<Type*, NodeList<Type>*>& sig2)
+                        const std::pair<Type*, NodeList<Type>*>& sig2) const
         {
             if (sig1.first != sig2.first)
                 return sig1.first < sig2.first;

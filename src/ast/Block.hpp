@@ -85,7 +85,7 @@ public:
      *
      * @see  NodeList::elementChanged()
      */
-    sigc::signal<void, Statement*, Statement*>& statementListChanged();
+    sigc::signal<void(Statement*, Statement*)>& statementListChanged();
 
 private:
     NodeList<Statement> mStatements;

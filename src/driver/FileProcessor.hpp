@@ -9,15 +9,14 @@
 #ifndef _FILE_PROCESSOR_HPP
 #define _FILE_PROCESSOR_HPP
 
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <llvm/Module.h>
-#include <llvm/System/Path.h>
+#include <llvm/IR/Module.h>
+#include <llvm/Support/Path.h>
 #include <analysis/ModulesRequiredException.hpp>
 #include <ast/Module.hpp>
-
-using llvm::sys::Path;
 
 namespace soyac {
 namespace driver
@@ -60,16 +59,14 @@ public:
      * @throw std::ifstream::failure                If an I/O error occurs.
      * @throw soyac::ast::ModulesRequiredException  If other modules need to
      *                                              be processed first.
-     * 
+     *
      * @return  The generated output file, or an empty string.
      */
-    std::string process()
-      throw (std::ifstream::failure,
-             soyac::analysis::ModulesRequiredException);
+    std::string process();
 
 private:
-    Path mFilePath;
-    Path mTempDir;
+    std::filesystem::path mFilePath;
+    std::filesystem::path mTempDir;
 
     /**
      * Analyzes the passed Module. If there are modules required which are not
@@ -81,8 +78,16 @@ private:
      * @return   @c true if no errors were found,
      *           @c false otherwise.
      */
-    bool analyze(soyac::ast::Module* m)
-      throw (soyac::analysis::ModulesRequiredException);
+    bool analyze(soyac::ast::Module* m);
+    
+    /**
+     * Compiles the passed module to the target format requested by the
+     * current compiler options.
+     *
+     * @param m  The module to generate code for.
+     * @return   The resulting file's path.
+     */
+    std::filesystem::path compile(soyac::ast::Module* m);
 
     /**
      * Generates an LLVM assembly file from the passed module and returns
@@ -93,38 +98,16 @@ private:
      * @param m  The module to generate code for.
      * @return   The resulting LLVM assembly file's path.
      */
-    Path generateLLVM(soyac::ast::Module* m);
+    std::filesystem::path generateLLVMAssemblyFile(soyac::ast::Module* m);
 
     /**
-     * Generates an LLVM bitcode file from the passed LLVM assembly file and
-     * returns its path. The file will be located in the FileProcessor's
-     * temporary directory.
+     * Generates a binary object file from the module and returns its path.
+     * The file will be located in the input file's directory.
      *
-     * @param inputFile  The LLVM assembly file to translate.
-     * @return           The resulting LLVM bitcode file's path.
+     * @param m  The module to generate code for.
+     * @return   The resulting object file's path.
      */
-    Path generateBitcode(const Path& inputFile);
-
-    /**
-     * Generates an native assembly file from the passed LLVM bitcode file and
-     * returns its path. (If the FileProcessor's target output format is native
-     * assembly, the file will be located in the input file's directory.
-     * Otherwise, it is stored in the FileProcessor's temporary directory.)
-     *
-     * @param inputFile  The LLVM bitcode file to translate.
-     * @return           The resulting native assembly file's path.
-     */
-    Path generateAssembly(const Path& inputFile);
-
-    /**
-     * Generates a binary object file from the passed native assembly file
-     * and returns its path. The file will be located in the input file's
-     * directory.
-     *
-     * @param inputFile  The LLVM assembly file to translate.
-     * @return           The resulting native assembly file's path.
-     */
-    Path generateBinary(const Path& inputFile);
+    std::filesystem::path generateObjectFile(soyac::ast::Module* m);
 };
 
 }}

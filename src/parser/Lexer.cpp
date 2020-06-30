@@ -11,7 +11,9 @@
 #include <cctype>
 #include <cstdlib>
 #include <stdint.h>
+#include <regex>
 #include <vector>
+
 #include <boost/format.hpp>
 #include "utf8.h"
 
@@ -27,11 +29,11 @@ namespace parser
 {
 
 bool Lexer::sInitRegexDone;
-boost::u32regex Lexer::sLineTerminator;
-boost::u32regex Lexer::sWhiteSpace;
-boost::u32regex Lexer::sIdentifierStartChar;
-boost::u32regex Lexer::sIdentifierChar;
-boost::u32regex Lexer::sIntegerType;
+std::regex Lexer::sLineTerminator;
+std::regex Lexer::sWhiteSpace;
+std::regex Lexer::sIdentifierStartChar;
+std::regex Lexer::sIdentifierChar;
+std::regex Lexer::sIntegerType;
 std::map<std::string, int> Lexer::sKeywords;
 
 
@@ -65,16 +67,13 @@ Lexer::~Lexer()
 void
 Lexer::initRegex()
 {
-    sLineTerminator = boost::make_u32regex("\\r|\\n|\\x2028|\\x2029");
 
-    sWhiteSpace = boost::make_u32regex("[[:Zs:]]|\\t|\\v|\\f");
+    sWhiteSpace = std::regex("[ \\r\\n\\t]");
 
-    sIdentifierStartChar = boost::make_u32regex("[[:L*:]]|[[:Nl:]]|_");
-    sIdentifierChar      = boost::make_u32regex("[[:L*:]]|[[:Nl:]]|[[:Nd:]]|"
-                                                "[[:Pc:]]|[[:Mn:]]|[[:Mc:]]|"
-                                                "[[:Cf:]]");
+    sIdentifierStartChar = std::regex("[A-Za-z_]");
+    sIdentifierChar      = std::regex("[A-Za-z0-9_]");
 
-    sIntegerType = boost::make_u32regex("(u)?int[1-9]?[0-9]*");
+    sIntegerType = std::regex("(u)?int[1-9]?[0-9]*");
 
     sKeywords = std::map<std::string, int>();
     sKeywords["alias"]       = SoyaParser::token::ALIAS;
@@ -154,7 +153,7 @@ Lexer::nextToken(SoyaParser::semantic_type* yylval,
     /*
      * Line Terminators
      */
-    if (boost::u32regex_match(utf8_char, sLineTerminator))
+    if (std::regex_match(utf8_char, sLineTerminator))
     {
         skipLineTerminator();
         return nextToken(yylval, yylloc);
@@ -163,7 +162,7 @@ Lexer::nextToken(SoyaParser::semantic_type* yylval,
     /*
      * White Space
      */
-    else if (boost::u32regex_match(utf8_char, sWhiteSpace))
+    else if (std::regex_match(utf8_char, sWhiteSpace))
     {
         nextChar();
         return nextToken(yylval, yylloc);
@@ -200,13 +199,13 @@ Lexer::nextToken(SoyaParser::semantic_type* yylval,
         /*
          * Identifiers / Keywords
          */
-        if (boost::u32regex_match(utf8_char, sIdentifierStartChar))
+        if (std::regex_match(utf8_char, sIdentifierStartChar))
             ret = readIdentifierOrKeyword(yylval);
 
         /*
          * Integer / Floating-Point Literals
          */
-        else if (std::isdigit(utf8_char[0]) || 
+        else if (std::isdigit(utf8_char[0]) ||
                  (utf8_char[0] == '+' && std::isdigit(lookAhead(2)[0])) ||
                  (utf8_char[0] == '-' && std::isdigit(lookAhead(2)[0])))
         {
@@ -217,7 +216,7 @@ Lexer::nextToken(SoyaParser::semantic_type* yylval,
          * Character Literals
          */
         else if (utf8_char[0] == '\'')
-            ret = readCharacterLiteral(yylval); 
+            ret = readCharacterLiteral(yylval);
 
         /*
          * Operators
@@ -393,7 +392,7 @@ Lexer::skipDelimitedComment()
     {
         const char* lookahead = lookAhead();
 
-        if (boost::u32regex_match(lookahead, sLineTerminator))
+        if (std::regex_match(lookahead, sLineTerminator))
         {
             skipLineTerminator();
         }
@@ -427,7 +426,7 @@ Lexer::skipSingleLineComment()
      * Skip all characters until we encounter a line terminator
      * or end-of-file.
      */
-    while (!boost::u32regex_match(lookAhead(), sLineTerminator) &&
+    while (!std::regex_match(lookAhead(), sLineTerminator) &&
            lookAhead()[0] != '\0')
     {
         nextChar();
@@ -439,14 +438,14 @@ Lexer::readIdentifierOrKeyword(SoyaParser::semantic_type* yylval)
 {
     std::string* identifier = new std::string;
 
-    while (boost::u32regex_match(lookAhead(), sIdentifierChar))
+    while (std::regex_match(lookAhead(), sIdentifierChar))
         *identifier += nextChar();
 
     /*
      * If the read string is an integer type keyword, determine the
      * matching IntegerType instance and return it as semantic value.
      */
-    if (boost::u32regex_match(*identifier, sIntegerType))
+    if (std::regex_match(*identifier, sIntegerType))
     {
 
         if (*identifier == "int")
@@ -728,7 +727,7 @@ Lexer::readFloatingPointLiteral(SoyaParser::semantic_type* yylval,
             if ((c[0] == 'E' || c[0] == 'e') && lookAhead()[0] == '-')
             {
                 literal << '-';
-                nextChar();            
+                nextChar();
             }
         }
         else
@@ -753,7 +752,7 @@ Lexer::readFloatingPointLiteral(SoyaParser::semantic_type* yylval,
           str(boost::format(
             "The floating-point literal '%1%' is too big for any "
             "of the supported integer types.")
-            % literal));
+            % literal.str()));
     }
 
     return SoyaParser::token::FP_LITERAL;
@@ -793,7 +792,7 @@ Lexer::readCharacterLiteral(SoyaParser::semantic_type* yylval)
 
     if (codepoints.size() == 0)
         yylval->charLiteral = 0;
-    else    
+    else
         yylval->charLiteral = codepoints.front();
 
     /*

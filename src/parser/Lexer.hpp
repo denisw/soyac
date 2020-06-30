@@ -11,13 +11,13 @@
 
 #include <deque>
 #include <iostream>
+#include <regex>
 #include <sstream>
 #include <string>
-#include <boost/regex/icu.hpp>
 
-#include <ast/FloatingPointLiteral.hpp>
-#include <ast/IntegerLiteral.hpp>
-#include <common/PassResultBuilder.hpp>
+#include "ast/FloatingPointLiteral.hpp"
+#include "ast/IntegerLiteral.hpp"
+#include "common/PassResultBuilder.hpp"
 #include "parser.hpp"
 
 using namespace yy;
@@ -100,11 +100,11 @@ private:
     /*
      * Regular expressions.
      */
-    static boost::u32regex sLineTerminator;
-    static boost::u32regex sWhiteSpace;
-    static boost::u32regex sIdentifierStartChar;
-    static boost::u32regex sIdentifierChar;
-    static boost::u32regex sIntegerType;
+    static std::regex sLineTerminator;
+    static std::regex sWhiteSpace;
+    static std::regex sIdentifierStartChar;
+    static std::regex sIdentifierChar;
+    static std::regex sIntegerType;
 
     /*
      * Maps Soya's keywords as strings to the IDs of their respective tokens.

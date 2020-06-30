@@ -9,6 +9,9 @@
 #ifndef _CONFIG_HPP
 #define _CONFIG_HPP
 
+#include <string>
+#include <vector>
+
 namespace soyac {
 namespace driver {
 namespace config
@@ -23,7 +26,7 @@ extern bool compileOnly;
 /**
  * The default paths in which to search for interface files.
  */
-extern const char* defaultInterfacePaths[];
+extern std::vector<std::string> defaultInterfacePaths;
 
 /**
  * Whether native assembly code should be the output format.
@@ -40,22 +43,22 @@ extern bool emitLLVM;
 /**
  * The paths in which to search for interface files.
  */
-extern const char** interfacePaths;
+extern std::vector<std::string> interfacePaths;
 
 /**
  * Where to put the generated binary file when linking.
  */
-extern const char* outputPath;
+extern std::string outputPath;
 
 /**
  * The name of the 'soyac' executable.
  */
-extern const char* programName;
+extern std::string programName;
 
 /**
  * The paths in which to search for source files.
  */
-extern const char** sourcePaths;
+extern std::vector<std::string> sourcePaths;
 
 /**
  * Returns @c true object files resulting from compilation should be linked
@@ -63,7 +66,7 @@ extern const char** sourcePaths;
  */
 inline bool linkingRequested()
 {
-    return (!emitLLVM && !emitAssembly && !compileOnly); 
+    return (!emitLLVM && !emitAssembly && !compileOnly);
 }
 
 }}}

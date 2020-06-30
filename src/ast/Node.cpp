@@ -92,7 +92,7 @@ Node::_replaceWith(Node* node)
 }
 
 
-sigc::signal<void, Node*, Node*>&
+sigc::signal<void(Node*, Node*)>&
 Node::replaceRequested()
 {
     return mReplaceRequested;

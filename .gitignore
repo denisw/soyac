@@ -4,6 +4,7 @@
 *.o
 *.so
 a.out
+/build
 /soyac
 /test-soyac
 

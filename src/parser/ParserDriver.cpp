@@ -25,7 +25,6 @@ ParserDriver::ParserDriver(const std::string& fileName)
 
 soyac::ast::Module*
 ParserDriver::parse(PassResult*& result)
-  throw (std::ifstream::failure)
 {
     std::ifstream stream;
     stream.exceptions(std::ifstream::failbit |
@@ -58,7 +57,7 @@ ParserDriver::parse(PassResult*& result)
     delete mLexer;
     mLexer = NULL;
 
-    result = mResultBuilder->result();            
+    result = mResultBuilder->result();
     delete mResultBuilder;
 
     return mSyntaxTree;

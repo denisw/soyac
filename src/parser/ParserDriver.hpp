@@ -55,8 +55,7 @@ public:
      * @param result  The location at which to store the PassResult pointer.
      * @return        The resulting abstract syntax tree, or null.
      */
-    soyac::ast::Module* parse(PassResult*& result)
-        throw (std::ifstream::failure);
+    soyac::ast::Module* parse(PassResult*& result);
 
     /**
      * Returns the lexical analyzer.

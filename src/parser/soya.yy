@@ -11,7 +11,7 @@
 %skeleton "lalr1.cc"
 %require "2.3"
 %defines
-%define "parser_class_name" "SoyaParser"
+%define api.parser.class {SoyaParser}
 
 %locations
 %debug
@@ -79,7 +79,7 @@ class ParserDriver;
 #include <cassert>
 #include <list>
 #include <boost/format.hpp>
-#include "ParserDriver.hpp"
+#include <parser/ParserDriver.hpp>
 
 using namespace soyac::parser;
 
