@@ -9,6 +9,7 @@
 #ifndef _AST_NODE_HPP
 #define _AST_NODE_HPP
 
+#include <boost/signals2/signal.hpp>
 #include <list>
 #include <sigc++/sigc++.h>
 #include "Location.hpp"
@@ -16,6 +17,8 @@
 namespace soyac {
 namespace ast
 {
+
+using boost::signals2::signal;
 
 class Visitor;
 
@@ -136,12 +139,12 @@ public:
      *
      * @return  The "replaceRequested" signal.
      */
-    sigc::signal<void(Node*, Node*)>& replaceRequested();
+    signal<void(Node*, Node*)>& replaceRequested();
 
 private:
     int mRefCount;
     Location mLocation;
-    sigc::signal<void(Node*, Node*)> mReplaceRequested;
+    signal<void (Node*, Node*)> mReplaceRequested;
 
     /**
      * The concrete implementation of replaceWith().
