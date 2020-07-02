@@ -9,13 +9,16 @@
 #ifndef _LINK_HPP
 #define _LINK_HPP
 
+#include <boost/signals2/connection.hpp>
+#include <boost/signals2/signal.hpp>
 #include <cassert>
-#include <sigc++/sigc++.h>
+
 #include "Node.hpp"
 
-namespace soyac {
-namespace ast
+namespace soyac::ast
 {
+
+namespace signals = boost::signals2;
 
 /**
  * A smart pointer class that represents a reference to an abstract syntax
@@ -97,11 +100,13 @@ public:
         {
             mConnection.disconnect();
 
-            if (target != NULL)
+            if (target)
             {
                 ((Node*) target)->ref();
-                mConnection = ((Node*) target)->replaceRequested().connect(
-                  sigc::mem_fun(*this, &Link::onReplaceRequested));
+
+                mConnection = ((Node*) target)->replaceRequested().connect([this](auto old_, auto new_) {
+                   onReplaceRequested(old_, new_);
+                });
             }
 
             T* oldTarget = mTarget;
@@ -109,7 +114,7 @@ public:
 
             targetChanged()(oldTarget, mTarget);
 
-            if (oldTarget != NULL)
+            if (oldTarget)
                 ((Node*) oldTarget)->unref();
         }
     }
@@ -125,15 +130,15 @@ public:
      *
      * @return  The "targetChanged" signal.
      */
-    typename sigc::signal<void(T*, T*)>& targetChanged()
+    typename signals::signal<void(T*, T*)>& targetChanged()
     {
         return mTargetChanged;
     }
 
 private:
     T* mTarget;
-    typename sigc::signal<void(T*, T*)> mTargetChanged;
-    sigc::connection mConnection;
+    signals::signal<void(T*, T*)> mTargetChanged;
+    signals::connection mConnection;
 
     /**
      * Handler for the target node's "replaceRequested" signal
@@ -141,16 +146,10 @@ private:
      */
     void onReplaceRequested(Node* oldTarget, Node* newTarget)
     {
-/*
-        T* castTarget = dynamic_cast<T*>(newTarget);
-
-        if (newTarget != NULL)
-            assert (castTarget != NULL);
-*/
         setTarget((T*) newTarget);
     }
 };
 
-}}
+}
 
 #endif

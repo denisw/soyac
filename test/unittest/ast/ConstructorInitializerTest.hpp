@@ -12,7 +12,9 @@
 #include <cppunit/TestFixture.h>
 #include <cppunit/extensions/HelperMacros.h>
 
+#include <ast/Constructor.hpp>
 #include <ast/ConstructorInitializer.hpp>
+#include <ast/FunctionParameter.hpp>
 #include <ast/UnresolvedBaseConstructorInitializer.hpp>
 #include "DummyExpression.hpp"
 #include "UnitTestUtil.hpp"
@@ -31,8 +33,16 @@ class ConstructorInitializerTest : public CppUnit::TestFixture
 public:
     void setUp()
     {
-        mCons =
-          new Constructor(new UnresolvedBaseConstructorInitializer, new Block);
+        std::vector params{
+            new FunctionParameter("a", TYPE_UNKNOWN),
+            new FunctionParameter("b", TYPE_UNKNOWN),
+            new FunctionParameter("c", TYPE_UNKNOWN),
+        };
+
+        mCons = new Constructor(new UnresolvedBaseConstructorInitializer,
+                                params.begin(),
+                                params.end(),
+                                new Block);
 
         mArgs = new Expression*[3];
         mArgs[0] = new DummyExpression;

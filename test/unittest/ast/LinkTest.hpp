@@ -64,41 +64,44 @@ public:
     {
         mCallbackCalled = false;
 
-        mLink->targetChanged().connect(
-          sigc::mem_fun(this, &LinkTest::targetChangedCallback));
+        mLink->targetChanged().connect([this](auto old_, auto new_) {
+          targetChangedCallback(old_, new_);
+        });
 
         mNewTarget = new DummyNode;
         mLink->setTarget(mNewTarget);
         CPPUNIT_ASSERT (mCallbackCalled);
 
-        mLink->targetChanged().clear();
+        mLink->targetChanged().disconnect_all_slots();
     }
 
     void testTargetChangedOnReplace()
     {
         mCallbackCalled = false;
 
-        mLink->targetChanged().connect(
-          sigc::mem_fun(this, &LinkTest::targetChangedCallback));
+        mLink->targetChanged().connect([this](auto old_, auto new_) {
+            targetChangedCallback(old_, new_);
+        });
 
         mNewTarget = new DummyNode;
         mTarget->replaceWith(mNewTarget);
         CPPUNIT_ASSERT (mCallbackCalled);
 
-        mLink->targetChanged().clear();
+        mLink->targetChanged().disconnect_all_slots();
     }
 
     void testTargetUnchangedIfNoNewTarget()
     {
         mCallbackCalled = false;
 
-        mLink->targetChanged().connect(
-          sigc::mem_fun(this, &LinkTest::targetChangedCallback));
+        mLink->targetChanged().connect([this](auto old_, auto new_) {
+            targetChangedCallback(old_, new_);
+        });
 
         mLink->setTarget(mTarget);
         CPPUNIT_ASSERT (!mCallbackCalled);
 
-        mLink->targetChanged().clear();
+        mLink->targetChanged().disconnect_all_slots();
     }
 
     void testCopyConstructor()

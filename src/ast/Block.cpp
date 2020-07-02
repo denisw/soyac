@@ -46,7 +46,7 @@ Block::addStatement(Statement* s)
 }
 
 
-sigc::signal<void(Statement*, Statement*)>&
+boost::signals2::signal<void(Statement*, Statement*)>&
 Block::statementListChanged()
 {
     return mStatements.changed();

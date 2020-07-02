@@ -26,8 +26,9 @@ Module::Module(const Name& name)
      */
     mBody.ref();
 
-    mBody.statementListChanged().connect(
-      sigc::mem_fun(*this, &Module::onBodyChanged));
+    mBody.statementListChanged().connect([this](auto oldValue, auto newValue) {
+            onBodyChanged(oldValue, newValue);
+    });
 }
 
 

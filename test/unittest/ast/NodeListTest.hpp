@@ -127,45 +127,48 @@ public:
     {
         mCallbackCalled = false;
 
-        mList->changed().connect(
-          sigc::mem_fun(this, &NodeListTest::changedCallback));
+        mList->changed().connect([this](Node* oldNode, Node* newNode) {
+          changedCallback(oldNode, newNode);
+        });
 
         mOldNode = mNode1;
         mNewNode = new DummyNode;
         mOldNode->replaceWith(mNewNode);
         CPPUNIT_ASSERT (mCallbackCalled == true);
 
-        mList->changed().clear();
+        mList->changed().disconnect_all_slots();
     }
 
     void testChangedOnPushBack()
     {
         mCallbackCalled = false;
 
-        mList->changed().connect(
-          sigc::mem_fun(this, &NodeListTest::changedCallback));
+        mList->changed().connect([this](Node* oldNode, Node* newNode) {
+          changedCallback(oldNode, newNode);
+        });
 
         mOldNode = 0;
         mNewNode = new DummyNode;
         mList->push_back(mNewNode);
         CPPUNIT_ASSERT (mCallbackCalled == true);
 
-        mList->changed().clear();
+        mList->changed().disconnect_all_slots();
     }
 
     void testChangedOnRemove()
     {
         mCallbackCalled = false;
 
-        mList->changed().connect(
-          sigc::mem_fun(this, &NodeListTest::changedCallback));
+        mList->changed().connect([this](Node* oldNode, Node* newNode) {
+            changedCallback(oldNode, newNode);
+        });
 
         mOldNode = mNode1;
         mNewNode = 0;
         mList->remove(mNode1);
         CPPUNIT_ASSERT (mCallbackCalled == true);
 
-        mList->changed().clear();
+        mList->changed().disconnect_all_slots();
     }
 
 private:

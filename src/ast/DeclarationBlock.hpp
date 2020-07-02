@@ -89,7 +89,7 @@ public:
      *
      * @see  NodeList::elementChanged()
      */
-    sigc::signal<void(DeclarationStatement*, DeclarationStatement*)>&
+    boost::signals2::signal<void(DeclarationStatement*, DeclarationStatement*)>&
     declarationListChanged();
 
 private:

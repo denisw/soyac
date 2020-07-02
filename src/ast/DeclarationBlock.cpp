@@ -47,7 +47,7 @@ DeclarationBlock::addDeclaration(DeclarationStatement* decl)
 }
 
 
-sigc::signal<void(DeclarationStatement*, DeclarationStatement*)>&
+boost::signals2::signal<void(DeclarationStatement*, DeclarationStatement*)>&
 DeclarationBlock::declarationListChanged()
 {
     return mDeclarations.changed();

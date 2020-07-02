@@ -237,6 +237,5 @@ target_link_libraries(soyac
   ${SOYAC_LLVM_LIBS}
   Boost::headers
   Boost::program_options
-  Boost::regex
-  PkgConfig::SigCPP)
+  Boost::regex)
 

@@ -25,10 +25,12 @@ Property::Property(const Name& name,
 {
     assert (type != NULL);
 
-    mGetAccessor.targetChanged().connect(
-      sigc::mem_fun(*this, &Property::onGetAccessorChanged));
-    mSetAccessor.targetChanged().connect(
-      sigc::mem_fun(*this, &Property::onSetAccessorChanged));
+    mGetAccessor.targetChanged().connect([this](auto oldAcc, auto newAcc) {
+        onGetAccessorChanged(oldAcc, newAcc);
+    });
+    mSetAccessor.targetChanged().connect([this](auto oldAcc, auto newAcc) {
+        onSetAccessorChanged(oldAcc, newAcc);
+    });
 
     mGetAccessor.setTarget(getAccessor);
     mSetAccessor.setTarget(setAccessor);

@@ -46,8 +46,9 @@ public:
         : Type(name),
           mUnderlyingType(underlyingType)
     {
-        mValues.changed().connect(
-            sigc::mem_fun(*this, &EnumType::onValuesChanged));
+        mValues.changed().connect([this](auto oldValue, auto newValue) {
+            onValuesChanged(oldValue, newValue);
+        });
 
         for (InputIterator it = values_begin; it != values_end; it++)
             mValues.push_back(*it);

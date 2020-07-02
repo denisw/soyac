@@ -16,6 +16,7 @@ namespace soyac {
 namespace ast
 {
 
+using boost::signals2::signal;
 
 Node::Node()
     : mRefCount(0)
@@ -76,7 +77,7 @@ Node::_replaceWith(Node* node)
     /*
      * Give the replacing node our location information.
      */
-    if (node != NULL)
+    if (node)
         node->setLocation(location());
 
     /*
@@ -86,13 +87,12 @@ Node::_replaceWith(Node* node)
      * aferwards does the trick.
      */
     ref();
-    replaceRequested()(this, node);
-    replaceRequested().clear();
+    mReplaceRequested(this, node);
     unref();
 }
 
 
-sigc::signal<void(Node*, Node*)>&
+signal<void(Node*, Node*)>&
 Node::replaceRequested()
 {
     return mReplaceRequested;

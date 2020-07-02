@@ -9,8 +9,9 @@
 #ifndef _NODE_LIST_HPP
 #define _NODE_LIST_HPP
 
+#include <functional>
 #include <list>
-#include <sigc++/signal.h>
+#include <boost/signals2/signal.hpp>
 #include "Link.hpp"
 #include "Node.hpp"
 
@@ -33,7 +34,7 @@ class NodeList
 {
 private:
     typename std::list<Link<N>*> mData;
-    typename sigc::signal<void(N*, N*)> mChanged;
+    typename boost::signals2::signal<void(N*, N*)> mChanged;
 
     void onTargetChanged(Node* oldTarget, Node* newTarget)
     {
@@ -175,10 +176,13 @@ public:
      */
     void push_back(N* n)
     {
+        using namespace std::placeholders;
+
         Link<N> *l = new Link<N>(n);
 
-        l->targetChanged().connect(
-          sigc::mem_fun(*this, &NodeList::onTargetChanged));
+        l->targetChanged().connect([this](auto old_, auto new_) {
+            onTargetChanged(old_, new_);
+        });
 
         mData.push_back(l);
         changed()(NULL, n);
@@ -221,7 +225,7 @@ public:
      *
      * @return  The "changed" signal.
      */
-    typename sigc::signal<void(N*, N*)>& changed()
+    typename boost::signals2::signal<void(N*, N*)>& changed()
     {
         return mChanged;
     }
