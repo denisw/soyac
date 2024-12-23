@@ -13,16 +13,14 @@
 #include "Statement.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents a return statement.
  *
  * (See the Soya Language Reference,)
  */
-class ReturnStatement : public Statement
-{
+class ReturnStatement : public Statement {
 public:
     /**
      * Creates a ReturnStatement.
@@ -51,6 +49,7 @@ private:
     Link<Expression> mReturnValue;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

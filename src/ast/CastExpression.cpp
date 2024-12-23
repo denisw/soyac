@@ -10,36 +10,19 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 CastExpression::CastExpression(Expression* operand, Type* type)
-    : mOperand(operand),
-      mType(type)
+    : mOperand(operand)
+    , mType(type)
 {
 }
 
+void* CastExpression::visit(Visitor* v) { return v->visitCastExpression(this); }
 
-void*
-CastExpression::visit(Visitor* v)
-{
-    return v->visitCastExpression(this);
-}
+Type* CastExpression::type() const { return mType.target(); }
 
+Expression* CastExpression::operand() const { return mOperand.target(); }
 
-Type*
-CastExpression::type() const
-{
-    return mType.target();
-}
-
-
-Expression*
-CastExpression::operand() const
-{
-    return mOperand.target();
-}
-
-
-}}
+} // namespace ast
+} // namespace soyac

@@ -14,24 +14,22 @@
 /**
  * The "float" type. This is a shortcut to FloatingPointType::getFloat().
  */
-#define TYPE_FLOAT  soyac::ast::FloatingPointType::getFloat()
+#define TYPE_FLOAT soyac::ast::FloatingPointType::getFloat()
 
 /**
  * The "double" type. This is a shortcut to FloatingPointType::getDouble().
  */
-#define TYPE_DOUBLE  soyac::ast::FloatingPointType::getDouble()
+#define TYPE_DOUBLE soyac::ast::FloatingPointType::getDouble()
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents a floating-point type.
  *
  * (See the Soya Language Reference,)
  */
-class FloatingPointType : public BuiltInType
-{
+class FloatingPointType : public BuiltInType {
 public:
     /**
      * Returns the FloatingPointType instance representing the "float" type.
@@ -41,7 +39,8 @@ public:
     static FloatingPointType* getFloat();
 
     /**
-     * Returns the FloatingPointType instance representing the "double" type.
+     * Returns the FloatingPointType instance representing the "double"
+     * type.
      *
      * @return  The "double" type.
      */
@@ -77,6 +76,7 @@ private:
     FloatingPointType(bool isDouble);
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

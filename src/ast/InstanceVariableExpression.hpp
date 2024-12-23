@@ -13,16 +13,14 @@
 #include "Variable.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents an expression that denotes an instance variable.
  *
  * @see VariableExpression
  */
-class InstanceVariableExpression : public Expression
-{
+class InstanceVariableExpression : public Expression {
 public:
     /**
      * Creates an InstanceVariableExpression.
@@ -64,6 +62,7 @@ private:
     Link<Variable> mTarget;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

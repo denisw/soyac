@@ -9,36 +9,28 @@
 #include "BuiltInType.hpp"
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 BuiltInType::BuiltInType(const Name& name)
     : Type(name)
 {
 }
 
-
-BuiltInType::members_iterator
-BuiltInType::members_begin() const
+BuiltInType::members_iterator BuiltInType::members_begin() const
 {
     return mMembers.begin();
 }
 
-
-BuiltInType::members_iterator
-BuiltInType::members_end() const
+BuiltInType::members_iterator BuiltInType::members_end() const
 {
     return mMembers.end();
 }
 
-
-void
-BuiltInType::addMember(DeclaredEntity* member)
+void BuiltInType::addMember(DeclaredEntity* member)
 {
     mMembers.push_back(member);
     addChild(member);
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

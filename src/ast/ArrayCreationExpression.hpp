@@ -9,23 +9,21 @@
 #ifndef _ARRAY_CREATION_EXPRESSION_HPP
 #define _ARRAY_CREATION_EXPRESSION_HPP
 
-#include <cassert>
 #include "ArrayType.hpp"
 #include "Expression.hpp"
 #include "NodeList.hpp"
 #include "UnknownArrayType.hpp"
+#include <cassert>
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represnts an array creation expression.
  *
  * @see ObjectCreationExpression
  */
-class ArrayCreationExpression : public Expression
-{
+class ArrayCreationExpression : public Expression {
 public:
     /**
      * Iterates over the created array's elements (constant).
@@ -35,29 +33,30 @@ public:
     /**
      * Creates an ArrayCreationExpression with elements.
      *
-     * @param type              The created array's type. May be an ArrayType
-     *                          or an UnknownArrayType instance.
+     * @param type              The created array's type. May be an
+     * ArrayType or an UnknownArrayType instance.
      * @param lengthExpression  An expression yielding the created array's
      *                          length; may be null.
-     * @param elements_begin    Start iterator for the created array's elements.
-     * @param elements_end      End iterator for the created array's elements.
+     * @param elements_begin    Start iterator for the created array's
+     * elements.
+     * @param elements_end      End iterator for the created array's
+     * elements.
      */
     template <class InputIterator>
-    ArrayCreationExpression(Type* type,
-                            Expression* lengthExpression,
-                            InputIterator elements_begin,
-                            InputIterator elements_end)
-        : mType(type),
-          mLengthExpression(lengthExpression),
-          mElements(elements_begin, elements_end)
-          
-    {
-        assert (type != NULL);
-        assert (dynamic_cast<ArrayType*>(type) != NULL ||
-                dynamic_cast<UnknownArrayType*>(type) != NULL);
+    ArrayCreationExpression(Type* type, Expression* lengthExpression,
+        InputIterator elements_begin, InputIterator elements_end)
+        : mType(type)
+        , mLengthExpression(lengthExpression)
+        , mElements(elements_begin, elements_end)
 
-        if (mElements.size() == 0)
-            assert (lengthExpression != NULL);
+    {
+        assert(type != NULL);
+        assert(dynamic_cast<ArrayType*>(type) != NULL
+            || dynamic_cast<UnknownArrayType*>(type) != NULL);
+
+        if (mElements.size() == 0) {
+            assert(lengthExpression != NULL);
+        }
     }
 
     /**
@@ -67,9 +66,7 @@ public:
      * @param lengthExpression  An expression yielding the created array's
      *                          length; may be null.
      */
-    ArrayCreationExpression(ArrayType* type,
-                            Expression* lengthExpression);
-
+    ArrayCreationExpression(ArrayType* type, Expression* lengthExpression);
 
     /**
      * Visits the ArrayCreationExpression.
@@ -114,6 +111,7 @@ private:
     NodeList<Expression> mElements;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

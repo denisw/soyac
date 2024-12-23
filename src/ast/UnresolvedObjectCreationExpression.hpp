@@ -9,16 +9,14 @@
 #ifndef _UNRESOLVED_OBJECT_CREATION_EXPRESSION_HPP
 #define _UNRESOLVED_OBJECT_CREATION_EXPRESSION_HPP
 
-#include <cassert>
 #include "Expression.hpp"
 #include "NodeList.hpp"
 #include "Type.hpp"
 #include "UnknownType.hpp"
+#include <cassert>
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 /**
  * Represents an expression creating an object of a to-be-determined
@@ -26,8 +24,7 @@ namespace ast
  *
  * @see ObjectCreationExpression
  */
-class UnresolvedObjectCreationExpression : public Expression
-{
+class UnresolvedObjectCreationExpression : public Expression {
 public:
     /**
      * Iterates over the creation expression's constructor arguments
@@ -44,14 +41,14 @@ public:
      */
     template <class InputIterator>
     UnresolvedObjectCreationExpression(UnknownType* type,
-                                       InputIterator arguments_begin,
-                                       InputIterator arguments_end)
+        InputIterator arguments_begin, InputIterator arguments_end)
         : mType(type)
     {
-        assert (type != NULL);
+        assert(type != NULL);
 
-        for (InputIterator it = arguments_begin; it != arguments_end; it++)
+        for (InputIterator it = arguments_begin; it != arguments_end; it++) {
             mArguments.push_back(*it);
+        }
     }
 
     /**
@@ -87,6 +84,7 @@ private:
     NodeList<Expression> mArguments;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

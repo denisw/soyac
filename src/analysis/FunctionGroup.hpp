@@ -14,21 +14,19 @@
 using namespace soyac::ast;
 
 namespace soyac {
-namespace analysis
-{
+namespace analysis {
 
 /**
  * Represents a group of overloaded functions. Used as a return value
  * for SymbolTable::lookup().
  */
-class FunctionGroup : public NamedEntity
-{
+class FunctionGroup : public NamedEntity {
 public:
     /**
      * Iterates over the function group's functions (constant).
      */
     typedef NodeList<Function>::const_iterator overloads_iterator;
- 
+
     /**
      * Creates a FunctionGroup.
      *
@@ -39,10 +37,9 @@ public:
      *                         functions.
      */
     template <class InputIterator>
-    FunctionGroup(InputIterator overloads_begin,
-                  InputIterator overloads_end)
-        : NamedEntity((*overloads_begin)->name()),
-          mOverloads(overloads_begin, overloads_end)
+    FunctionGroup(InputIterator overloads_begin, InputIterator overloads_end)
+        : NamedEntity((*overloads_begin)->name())
+        , mOverloads(overloads_begin, overloads_end)
     {
 #ifndef NDEBUG
         InputIterator it = overloads_begin;
@@ -50,10 +47,9 @@ public:
         NamedEntity* parent = (*it)->parent();
         it++;
 
-        for (; it != overloads_end; it++)
-        {
-            assert ((*it)->name() == name);
-            assert ((*it)->parent() == parent);
+        for (; it != overloads_end; it++) {
+            assert((*it)->name() == name);
+            assert((*it)->parent() == parent);
         }
 #endif
     }
@@ -85,6 +81,7 @@ private:
     NodeList<Function> mOverloads;
 };
 
-}}
+} // namespace analysis
+} // namespace soyac
 
 #endif

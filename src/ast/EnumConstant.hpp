@@ -13,16 +13,14 @@
 #include "IntegerValue.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents an enum constant.
  *
  * (See the Soya Language Reference,)
  */
-class EnumConstant : public DeclaredEntity
-{
+class EnumConstant : public DeclaredEntity {
 public:
     /**
      * Creates a EnumConstant.
@@ -50,6 +48,7 @@ private:
     IntegerValue mValue;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

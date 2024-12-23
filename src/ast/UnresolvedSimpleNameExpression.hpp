@@ -9,12 +9,11 @@
 #ifndef _UNRESOLVED_SIMPLE_NAME_EXPRESSION_HPP
 #define _UNRESOLVED_SIMPLE_NAME_EXPRESSION_HPP
 
-#include "NamedEntity.hpp"
 #include "Expression.hpp"
+#include "NamedEntity.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Placeholder for a simple name expression denoting a to-be-determined
@@ -25,8 +24,7 @@ namespace ast
  *
  * (See the Soya Language Reference,)
  */
-class UnresolvedSimpleNameExpression : public Expression
-{
+class UnresolvedSimpleNameExpression : public Expression {
 public:
     /**
      * Creates a UnresolvedSimpleNameExpression.
@@ -59,6 +57,7 @@ private:
     Name mName;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

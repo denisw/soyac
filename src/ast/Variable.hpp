@@ -14,16 +14,14 @@
 #include "Type.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents a variable.
  *
  * (See the Soya Language Reference,)
  */
-class Variable : public DeclaredEntity
-{
+class Variable : public DeclaredEntity {
 public:
     /**
      * Creates a Variable.
@@ -44,9 +42,10 @@ public:
     virtual void* visit(Visitor* v);
 
     /**
-     * Returns the variable's type. If the variable's type is TYPE_UNKNOWN and
-     * has an initializer expression (see initializer()), that expression's
-     * type is the variable's type and thus is returned instead.
+     * Returns the variable's type. If the variable's type is TYPE_UNKNOWN
+     * and has an initializer expression (see initializer()), that
+     * expression's type is the variable's type and thus is returned
+     * instead.
      *
      * @return  The variable's type.
      */
@@ -66,6 +65,7 @@ private:
     Link<Expression> mInitializer;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

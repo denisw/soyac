@@ -6,7 +6,6 @@
  * See LICENSE.txt for details.
  */
 
-
 #include <array>
 #include <cstdlib>
 #include <filesystem>
@@ -14,21 +13,19 @@
 #include <iostream>
 #include <llvm/Target/TargetMachine.h>
 
-#include <parser/ParserDriver.hpp>
 #include <analysis/BasicAnalyzer.hpp>
 #include <analysis/ControlFlowAnalyzer.hpp>
 #include <codegen/CodeGenerator.hpp>
+#include <parser/ParserDriver.hpp>
 
 #include "FileProcessor.hpp"
-#include "config.hpp"
 #include "ProblemReport.hpp"
+#include "config.hpp"
 
 using std::filesystem::path;
 
 namespace soyac {
-namespace driver
-{
-
+namespace driver {
 
 FileProcessor::FileProcessor(const std::string& inputFile)
     : mFilePath(inputFile)
@@ -40,14 +37,9 @@ FileProcessor::FileProcessor(const std::string& inputFile)
     mTempDir = std::filesystem::temp_directory_path();
 }
 
+FileProcessor::~FileProcessor() { }
 
-FileProcessor::~FileProcessor()
-{
-}
-
-
-std::string
-FileProcessor::process()
+std::string FileProcessor::process()
 {
     std::filesystem::path p(mFilePath);
 
@@ -57,8 +49,7 @@ FileProcessor::process()
      * to LLVM assembly.
      */
     if (p.extension().string() == ".soya"
-        || p.extension().string() == ".soyi")
-    {
+        || p.extension().string() == ".soyi") {
         /*
          * Parse the file.
          */
@@ -66,43 +57,46 @@ FileProcessor::process()
         PassResult* result = NULL;
         ast::Module* m = parser::ParserDriver(p.string()).parse(result);
 
-        if (result != NULL)
+        if (result != NULL) {
             ProblemReport::addPassResult(result);
+        }
 
         /*
          * If parse() did not return a module, parsing failed.
          */
-        if (!m)
+        if (!m) {
             return std::string("");
-        
+        }
+
         /*
          * Analyze the module. If errors were found in the module, we
          * cannot proceed further as the abstract syntax tree is invalid.
          */
-        if (!analyze(m))
+        if (!analyze(m)) {
             return std::string("");
+        }
 
         /*
          * If the input file is a source file, generate LLVM assembly for
          * it. We set 'p' to the generated LLVM assembly file's path so
          * that the file will be further processed if this is needed.
          */
-        if (p.extension().string() == ".soya")
+        if (p.extension().string() == ".soya") {
             return compile(m);
+        }
         /*
          * If we are processing an interface file, there won't be any
          * compilation steps taken, so we can return now.
          */
-        else
+        else {
             return p.string();
+        }
     }
-    
+
     return mFilePath.string();
 }
 
-
-bool
-FileProcessor::analyze(ast::Module* m)
+bool FileProcessor::analyze(ast::Module* m)
 {
     PassResult* result;
 
@@ -110,38 +104,37 @@ FileProcessor::analyze(ast::Module* m)
      * Basic Analysis
      */
     result = analysis::BasicAnalyzer().analyze(m);
-    if (result != NULL)
-    {
+    if (result != NULL) {
         ProblemReport::addPassResult(result);
-        if (result->foundErrors())
+        if (result->foundErrors()) {
             return false;
+        }
     }
 
     /*
      * Control Flow Analysis
      */
     result = analysis::ControlFlowAnalyzer().analyze(m);
-    if (result != NULL)
-    {
+    if (result != NULL) {
         ProblemReport::addPassResult(result);
-        if (result->foundErrors())
+        if (result->foundErrors()) {
             return false;
+        }
     }
 
     return true;
 }
 
-path
-FileProcessor::compile(soyac::ast::Module *m)
+path FileProcessor::compile(soyac::ast::Module* m)
 {
-    if (config::emitLLVM)
+    if (config::emitLLVM) {
         return generateLLVMAssemblyFile(m);
-    else
+    } else {
         return generateObjectFile(m);
+    }
 }
 
-path
-FileProcessor::generateLLVMAssemblyFile(ast::Module* m)
+path FileProcessor::generateLLVMAssemblyFile(ast::Module* m)
 {
     path outputPath(mFilePath);
     outputPath.replace_extension(".ll");
@@ -149,17 +142,16 @@ FileProcessor::generateLLVMAssemblyFile(ast::Module* m)
     codegen::CodeGenerator generator(m);
     std::error_code error;
     generator.toLLVMAssembly(outputPath, error);
-    
+
     if (error) {
         std::cerr << error.message() << "\n";
         std::exit(1);
     }
-    
+
     return outputPath;
 }
 
-path
-FileProcessor::generateObjectFile(soyac::ast::Module *m)
+path FileProcessor::generateObjectFile(soyac::ast::Module* m)
 {
     path outputPath(mFilePath);
     outputPath.replace_extension(".o");
@@ -167,13 +159,14 @@ FileProcessor::generateObjectFile(soyac::ast::Module *m)
     codegen::CodeGenerator generator(m);
     std::error_code error;
     generator.toObjectCode(outputPath, error);
-    
+
     if (error) {
         std::cerr << error.message() << "\n";
         std::exit(1);
     }
-    
+
     return outputPath;
 }
 
-}}
+} // namespace driver
+} // namespace soyac

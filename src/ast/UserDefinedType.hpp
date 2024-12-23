@@ -13,16 +13,13 @@
 #include "Type.hpp"
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 /**
  * Inherited by node classes representing user-defined types, that is,
  * structs, classes or interfaces.
  */
-class UserDefinedType : public Type
-{
+class UserDefinedType : public Type {
 public:
     /**
      * Creates a UserDefinedType.
@@ -47,10 +44,11 @@ private:
      *
      * @see  NodeList::elementChanged()
      */
-    void onBodyChanged(DeclarationStatement* oldDecl,
-                       DeclarationStatement* newDecl);
+    void onBodyChanged(
+        DeclarationStatement* oldDecl, DeclarationStatement* newDecl);
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

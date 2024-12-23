@@ -14,14 +14,12 @@
 #include "UnknownType.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Placeholder for a to-be-determined function type.
  */
-class UnknownFunctionType : public UnknownType
-{
+class UnknownFunctionType : public UnknownType {
 public:
     /**
      * Iterates over the function type's to-be-determined parameter types
@@ -35,12 +33,11 @@ public:
      * @param elementType  The unknown element type.
      */
     template <class InputIterator>
-    UnknownFunctionType(Type* returnType,
-                        InputIterator parameterTypes_begin,
-                        InputIterator parameterTypes_end)
-        : UnknownType("(function)"),
-          mReturnType(returnType),
-          mParameterTypes(parameterTypes_begin, parameterTypes_end)
+    UnknownFunctionType(Type* returnType, InputIterator parameterTypes_begin,
+        InputIterator parameterTypes_end)
+        : UnknownType("(function)")
+        , mReturnType(returnType)
+        , mParameterTypes(parameterTypes_begin, parameterTypes_end)
     {
     }
 
@@ -82,6 +79,7 @@ private:
     NodeList<Type> mParameterTypes;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

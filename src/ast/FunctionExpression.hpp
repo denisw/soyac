@@ -13,16 +13,14 @@
 #include "Function.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents an expression that denotes a non-instance function.
  *
  * @see InstanceFunctionExpression
  */
-class FunctionExpression : public Expression
-{
+class FunctionExpression : public Expression {
 public:
     /**
      * Creates a FunctionExpression.
@@ -54,6 +52,7 @@ private:
     Link<Function> mTarget;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

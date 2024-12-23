@@ -12,16 +12,14 @@
 #include "Expression.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents an assignment expression.
  *
  * (See the Soya Language Reference,)
  */
-class AssignmentExpression : public Expression
-{
+class AssignmentExpression : public Expression {
 public:
     /**
      * Creates an AssignmentExpression.
@@ -62,6 +60,7 @@ private:
     Link<Expression> mRightHand;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

@@ -8,13 +8,12 @@
 
 #include "Node.hpp"
 #include "Link.hpp"
+#include <algorithm>
 #include <cstdlib>
 #include <iostream>
-#include <algorithm>
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 using boost::signals2::signal;
 
@@ -23,62 +22,48 @@ Node::Node()
 {
 }
 
-
 Node::~Node()
 {
-    if (mRefCount > 0)
-    {
+    if (mRefCount > 0) {
         mRefCount = -1;
         _replaceWith(NULL);
     }
 }
 
-
-void
-Node::ref()
+void Node::ref()
 {
-    if (mRefCount < 0)
+    if (mRefCount < 0) {
         return;
-    else
+    } else {
         mRefCount++;
+    }
 }
 
-
-void
-Node::unref()
+void Node::unref()
 {
-    if (mRefCount < 0)
+    if (mRefCount < 0) {
         return;
+    }
 
     mRefCount--;
 
-    if (mRefCount <= 0)
+    if (mRefCount <= 0) {
         delete this;
+    }
 }
 
+const Location& Node::location() const { return mLocation; }
 
-const Location&
-Node::location() const
-{
-    return mLocation;
-}
+void Node::setLocation(const Location& l) { mLocation = l; }
 
-
-void
-Node::setLocation(const Location& l)
-{
-    mLocation = l;
-}
-
-
-void
-Node::_replaceWith(Node* node)
+void Node::_replaceWith(Node* node)
 {
     /*
      * Give the replacing node our location information.
      */
-    if (node)
+    if (node) {
         node->setLocation(location());
+    }
 
     /*
      * We need to ensure that the Node object isn't destroyed by the
@@ -91,12 +76,10 @@ Node::_replaceWith(Node* node)
     unref();
 }
 
-
-signal<void(Node*, Node*)>&
-Node::replaceRequested()
+signal<void(Node*, Node*)>& Node::replaceRequested()
 {
     return mReplaceRequested;
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

@@ -12,16 +12,14 @@
 #include "Expression.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents a logical-not expression.
  *
  * (See the Soya Language Reference,)
  */
-class LogicalNotExpression : public Expression
-{
+class LogicalNotExpression : public Expression {
 public:
     /**
      * Creates a LogicalNotExpression.
@@ -53,6 +51,7 @@ private:
     Link<Expression> mOperand;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

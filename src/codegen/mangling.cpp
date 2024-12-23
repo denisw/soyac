@@ -12,29 +12,28 @@
 
 #include "ast/ast.hpp"
 
-namespace soyac::codegen
-{
+namespace soyac::codegen {
 
 using namespace ast;
 
-static std::string
-mangledSimpleName(std::string name)
+static std::string mangledSimpleName(std::string name)
 {
-    if (name == CONSTRUCTOR_NAME)
+    if (name == CONSTRUCTOR_NAME) {
         return "constructor";
-    else
+    } else {
         return name;
+    }
 }
 
-std::string
-mangledName(NamedEntity* entity)
+std::string mangledName(NamedEntity* entity)
 {
     /*
      * If the entity has no qualified name, it is a local entity; in this
      * case, we simply use the unqualified name as mangled name.
      */
-    if (entity->qualifiedName().isSimple())
+    if (entity->qualifiedName().isSimple()) {
         return mangledSimpleName(entity->name().str());
+    }
 
     /*
      * Otherwise, we have to build a more complex mangled name. It will
@@ -83,15 +82,13 @@ mangledName(NamedEntity* entity)
     /*
      * Mangle the module identifier.
      */
-    if (!Module::getProgram() || *it != Module::getProgram()->name().str())
-    {
+    if (!Module::getProgram() || *it != Module::getProgram()->name().str()) {
         char* modname = new char[(*it).length() + 1];
         strcpy(modname, (*it).c_str());
 
         const char* mID = std::strtok(modname, ":");
 
-        do
-        {
+        do {
             std::string sname = mangledSimpleName(mID);
             result << sname.length();
             result << sname;
@@ -105,12 +102,10 @@ mangledName(NamedEntity* entity)
     /*
      * Mangle the remaining identifiers if the entity is not a module.
      */
-    if (!dynamic_cast<Module*>(entity))
-    {
+    if (!dynamic_cast<Module*>(entity)) {
         result << '_';
 
-        for (; it != name.identifiers_end(); ++it)
-        {
+        for (; it != name.identifiers_end(); ++it) {
             std::string sname = mangledSimpleName(*it);
             result << sname.length();
             result << sname;
@@ -120,36 +115,34 @@ mangledName(NamedEntity* entity)
     /*
      * If the entity is a function, mangle its parameters.
      */
-    if (auto func = dynamic_cast<Function*>(entity))
-    {
-        for (auto it = func->parameters_begin(); it != func->parameters_end(); ++it)
-        {
+    if (auto func = dynamic_cast<Function*>(entity)) {
+        for (auto it = func->parameters_begin(); it != func->parameters_end();
+            ++it) {
             Type* paramType = (*it)->type();
 
-            if (paramType == TYPE_BOOL)
+            if (paramType == TYPE_BOOL) {
                 result << "_b";
-            else if (paramType == TYPE_CHAR)
+            } else if (paramType == TYPE_CHAR) {
                 result << "_c";
-            else if (paramType == TYPE_FLOAT)
+            } else if (paramType == TYPE_FLOAT) {
                 result << "_f";
-            else if (paramType == TYPE_DOUBLE)
+            } else if (paramType == TYPE_DOUBLE) {
                 result << "_d";
-            else if (paramType == TYPE_LONG)
+            } else if (paramType == TYPE_LONG) {
                 result << "_l";
-            else if (paramType == TYPE_ULONG)
+            } else if (paramType == TYPE_ULONG) {
                 result << "_ul";
-            else if (auto i = dynamic_cast<IntegerType*>(paramType))
-            {
+            } else if (auto i = dynamic_cast<IntegerType*>(paramType)) {
                 result << (i->isSigned() ? "_i" : "_u");
 
-                if (paramType != TYPE_INT && paramType != TYPE_UINT)
-                {
+                if (paramType != TYPE_INT && paramType != TYPE_UINT) {
                     result << i->size();
                 }
             }
 
-            else
+            else {
                 result << mangledName(paramType);
+            }
         }
     }
 

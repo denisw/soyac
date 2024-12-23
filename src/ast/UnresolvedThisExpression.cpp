@@ -6,28 +6,20 @@
  * See LICENSE.txt for details.
  */
 
-#include <cassert>
 #include "UnresolvedThisExpression.hpp"
 #include "UnknownType.hpp"
 #include "Visitor.hpp"
+#include <cassert>
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
-
-void*
-UnresolvedThisExpression::visit(Visitor* v)
+void* UnresolvedThisExpression::visit(Visitor* v)
 {
     return v->visitUnresolvedThisExpression(this);
 }
 
+Type* UnresolvedThisExpression::type() const { return TYPE_UNKNOWN; }
 
-Type*
-UnresolvedThisExpression::type() const
-{
-    return TYPE_UNKNOWN;
-}
-
-
-}}
+} // namespace ast
+} // namespace soyac

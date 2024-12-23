@@ -6,7 +6,6 @@
  * See LICENSE.txt for details.
  */
 
-#include <sstream>
 #include "IntegerType.hpp"
 #include "BooleanType.hpp"
 #include "CharacterType.hpp"
@@ -14,10 +13,10 @@
 #include "Function.hpp"
 #include "FunctionParameter.hpp"
 #include "Visitor.hpp"
+#include <sstream>
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 std::map<std::pair<int, bool>, IntegerType*> IntegerType::sInstances;
 bool IntegerType::sInitialized = false;
@@ -26,45 +25,31 @@ std::set<std::string> IntegerType::sArithmeticMethods;
 std::set<std::string> IntegerType::sRelationalMethods;
 std::set<std::string> IntegerType::sBitShiftMethods;
 
-
-void
-IntegerType::initialize()
+void IntegerType::initialize()
 {
-    const std::string arithmetic[5] = {
-        std::string("plus"),
-        std::string("minus"),
-        std::string("mul"),
-        std::string("div"),
-        std::string("mod")
-    };
+    const std::string arithmetic[5]
+        = { std::string("plus"), std::string("minus"), std::string("mul"),
+              std::string("div"), std::string("mod") };
 
-    const std::string relational[3] = {
-        std::string("equals"),
-        std::string("lessThan"),
-        std::string("greaterThan")
-    };
+    const std::string relational[3] = { std::string("equals"),
+        std::string("lessThan"), std::string("greaterThan") };
 
-    const std::string bitShift[2] = {
-        std::string("lshift"),
-        std::string("rshift")
-    };
+    const std::string bitShift[2]
+        = { std::string("lshift"), std::string("rshift") };
 
     sArithmeticMethods = std::set<std::string>(arithmetic, arithmetic + 5);
     sRelationalMethods = std::set<std::string>(relational, relational + 3);
-    sBitShiftMethods   = std::set<std::string>(bitShift, bitShift + 2);
+    sBitShiftMethods = std::set<std::string>(bitShift, bitShift + 2);
 }
 
-
-IntegerType*
-IntegerType::get(int size, bool isSigned)
+IntegerType* IntegerType::get(int size, bool isSigned)
 {
     /*
      * We need to have all static members properly initialized before
      * creating any IntegerType, so do that if we haven't already done
      * so.
      */
-    if (!sInitialized)
-    {
+    if (!sInitialized) {
         initialize();
         sInitialized = true;
     }
@@ -75,8 +60,7 @@ IntegerType::get(int size, bool isSigned)
      * If an instance with the specified size and signedness has not been
      * requested yet, create it now.
      */
-    if (sInstances[p] == NULL)
-    {
+    if (sInstances[p] == NULL) {
         /*
          * Determine the requested integer type's name. The name starts
          * with "int" for signed and with "uint" for unsigned integer
@@ -85,13 +69,10 @@ IntegerType::get(int size, bool isSigned)
 
         std::stringstream name;
 
-        if (size == -1)
-        {
+        if (size == -1) {
             name << (isSigned ? "long" : "ulong");
-        }
-        else
-        {
-            assert (size >= 0);
+        } else {
+            assert(size >= 0);
             name << (isSigned ? "int" : "uint");
 
             /*
@@ -99,8 +80,9 @@ IntegerType::get(int size, bool isSigned)
              * requested type is not "int" or "uint" (those obviously don't
              * have a size in their name).
              */
-            if (size > 0)
+            if (size > 0) {
                 name << size;
+            }
         }
 
         sInstances[p] = new IntegerType(Name(name.str()), size, isSigned);
@@ -109,10 +91,11 @@ IntegerType::get(int size, bool isSigned)
         /*
          * FIXME: This should be set depending on the target architecture.
          */
-        if (size == 0)
+        if (size == 0) {
             sInstances[p]->mSize = 32;
-        else if (size == -1)
+        } else if (size == -1) {
             sInstances[p]->mSize = 64;
+        }
 
         onNewInstance(sInstances[p]);
     }
@@ -120,62 +103,30 @@ IntegerType::get(int size, bool isSigned)
     return sInstances[p];
 }
 
+IntegerType* IntegerType::getInt() { return IntegerType::get(0, true); }
 
-IntegerType*
-IntegerType::getInt()
+IntegerType* IntegerType::getUInt() { return IntegerType::get(0, false); }
+
+IntegerType* IntegerType::getLong() { return IntegerType::get(-1, true); }
+
+IntegerType* IntegerType::getULong() { return IntegerType::get(-1, false); }
+
+void IntegerType::onNewInstance(IntegerType* newType)
 {
-    return IntegerType::get(0, true);
-}
+    static const std::string arithmetic[5]
+        = { std::string("plus"), std::string("minus"), std::string("mul"),
+              std::string("div"), std::string("mod") };
 
+    static const std::string relational[3] = { std::string("equals"),
+        std::string("lessThan"), std::string("greaterThan") };
 
-IntegerType*
-IntegerType::getUInt()
-{
-    return IntegerType::get(0, false);
-}
-
-
-IntegerType*
-IntegerType::getLong()
-{
-    return IntegerType::get(-1, true);
-}
-
-
-IntegerType*
-IntegerType::getULong()
-{
-    return IntegerType::get(-1, false);
-}
-
-
-void
-IntegerType::onNewInstance(IntegerType* newType)
-{
-    static const std::string arithmetic[5] = {
-        std::string("plus"),
-        std::string("minus"),
-        std::string("mul"),
-        std::string("div"),
-        std::string("mod")
-    };
-
-    static const std::string relational[3] = {
-        std::string("equals"),
-        std::string("lessThan"),
-        std::string("greaterThan")
-    };
-
-    static const std::string bitshift[2] = {
-        std::string("lshift"),
-        std::string("rshift")
-    };
+    static const std::string bitshift[2]
+        = { std::string("lshift"), std::string("rshift") };
 
     /*
      * Add the "lshift()" and "rshift()" methods to the new type.
      */
-    for (int i = 0; i < 2; i++)
-    {
+    for (int i = 0; i < 2; i++) {
         FunctionParameter* p = new FunctionParameter("x", TYPE_INT);
         Function* m = new Function(bitshift[i], TYPE_BOOL, &p, &p + 1);
         newType->addMember(m);
@@ -189,40 +140,34 @@ IntegerType::onNewInstance(IntegerType* newType)
      * implicitly convertable to the new type, those need overloads
      * accepting this type too, so we also create them here.
      */
-    for (std::map<std::pair<int, bool>, IntegerType*>::iterator it =
-           sInstances.begin();
-         it != sInstances.end(); it++)
-    {
-        if ((newType->size() == it->second->size() &&
-             newType->isSigned() == it->second->isSigned() &&
-             newType != it->second) ||
-            (it->second == TYPE_LONG && newType != TYPE_LONG) ||
-            (it->second == TYPE_ULONG && newType != TYPE_ULONG))
-        {
+    for (std::map<std::pair<int, bool>, IntegerType*>::iterator it
+        = sInstances.begin();
+        it != sInstances.end(); it++) {
+        if ((newType->size() == it->second->size()
+                && newType->isSigned() == it->second->isSigned()
+                && newType != it->second)
+            || (it->second == TYPE_LONG && newType != TYPE_LONG)
+            || (it->second == TYPE_ULONG && newType != TYPE_ULONG)) {
             continue;
         }
 
         IntegerType* callee;
         IntegerType* arg;
 
-        if (newType->isImplicitlyConvertableTo(it->second))
-        {
+        if (newType->isImplicitlyConvertableTo(it->second)) {
             callee = newType;
             arg = it->second;
-        }
-        else if (it->second->isImplicitlyConvertableTo(newType))
-        {
+        } else if (it->second->isImplicitlyConvertableTo(newType)) {
             callee = it->second;
             arg = newType;
-        }
-        else
+        } else {
             continue;
-        
+        }
+
         /*
          * Arithmetic Methods
          */
-        for (int i = 0; i < 5; i++)
-        {
+        for (int i = 0; i < 5; i++) {
             FunctionParameter* p = new FunctionParameter("x", arg);
             Function* m = new Function(arithmetic[i], arg, &p, &p + 1);
             callee->addMember(m);
@@ -231,8 +176,7 @@ IntegerType::onNewInstance(IntegerType* newType)
         /*
          * Relational Methods
          */
-        for (int i = 0; i < 3; i++)
-        {
+        for (int i = 0; i < 3; i++) {
             FunctionParameter* p = new FunctionParameter("x", arg);
             Function* m = new Function(relational[i], TYPE_BOOL, &p, &p + 1);
             callee->addMember(m);
@@ -240,95 +184,70 @@ IntegerType::onNewInstance(IntegerType* newType)
     }
 }
 
-
 IntegerType::IntegerType(const Name& name, int size, bool isSigned)
-    : BuiltInType(name),
-      mSize(size),
-      mIsSigned(isSigned)
+    : BuiltInType(name)
+    , mSize(size)
+    , mIsSigned(isSigned)
 {
 }
 
+void* IntegerType::visit(Visitor* v) { return v->visitIntegerType(this); }
 
-void*
-IntegerType::visit(Visitor* v)
+bool IntegerType::isConvertableTo(Type* other) const
 {
-    return v->visitIntegerType(this);
+    return (dynamic_cast<IntegerType*>(other) != NULL
+        || dynamic_cast<FloatingPointType*>(other) != NULL
+        || other == TYPE_CHAR);
 }
 
-
-bool
-IntegerType::isConvertableTo(Type* other) const
+bool IntegerType::isImplicitlyConvertableTo(Type* other) const
 {
-    return (dynamic_cast<IntegerType*>(other) != NULL ||
-            dynamic_cast<FloatingPointType*>(other) != NULL ||
-            other == TYPE_CHAR);
-}
-
-
-bool
-IntegerType::isImplicitlyConvertableTo(Type* other) const
-{
-    if (Type::isImplicitlyConvertableTo(other) ||
-        dynamic_cast<FloatingPointType*>(other) != NULL)
-    {
+    if (Type::isImplicitlyConvertableTo(other)
+        || dynamic_cast<FloatingPointType*>(other) != NULL) {
         return true;
-    }
-    else
-    {
+    } else {
         IntegerType* int2 = dynamic_cast<IntegerType*>(other);
 
-        if (int2 == NULL)
+        if (int2 == NULL) {
             return false;
-        else
+        } else {
             return min() >= int2->min() && max() <= int2->max();
+        }
     }
 }
 
+int IntegerType::size() const { return mSize; }
 
-int
-IntegerType::size() const
-{
-    return mSize;
-}
+bool IntegerType::isSigned() const { return mIsSigned; }
 
-
-bool
-IntegerType::isSigned() const
-{
-    return mIsSigned;
-}
-
-
-IntegerValue
-IntegerType::min() const
+IntegerValue IntegerType::min() const
 {
     int64_t min;
 
-    if (isSigned())
-    {
+    if (isSigned()) {
         min = -2;
 
-        for (int s = 2; s < size(); s++)
+        for (int s = 2; s < size(); s++) {
             min *= 2;
-    }
-    else
+        }
+    } else {
         min = 0;
+    }
 
     return IntegerValue(min, isSigned());
 }
 
-
-IntegerValue
-IntegerType::max() const
+IntegerValue IntegerType::max() const
 {
     int64_t max = 2;
 
-    for (int s = isSigned() ? 2 : 1; s < size(); s++)
+    for (int s = isSigned() ? 2 : 1; s < size(); s++) {
         max *= 2;
+    }
 
     max -= 1;
     return IntegerValue(max, isSigned());
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

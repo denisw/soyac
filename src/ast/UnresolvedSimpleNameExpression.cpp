@@ -11,36 +11,22 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 UnresolvedSimpleNameExpression::UnresolvedSimpleNameExpression(const Name& name)
     : mName(name)
 {
-    assert (name.isSimple());
+    assert(name.isSimple());
 }
 
-
-void*
-UnresolvedSimpleNameExpression::visit(Visitor* v)
+void* UnresolvedSimpleNameExpression::visit(Visitor* v)
 {
     return v->visitUnresolvedSimpleNameExpression(this);
 }
 
+Type* UnresolvedSimpleNameExpression::type() const { return TYPE_UNKNOWN; }
 
-Type*
-UnresolvedSimpleNameExpression::type() const
-{
-    return TYPE_UNKNOWN;
-}
+const Name& UnresolvedSimpleNameExpression::name() const { return mName; }
 
-
-const Name&
-UnresolvedSimpleNameExpression::name() const
-{
-    return mName;
-}
-
-
-}}
+} // namespace ast
+} // namespace soyac

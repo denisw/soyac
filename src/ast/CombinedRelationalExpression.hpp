@@ -12,8 +12,7 @@
 #include "Expression.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 class DeclaredEntity;
 
@@ -23,8 +22,7 @@ class DeclaredEntity;
  *
  * (See the Soya Language Reference,)
  */
-class CombinedRelationalExpression : public Expression
-{
+class CombinedRelationalExpression : public Expression {
 public:
     /**
      * Creates an CombinedRelationalExpression.
@@ -32,12 +30,11 @@ public:
      * @param leftHand          The expression's left-hand expression.
      * @param rightHand         The expression's right-hand expression.
      * @param equalsCallee      The called "equals" member.
-     * @param comparisonCallee  The called "lessThan" or "greaterThan" member.
+     * @param comparisonCallee  The called "lessThan" or "greaterThan"
+     * member.
      */
-    CombinedRelationalExpression(Expression* leftHand,
-                                 Expression* rightHand,
-                                 DeclaredEntity* equalsCallee,
-                                 DeclaredEntity* comparisonCallee);
+    CombinedRelationalExpression(Expression* leftHand, Expression* rightHand,
+        DeclaredEntity* equalsCallee, DeclaredEntity* comparisonCallee);
 
     /**
      * Visits the CombinedRelationalExpression.
@@ -75,9 +72,9 @@ public:
     DeclaredEntity* equalsCallee() const;
 
     /**
-     * Returns the "lessThan" or "greaterThan" member of the left-hand operand
-     * to be called for the "<" or ">" part of the comparison. This can be any
-     * callable entity, not just a function.
+     * Returns the "lessThan" or "greaterThan" member of the left-hand
+     * operand to be called for the "<" or ">" part of the comparison. This
+     * can be any callable entity, not just a function.
      *
      * @return  The called "lessThan" or "greaterThan" member.
      */
@@ -90,6 +87,7 @@ private:
     Link<DeclaredEntity> mComparisonCallee;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

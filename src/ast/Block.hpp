@@ -13,16 +13,14 @@
 #include "Statement.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents a block.
  *
  * (See the Soya Language Reference,)
  */
-class Block : public Statement
-{
+class Block : public Statement {
 public:
     /**
      * Iterates over the block's statements (constant).
@@ -36,11 +34,11 @@ public:
      * @param statements_begin  End iterator for the block's statements.
      */
     template <class InputIterator>
-    Block(InputIterator statements_begin,
-          InputIterator statements_end)
+    Block(InputIterator statements_begin, InputIterator statements_end)
     {
-        for (InputIterator it = statements_begin; it != statements_end; it++)
+        for (InputIterator it = statements_begin; it != statements_end; it++) {
             mStatements.push_back(*it);
+        }
     }
 
     /**
@@ -85,12 +83,14 @@ public:
      *
      * @see  NodeList::elementChanged()
      */
-    boost::signals2::signal<void(Statement*, Statement*)>& statementListChanged();
+    boost::signals2::signal<void(Statement*, Statement*)>&
+    statementListChanged();
 
 private:
     NodeList<Statement> mStatements;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

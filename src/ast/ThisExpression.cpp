@@ -6,34 +6,22 @@
  * See LICENSE.txt for details.
  */
 
-#include <cassert>
 #include "ThisExpression.hpp"
 #include "Visitor.hpp"
+#include <cassert>
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 ThisExpression::ThisExpression(Type* type)
     : mType(type)
 {
-    assert (type != NULL);
+    assert(type != NULL);
 }
 
+void* ThisExpression::visit(Visitor* v) { return v->visitThisExpression(this); }
 
-void*
-ThisExpression::visit(Visitor* v)
-{
-    return v->visitThisExpression(this);
-}
+Type* ThisExpression::type() const { return mType.target(); }
 
-
-Type*
-ThisExpression::type() const
-{
-    return mType.target();
-}
-
-
-}}
+} // namespace ast
+} // namespace soyac

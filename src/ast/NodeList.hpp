@@ -9,15 +9,14 @@
 #ifndef _NODE_LIST_HPP
 #define _NODE_LIST_HPP
 
-#include <functional>
-#include <list>
-#include <boost/signals2/signal.hpp>
 #include "Link.hpp"
 #include "Node.hpp"
+#include <boost/signals2/signal.hpp>
+#include <functional>
+#include <list>
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents a list of abstract syntax tree nodes of the specified type.
@@ -29,27 +28,25 @@ namespace ast
  *            in the NodeList. Note that the type must be specified
  *            in it's pure form, not as pointer or reference type.
  */
-template <class N>
-class NodeList
-{
+template <class N> class NodeList {
 private:
     typename std::list<Link<N>*> mData;
     typename boost::signals2::signal<void(N*, N*)> mChanged;
 
     void onTargetChanged(Node* oldTarget, Node* newTarget)
     {
-        changed()((N*) oldTarget, (N*) newTarget);
+        changed()((N*)oldTarget, (N*)newTarget);
 
-        if (newTarget == NULL)
+        if (newTarget == NULL) {
             remove(NULL);
+        }
     }
 
 public:
     /**
      * The NodeList's constant iterator type.
      */
-    class const_iterator
-    {
+    class const_iterator {
     public:
         /**
          * Increments the iterator.
@@ -73,27 +70,18 @@ public:
         /*
          * Dereferences the iterator.
          */
-        N* operator*() const
-        {
-            return (N*) (*mIterator)->target();
-        }
+        N* operator*() const { return (N*)(*mIterator)->target(); }
 
         /**
          * Returns @c true if the iterator equals the passed other iterator.
          */
-        bool operator==(const_iterator it)
-        {
-            return mIterator == it.mIterator;
-        }
+        bool operator==(const_iterator it) { return mIterator == it.mIterator; }
 
         /**
          * Returns @c true if the iterator does not equal the passed other
          * iterator.
          */
-        bool operator!=(const_iterator it)
-        {
-            return !(*this == it);
-        }
+        bool operator!=(const_iterator it) { return !(*this == it); }
 
     private:
         friend class NodeList;
@@ -108,9 +96,7 @@ public:
     /**
      * Creates a NodeList.
      */
-    NodeList()
-    {
-    }
+    NodeList() { }
 
     /**
      * Creates a NodeList with the elements from iterator @c first to
@@ -122,8 +108,9 @@ public:
     template <class InputIterator>
     NodeList(InputIterator first, InputIterator last)
     {
-        for (InputIterator it = first; it != last; it++)
+        for (InputIterator it = first; it != last; it++) {
             push_back(*it);
+        }
     }
 
     /**
@@ -132,9 +119,7 @@ public:
     ~NodeList()
     {
         for (typename std::list<Link<N>*>::iterator it = mData.begin();
-             it != mData.end();
-             it++)
-        {
+            it != mData.end(); it++) {
             delete *it;
         }
     }
@@ -144,30 +129,21 @@ public:
      *
      * @return  The constant start iterator.
      */
-    const_iterator begin() const
-    {
-        return const_iterator(mData.begin());
-    }
+    const_iterator begin() const { return const_iterator(mData.begin()); }
 
     /**
      * Returns a constant iterator pointing past the list's last element.
      *
      * @return  The constant end iterator.
      */
-    const_iterator end() const
-    {
-        return const_iterator(mData.end());
-    }
+    const_iterator end() const { return const_iterator(mData.end()); }
 
     /**
      * Returns the number of elements in the list.
      *
      * @return  The list's size.
      */
-    size_t size() const
-    {
-        return mData.size();
-    }
+    size_t size() const { return mData.size(); }
 
     /**
      * Adds an element to the end of the list.
@@ -178,11 +154,10 @@ public:
     {
         using namespace std::placeholders;
 
-        Link<N> *l = new Link<N>(n);
+        Link<N>* l = new Link<N>(n);
 
-        l->targetChanged().connect([this](auto old_, auto new_) {
-            onTargetChanged(old_, new_);
-        });
+        l->targetChanged().connect(
+            [this](auto old_, auto new_) { onTargetChanged(old_, new_); });
 
         mData.push_back(l);
         changed()(NULL, n);
@@ -196,18 +171,16 @@ public:
     void remove(N* n)
     {
         for (typename std::list<Link<N>*>::iterator it = mData.begin();
-             it != mData.end();)
-        {
-            if ((*it)->target() == n)
-            {
+            it != mData.end();) {
+            if ((*it)->target() == n) {
                 Link<N>* removed = *it;
                 it = mData.erase(it);
 
                 changed()(n, NULL);
                 delete removed;
-            }
-            else
+            } else {
                 it++;
+            }
         }
     }
 
@@ -231,6 +204,7 @@ public:
     }
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

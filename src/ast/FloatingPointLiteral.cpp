@@ -11,38 +11,28 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 FloatingPointLiteral::FloatingPointLiteral(const FloatingPointValue& value)
     : mValue(value)
 {
 }
 
-
-void*
-FloatingPointLiteral::visit(Visitor* v)
+void* FloatingPointLiteral::visit(Visitor* v)
 {
     return v->visitFloatingPointLiteral(this);
 }
 
-
-Type*
-FloatingPointLiteral::type() const
+Type* FloatingPointLiteral::type() const
 {
-    if (value().isSinglePrecision())
+    if (value().isSinglePrecision()) {
         return TYPE_FLOAT;
-    else
+    } else {
         return TYPE_DOUBLE;
+    }
 }
 
+const FloatingPointValue& FloatingPointLiteral::value() const { return mValue; }
 
-const FloatingPointValue&
-FloatingPointLiteral::value() const
-{
-    return mValue;
-}
-
-
-}}
+} // namespace ast
+} // namespace soyac

@@ -10,38 +10,27 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
-
-UnresolvedModuleImport::UnresolvedModuleImport(const Name& importedName,
-                                               bool isDirect)
-    : mImportedName(importedName),
-      mIsDirect(isDirect)
+UnresolvedModuleImport::UnresolvedModuleImport(
+    const Name& importedName, bool isDirect)
+    : mImportedName(importedName)
+    , mIsDirect(isDirect)
 {
-    assert (importedName.isSimple());
+    assert(importedName.isSimple());
 }
 
-
-void*
-UnresolvedModuleImport::visit(Visitor* v)
+void* UnresolvedModuleImport::visit(Visitor* v)
 {
     return v->visitUnresolvedModuleImport(this);
 }
 
-
-const Name&
-UnresolvedModuleImport::importedName() const
+const Name& UnresolvedModuleImport::importedName() const
 {
     return mImportedName;
 }
 
+bool UnresolvedModuleImport::isDirect() const { return mIsDirect; }
 
-bool
-UnresolvedModuleImport::isDirect() const
-{
-    return mIsDirect;
-}
-
-
-}}
+} // namespace ast
+} // namespace soyac

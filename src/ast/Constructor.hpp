@@ -9,45 +9,43 @@
 #ifndef _CONSTRUCTOR_HPP
 #define _CONSTRUCTOR_HPP
 
-#include <cassert>
 #include "ConstructorInitializer.hpp"
 #include "Function.hpp"
 #include "VoidType.hpp"
+#include <cassert>
 
 /**
  * The name given to every Constructor.
  *
  * @see DeclaredEntity::name()
  */
-#define CONSTRUCTOR_NAME  "(constructor)"
+#define CONSTRUCTOR_NAME "(constructor)"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
-class Constructor : public Function
-{
+class Constructor : public Function {
 public:
     /**
      * Creates a Constructor with parameters.
      *
      * @param initializer       The constructor initializer.
-     * @param parameters_begin  Start iterator for the constructor's parameters.
-     * @param parameters_end    End iterator for the constructor's parameters.
+     * @param parameters_begin  Start iterator for the constructor's
+     * parameters.
+     * @param parameters_end    End iterator for the constructor's
+     * parameters.
      * @param body              The constructor's body.
      */
     template <class InputIterator>
     Constructor(ConstructorInitializer* initializer,
-                InputIterator parameters_begin,
-                InputIterator parameters_end,
-                Block* body)
-        : Function(CONSTRUCTOR_NAME, TYPE_VOID,
-                   parameters_begin, parameters_end,
-                   body),
-          mInitializer(initializer)
+        InputIterator parameters_begin, InputIterator parameters_end,
+        Block* body)
+        : Function(CONSTRUCTOR_NAME, TYPE_VOID, parameters_begin,
+              parameters_end, body)
+        , mInitializer(initializer)
     {
-        assert (initializer != NULL);
-        assert (body != NULL);
+        assert(initializer != NULL);
+        assert(body != NULL);
     }
 
     /**
@@ -55,8 +53,7 @@ public:
      *
      * @param body  The constructor's body.
      */
-    Constructor(ConstructorInitializer* initializer,
-                Block* body);
+    Constructor(ConstructorInitializer* initializer, Block* body);
 
     /**
      * Visits the Constructor.
@@ -76,6 +73,7 @@ private:
     Link<ConstructorInitializer> mInitializer;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

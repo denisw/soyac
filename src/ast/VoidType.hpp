@@ -14,19 +14,17 @@
 /**
  * The "void" type. This is a shortcut to VoidType::get().
  */
-#define TYPE_VOID  soyac::ast::VoidType::get()
+#define TYPE_VOID soyac::ast::VoidType::get()
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents the "void" type.
  *
  * (See the Soya Language Reference,)
  */
-class VoidType : public BuiltInType
-{
+class VoidType : public BuiltInType {
 public:
     /**
      * Returns a singleton VoidType instance representing the "void" type.
@@ -53,6 +51,7 @@ private:
     VoidType();
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

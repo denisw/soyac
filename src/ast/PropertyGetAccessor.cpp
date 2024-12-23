@@ -11,23 +11,17 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 PropertyGetAccessor::PropertyGetAccessor(Block* body)
-    : Function("get",
-               new UnknownType(""),
-               body)
+    : Function("get", new UnknownType(""), body)
 {
 }
 
-
-void*
-PropertyGetAccessor::visit(Visitor* v)
+void* PropertyGetAccessor::visit(Visitor* v)
 {
     return v->visitPropertyGetAccessor(this);
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

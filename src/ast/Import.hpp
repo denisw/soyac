@@ -13,16 +13,14 @@
 #include "Node.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Inherited by node classes representing imports into modules.
  *
  * (See the Soya Language Reference, Chapter 9.)
  */
-class Import : public Node
-{
+class Import : public Node {
 public:
     /**
      * Initializes an Import.
@@ -30,6 +28,7 @@ public:
     Import();
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

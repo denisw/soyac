@@ -14,11 +14,9 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 CharacterType* CharacterType::sInstance = NULL;
-
 
 CharacterType::CharacterType()
     : BuiltInType("char")
@@ -29,12 +27,9 @@ CharacterType::CharacterType()
     addMember(equals);
 }
 
-
-CharacterType*
-CharacterType::get()
+CharacterType* CharacterType::get()
 {
-    if (sInstance == NULL)
-    {
+    if (sInstance == NULL) {
         sInstance = new CharacterType;
         sInstance->ref();
     }
@@ -42,19 +37,12 @@ CharacterType::get()
     return sInstance;
 }
 
+void* CharacterType::visit(Visitor* v) { return v->visitCharacterType(this); }
 
-void*
-CharacterType::visit(Visitor* v)
-{
-    return v->visitCharacterType(this);
-}
-
-
-bool
-CharacterType::isConvertableTo(Type* other) const
+bool CharacterType::isConvertableTo(Type* other) const
 {
     return (this == other || dynamic_cast<IntegerType*>(other) != NULL);
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

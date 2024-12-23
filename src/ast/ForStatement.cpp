@@ -10,50 +10,31 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
+void* ForStatement::visit(Visitor* v) { return v->visitForStatement(this); }
 
-void*
-ForStatement::visit(Visitor* v)
-{
-    return v->visitForStatement(this);
-}
+Expression* ForStatement::condition() const { return mCondition.target(); }
 
-
-Expression*
-ForStatement::condition() const
-{
-    return mCondition.target();
-}
-
-
-ForStatement::initializers_iterator
-ForStatement::initializers_begin() const
+ForStatement::initializers_iterator ForStatement::initializers_begin() const
 {
     return mInitializers.begin();
 }
 
-
-ForStatement::initializers_iterator
-ForStatement::initializers_end() const
+ForStatement::initializers_iterator ForStatement::initializers_end() const
 {
     return mInitializers.end();
 }
 
-
-ForStatement::iterators_iterator
-ForStatement::iterators_begin() const
+ForStatement::iterators_iterator ForStatement::iterators_begin() const
 {
     return mIterators.begin();
 }
 
-
-ForStatement::iterators_iterator
-ForStatement::iterators_end() const
+ForStatement::iterators_iterator ForStatement::iterators_end() const
 {
     return mIterators.end();
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

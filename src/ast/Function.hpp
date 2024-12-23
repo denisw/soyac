@@ -15,8 +15,7 @@
 #include "Type.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 class FunctionType;
 
@@ -25,8 +24,7 @@ class FunctionType;
  *
  * (See the Soya Language Reference,)
  */
-class Function : public DeclaredEntity
-{
+class Function : public DeclaredEntity {
 public:
     /**
      * Iterates over the function's parameters (constant).
@@ -38,21 +36,21 @@ public:
      *
      * @param name              The function's name.
      * @param returnType        The function's return type.
-     * @param parameters_begin  Start iterator for the function's parameters.
+     * @param parameters_begin  Start iterator for the function's
+     * parameters.
      * @param parameters_end    End iterator for the function's parameters.
      * @param body              The function's body, or null.
      */
     template <class InputIterator>
-    Function(const Name& name, Type* returnType,
-             InputIterator parameters_begin,
-             InputIterator parameters_end,
-             Block* body = NULL)
-        : DeclaredEntity(name),
-          mReturnType(returnType),
-          mBody(body)
+    Function(const Name& name, Type* returnType, InputIterator parameters_begin,
+        InputIterator parameters_end, Block* body = NULL)
+        : DeclaredEntity(name)
+        , mReturnType(returnType)
+        , mBody(body)
     {
-        for (InputIterator it = parameters_begin; it != parameters_end; it++)
+        for (InputIterator it = parameters_begin; it != parameters_end; it++) {
             mParameters.push_back(*it);
+        }
     }
 
     /**
@@ -62,9 +60,7 @@ public:
      * @param returnType  The function's return type.
      * @param body        The function's body, or null.
      */
-    Function(const Name& name,
-             Type* returnType,
-             Block* body = NULL);
+    Function(const Name& name, Type* returnType, Block* body = NULL);
 
     /**
      * Creates a Function with a single parameter.
@@ -74,10 +70,8 @@ public:
      * @param param       The parameter.
      * @param body        The function's body, or null.
      */
-    Function(const Name& name,
-             Type* returnType,
-             FunctionParameter* param,
-             Block* body = NULL);
+    Function(const Name& name, Type* returnType, FunctionParameter* param,
+        Block* body = NULL);
 
     /**
      * Visits the Function.
@@ -134,6 +128,7 @@ private:
     Link<Block> mBody;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

@@ -12,16 +12,14 @@
 #include "Function.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 class FunctionParameter;
 
 /**
  * Represents a property set accessor.
  */
-class PropertySetAccessor : public Function
-{
+class PropertySetAccessor : public Function {
 public:
     /**
      * Initializes a PropertySetAccessor.
@@ -51,6 +49,7 @@ public:
     FunctionParameter* valueParameter();
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

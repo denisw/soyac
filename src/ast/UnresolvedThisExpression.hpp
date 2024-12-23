@@ -13,15 +13,13 @@
 #include "Type.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents a "this" expression denoting an instance of a
  * to-be-determined type.
  */
-class UnresolvedThisExpression : public Expression
-{
+class UnresolvedThisExpression : public Expression {
 public:
     /**
      * Visits the UnresolvedThisExpression.
@@ -36,6 +34,7 @@ public:
     virtual Type* type() const;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

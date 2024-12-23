@@ -9,104 +9,79 @@
 #include "IntegerValue.hpp"
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 IntegerValue::IntegerValue(int64_t data, bool isSigned)
-    : mData(data),
-      mIsSigned(false)
+    : mData(data)
+    , mIsSigned(false)
 {
     /*
      * If true was passed for "isSigned" but no negative value was
      * provided, we leave mIsSigned as false. This normalization saves
      * us some work in the comparison operators.
      */
-    if (isSigned && data < 0)
+    if (isSigned && data < 0) {
         mIsSigned = true;
+    }
 }
 
+int64_t IntegerValue::data() const { return mData; }
 
-int64_t
-IntegerValue::data() const
-{
-    return mData;
-}
+bool IntegerValue::isSigned() const { return mIsSigned; }
 
-
-bool
-IntegerValue::isSigned() const
-{
-    return mIsSigned;
-}
-
-
-bool
-IntegerValue::operator==(const IntegerValue& other) const
+bool IntegerValue::operator==(const IntegerValue& other) const
 {
     return (mData == other.mData && mIsSigned == other.mIsSigned);
 }
 
-
-bool
-IntegerValue::operator!=(const IntegerValue& other) const
+bool IntegerValue::operator!=(const IntegerValue& other) const
 {
     return !(*this == other);
 }
 
-
-bool
-IntegerValue::operator<(const IntegerValue& other) const
+bool IntegerValue::operator<(const IntegerValue& other) const
 {
-    if (mIsSigned)
-    {
-        if (!other.mIsSigned && other.mData < 0)
+    if (mIsSigned) {
+        if (!other.mIsSigned && other.mData < 0) {
             return true;
-        else
+        } else {
             return mData < other.mData;
-    }
-    else
-    {
-        if (other.mIsSigned)
+        }
+    } else {
+        if (other.mIsSigned) {
             return false;
-        else
-            return ((uint64_t) mData) < ((uint64_t) other.mData);        
+        } else {
+            return ((uint64_t)mData) < ((uint64_t)other.mData);
+        }
     }
 }
 
-
-bool
-IntegerValue::operator>(const IntegerValue& other) const
+bool IntegerValue::operator>(const IntegerValue& other) const
 {
-    if (mIsSigned)
-    {
-        if (!other.mIsSigned && other.mData < 0)
+    if (mIsSigned) {
+        if (!other.mIsSigned && other.mData < 0) {
             return false;
-        else
+        } else {
             return mData > other.mData;
-    }
-    else
-    {
-        if (other.mIsSigned)
+        }
+    } else {
+        if (other.mIsSigned) {
             return true;
-        else
-            return ((uint64_t) mData) > ((uint64_t) other.mData);
+        } else {
+            return ((uint64_t)mData) > ((uint64_t)other.mData);
+        }
     }
 }
 
-
-bool
-IntegerValue::operator<=(const IntegerValue& other) const
+bool IntegerValue::operator<=(const IntegerValue& other) const
 {
     return (*this == other || *this < other);
 }
 
-
-bool
-IntegerValue::operator>=(const IntegerValue& other) const
+bool IntegerValue::operator>=(const IntegerValue& other) const
 {
     return (*this == other || *this > other);
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

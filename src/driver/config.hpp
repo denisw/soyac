@@ -14,8 +14,7 @@
 
 namespace soyac {
 namespace driver {
-namespace config
-{
+namespace config {
 
 /**
  * Whether the input files should only be compiled, but not linked.
@@ -66,14 +65,16 @@ extern std::string programName;
 extern std::vector<std::string> sourcePaths;
 
 /**
- * Returns @c true object files resulting from compilation should be linked
- * together.
+ * Returns @c true object files resulting from compilation should be
+ * linked together.
  */
 inline bool linkingRequested()
 {
     return (!emitLLVM && !emitAssembly && !compileOnly);
 }
 
-}}}
+} // namespace config
+} // namespace driver
+} // namespace soyac
 
 #endif

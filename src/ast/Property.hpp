@@ -15,14 +15,12 @@
 #include "Type.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents a property.
  */
-class Property : public DeclaredEntity
-{
+class Property : public DeclaredEntity {
 public:
     /**
      * Creates a Property.
@@ -31,10 +29,8 @@ public:
      * @param getAccessor  The property's get accessor, or null.
      * @param setAccessor  The property's set accessor, or null.
      */
-    Property(const Name& name,
-             Type* type,
-             PropertyGetAccessor* getAccessor,
-             PropertySetAccessor* setAccessor);
+    Property(const Name& name, Type* type, PropertyGetAccessor* getAccessor,
+        PropertySetAccessor* setAccessor);
 
     /**
      * Visits the Property.
@@ -53,7 +49,7 @@ public:
     /**
      * Returns the property's get accessor if the property has one, or
      * null otherwise.
-     * 
+     *
      * @return  The property's get accessor, or null.
      */
     PropertyGetAccessor* getAccessor() const;
@@ -61,7 +57,7 @@ public:
     /**
      * Returns the property's set accessor if the property has one, or
      * null otherwise.
-     * 
+     *
      * @return  The property's set accessor, or null.
      */
     PropertySetAccessor* setAccessor() const;
@@ -76,19 +72,19 @@ private:
      *
      * @see Link::targetReplaced()
      */
-    void onGetAccessorChanged(PropertyGetAccessor* oldAcc,
-                              PropertyGetAccessor* newAcc);
-
+    void onGetAccessorChanged(
+        PropertyGetAccessor* oldAcc, PropertyGetAccessor* newAcc);
 
     /**
      * Called whenever the property's set accessor is exchanged.
      *
      * @see Link::targetReplaced()
      */
-    void onSetAccessorChanged(PropertySetAccessor* oldAcc,
-                              PropertySetAccessor* newAcc);
+    void onSetAccessorChanged(
+        PropertySetAccessor* oldAcc, PropertySetAccessor* newAcc);
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

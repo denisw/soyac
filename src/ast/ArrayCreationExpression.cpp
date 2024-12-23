@@ -12,42 +12,30 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
-
-ArrayCreationExpression::ArrayCreationExpression(ArrayType* type,
-                                                 Expression* lengthExpression)
-    : mType(type),
-      mLengthExpression(lengthExpression)
+ArrayCreationExpression::ArrayCreationExpression(
+    ArrayType* type, Expression* lengthExpression)
+    : mType(type)
+    , mLengthExpression(lengthExpression)
 {
-    assert (type != NULL);
-    assert (dynamic_cast<ArrayType*>(type) != NULL ||
-            dynamic_cast<UnknownArrayType*>(type) != NULL);
-    assert (lengthExpression != NULL);
+    assert(type != NULL);
+    assert(dynamic_cast<ArrayType*>(type) != NULL
+        || dynamic_cast<UnknownArrayType*>(type) != NULL);
+    assert(lengthExpression != NULL);
 }
 
-
-void*
-ArrayCreationExpression::visit(Visitor* v)
+void* ArrayCreationExpression::visit(Visitor* v)
 {
     return v->visitArrayCreationExpression(this);
 }
 
+Type* ArrayCreationExpression::type() const { return mType.target(); }
 
-Type*
-ArrayCreationExpression::type() const
-{
-    return mType.target();
-}
-
-
-Expression*
-ArrayCreationExpression::lengthExpression() const
+Expression* ArrayCreationExpression::lengthExpression() const
 {
     return mLengthExpression.target();
 }
-
 
 ArrayCreationExpression::elements_iterator
 ArrayCreationExpression::elements_begin() const
@@ -55,12 +43,11 @@ ArrayCreationExpression::elements_begin() const
     return mElements.begin();
 }
 
-
 ArrayCreationExpression::elements_iterator
 ArrayCreationExpression::elements_end() const
 {
     return mElements.end();
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

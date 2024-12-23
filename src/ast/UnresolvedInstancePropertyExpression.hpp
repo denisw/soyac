@@ -13,8 +13,7 @@
 #include "Property.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents an expression denoting a property, which needs to
@@ -24,8 +23,7 @@ namespace ast
  * UnresolvedInstancePropertyExpression instances are replaced with
  * semantically unambiguous equivalents by the BasicAnalyzer.
  */
-class UnresolvedInstancePropertyExpression : public Expression
-{
+class UnresolvedInstancePropertyExpression : public Expression {
 public:
     /**
      * Creates a UnresolvedInstancePropertyExpression.
@@ -33,8 +31,8 @@ public:
      * @param instance  The denoted instance.
      * @param target    The denoted property.
      */
-    UnresolvedInstancePropertyExpression(Expression* instance,
-                                         Property* target);
+    UnresolvedInstancePropertyExpression(
+        Expression* instance, Property* target);
 
     /**
      * Visits the UnresolvedInstancePropertyExpression.
@@ -63,13 +61,13 @@ public:
      * @return the denoted property.
      */
     Property* target() const;
-     
 
 private:
     Link<Expression> mInstance;
     Link<Property> mTarget;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

@@ -13,16 +13,14 @@
 #include "Variable.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents an expression that denotes a non-instance variable.
  * (To represent an expression denoting an instance variable of
  * a particular instance, see MemberAccessExpression.)
  */
-class VariableExpression : public Expression
-{
+class VariableExpression : public Expression {
 public:
     /**
      * Creates a VariableExpression.
@@ -54,6 +52,7 @@ private:
     Link<Variable> mTarget;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

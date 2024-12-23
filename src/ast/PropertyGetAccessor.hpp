@@ -12,14 +12,12 @@
 #include "Function.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents a property get accessor.
  */
-class PropertyGetAccessor : public Function
-{
+class PropertyGetAccessor : public Function {
 public:
     /**
      * Initializes a PropertyGetAccessor.
@@ -36,6 +34,7 @@ public:
     virtual void* visit(Visitor* v);
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

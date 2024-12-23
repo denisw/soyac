@@ -9,13 +9,12 @@
 #ifndef _AST_NODE_HPP
 #define _AST_NODE_HPP
 
+#include "Location.hpp"
 #include <boost/signals2/signal.hpp>
 #include <list>
-#include "Location.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 using boost::signals2::signal;
 
@@ -31,24 +30,24 @@ class Visitor;
  * - <b>Reference counting:</b> Each node begins with a reference count
  *   of 0. Using the ref() and unref() methods, the count can be incremented
  *   and decremented; a decrease to or beneath 0 destroys the node. In most
- *   cases, reference count management is not done manually, but is automated
- *   by wrapping Node references in Link objects. <em>Note that while it
- *   is possible, you should NOT directly delete Node instances that are part
- *   of an abstract syntax tree, as this might render the tree inconsistent!</em>
- * - <b>The replaceWith() method:</b> Using replaceWith(), all Link references
- *   to a node can be replaced by references to another node, thus fully
- *   substiting one node with another in the abstract syntax tree. This is
- *   useful in several circumstances, for instance for replacing expressions
- *   with semantically equivalent, but simpler versions for optimization
- *   purposes.
+ *   cases, reference count management is not done manually, but is
+ * automated by wrapping Node references in Link objects. <em>Note that
+ * while it is possible, you should NOT directly delete Node instances that
+ * are part of an abstract syntax tree, as this might render the tree
+ * inconsistent!</em>
+ * - <b>The replaceWith() method:</b> Using replaceWith(), all Link
+ * references to a node can be replaced by references to another node, thus
+ * fully substiting one node with another in the abstract syntax tree. This
+ * is useful in several circumstances, for instance for replacing
+ * expressions with semantically equivalent, but simpler versions for
+ * optimization purposes.
  * - <b>Visitor hooks:</b> The Node class provides a visit() method, which
- *   visits the node with a specified Visitor. visit() is overridden by every
- *   concrete child class of Node to call the correct visit method of the
- *   passed Visitor instance, which means that the caller does not need to know
- *   the run-time type of a node to call the correct visitor method.
+ *   visits the node with a specified Visitor. visit() is overridden by
+ * every concrete child class of Node to call the correct visit method of
+ * the passed Visitor instance, which means that the caller does not need to
+ * know the run-time type of a node to call the correct visitor method.
  */
-class Node
-{
+class Node {
 public:
     /**
      * Creates an Node.
@@ -58,7 +57,7 @@ public:
     /**
      * The destructor.
      */
-   virtual ~Node();
+    virtual ~Node();
 
     /**
      * Increases the reference count of the Node instance by one.
@@ -94,17 +93,17 @@ public:
     void setLocation(const Location& l);
 
     /**
-     * Replaces all abstract syntax tree references to the Node instance with
-     * references to the passed other node. Replacing a node with null is not
-     * allowed.
+     * Replaces all abstract syntax tree references to the Node instance
+     * with references to the passed other node. Replacing a node with null
+     * is not allowed.
      *
      * @param node  The node with which to replace. Null is ignored.
      */
-    template <class N>
-    void replaceWith(N* node)
+    template <class N> void replaceWith(N* node)
     {
-        if (node != NULL)
+        if (node != NULL) {
             _replaceWith(node);
+        }
     }
 
     /**
@@ -116,10 +115,7 @@ public:
      * @param v  The Visitor with which the node should be visited.
      * @return   The visitor method's return value.
      */
-    virtual void* visit(Visitor* v)
-    {
-        return NULL;
-    }
+    virtual void* visit(Visitor* v) { return NULL; }
 
     /**
      * Returns the "replaceRequested" signal, which is emitted when the
@@ -127,8 +123,8 @@ public:
      *
      * Link instances pointing to the node subscribe to this signal to
      * do the be notified when a replacement operation is required. The
-     * signal can also be subscribed to by other nodes or the signal-emitting
-     * Node instance itself, though.
+     * signal can also be subscribed to by other nodes or the
+     * signal-emitting Node instance itself, though.
      *
      * Note that after the each time the "replaceRequested" signal has been
      * emitted, all signal handlers are disconnected.
@@ -143,7 +139,7 @@ public:
 private:
     int mRefCount;
     Location mLocation;
-    signal<void (Node*, Node*)> mReplaceRequested;
+    signal<void(Node*, Node*)> mReplaceRequested;
 
     /**
      * The concrete implementation of replaceWith().
@@ -151,6 +147,7 @@ private:
     void _replaceWith(Node* node);
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

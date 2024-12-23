@@ -6,40 +6,32 @@
  * See LICENSE.txt for details.
  */
 
-#include <cassert>
 #include "PropertySetAccessor.hpp"
 #include "FunctionParameter.hpp"
 #include "Property.hpp"
 #include "UnknownType.hpp"
 #include "Visitor.hpp"
 #include "VoidType.hpp"
+#include <cassert>
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 PropertySetAccessor::PropertySetAccessor(Block* body)
-    : Function("set",
-               TYPE_VOID,
-               new FunctionParameter("value", new UnknownType("")),
-               body)
+    : Function("set", TYPE_VOID,
+          new FunctionParameter("value", new UnknownType("")), body)
 {
 }
 
-
-void*
-PropertySetAccessor::visit(Visitor* v)
+void* PropertySetAccessor::visit(Visitor* v)
 {
     return v->visitPropertySetAccessor(this);
 }
 
-
-FunctionParameter*
-PropertySetAccessor::valueParameter()
+FunctionParameter* PropertySetAccessor::valueParameter()
 {
     return *parameters_begin();
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

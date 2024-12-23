@@ -6,53 +6,40 @@
  * See LICENSE.txt for details.
  */
 
-#include <cassert>
 #include "InstanceFunctionExpression.hpp"
 #include "FunctionType.hpp"
 #include "UnknownType.hpp"
 #include "Visitor.hpp"
+#include <cassert>
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
-
-InstanceFunctionExpression::InstanceFunctionExpression(Expression* instance,
-                                                       Function* target)
-    : mInstance(instance),
-      mTarget(target)
+InstanceFunctionExpression::InstanceFunctionExpression(
+    Expression* instance, Function* target)
+    : mInstance(instance)
+    , mTarget(target)
 {
-    assert (instance != NULL);
-    assert (target != NULL);
+    assert(instance != NULL);
+    assert(target != NULL);
 }
 
-
-void*
-InstanceFunctionExpression::visit(Visitor* v)
+void* InstanceFunctionExpression::visit(Visitor* v)
 {
     return v->visitInstanceFunctionExpression(this);
 }
 
+Type* InstanceFunctionExpression::type() const { return target()->type(); }
 
-Type*
-InstanceFunctionExpression::type() const
-{
-    return target()->type();
-}
-
-
-Expression*
-InstanceFunctionExpression::instance() const
+Expression* InstanceFunctionExpression::instance() const
 {
     return mInstance.target();
 }
 
-
-Function*
-InstanceFunctionExpression::target() const
+Function* InstanceFunctionExpression::target() const
 {
     return mTarget.target();
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

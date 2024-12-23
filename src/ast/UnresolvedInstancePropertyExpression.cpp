@@ -6,53 +6,42 @@
  * See LICENSE.txt for details.
  */
 
-#include <cassert>
 #include "UnresolvedInstancePropertyExpression.hpp"
 #include "UnknownType.hpp"
 #include "Visitor.hpp"
+#include <cassert>
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 UnresolvedInstancePropertyExpression::UnresolvedInstancePropertyExpression(
-  Expression* instance,
-  Property* target)
-    : mInstance(instance),
-      mTarget(target)
+    Expression* instance, Property* target)
+    : mInstance(instance)
+    , mTarget(target)
 {
-    assert (instance != NULL);
-    assert (target != NULL);
+    assert(instance != NULL);
+    assert(target != NULL);
 }
 
-
-void*
-UnresolvedInstancePropertyExpression::visit(Visitor* v)
+void* UnresolvedInstancePropertyExpression::visit(Visitor* v)
 {
     return v->visitUnresolvedInstancePropertyExpression(this);
 }
 
-
-Type*
-UnresolvedInstancePropertyExpression::type() const
+Type* UnresolvedInstancePropertyExpression::type() const
 {
     return TYPE_UNKNOWN;
 }
 
-
-Expression*
-UnresolvedInstancePropertyExpression::instance() const
+Expression* UnresolvedInstancePropertyExpression::instance() const
 {
     return mInstance.target();
 }
 
-
-Property*
-UnresolvedInstancePropertyExpression::target() const
+Property* UnresolvedInstancePropertyExpression::target() const
 {
     return mTarget.target();
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

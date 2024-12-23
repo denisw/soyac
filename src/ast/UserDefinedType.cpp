@@ -6,51 +6,40 @@
  * See LICENSE.txt for details.
  */
 
-#include <cassert>
-#include "DeclarationStatement.hpp"
 #include "UserDefinedType.hpp"
+#include "DeclarationStatement.hpp"
 #include "Visitor.hpp"
+#include <cassert>
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 UserDefinedType::UserDefinedType(const Name& name, DeclarationBlock* body)
-    : Type(name),
-      mBody(body)
+    : Type(name)
+    , mBody(body)
 {
-    assert (body != NULL);
+    assert(body != NULL);
 
     body->declarationListChanged().connect([this](auto oldDecl, auto newDecl) {
-       onBodyChanged(oldDecl, newDecl);
+        onBodyChanged(oldDecl, newDecl);
     });
 
     /*
      * As onBodyChanged() is not automatically called for declarations which
-     * are already part of the body passed to the UserDefinedType, we need to
-     * call it manually for each DeclarationStatement in the block.
+     * are already part of the body passed to the UserDefinedType, we need
+     * to call it manually for each DeclarationStatement in the block.
      */
-    for (DeclarationBlock::declarations_iterator it =
-           body->declarations_begin();
-         it != body->declarations_end(); it++)
-    {
+    for (DeclarationBlock::declarations_iterator it
+        = body->declarations_begin();
+        it != body->declarations_end(); it++) {
         onBodyChanged(NULL, *it);
     }
-
 }
 
+DeclarationBlock* UserDefinedType::body() const { return mBody.target(); }
 
-DeclarationBlock*
-UserDefinedType::body() const
-{
-    return mBody.target();
-}
-
-
-void
-UserDefinedType::onBodyChanged(DeclarationStatement* oldDecl,
-                               DeclarationStatement* newDecl)
+void UserDefinedType::onBodyChanged(
+    DeclarationStatement* oldDecl, DeclarationStatement* newDecl)
 {
     /*
      * Make sure that all entities declared directly in
@@ -58,12 +47,14 @@ UserDefinedType::onBodyChanged(DeclarationStatement* oldDecl,
      * (see NamedEntity::addChild()).
      */
 
-    if (oldDecl != NULL)
+    if (oldDecl != NULL) {
         removeChild(oldDecl->declaredEntity());
+    }
 
-    if (newDecl != NULL)
+    if (newDecl != NULL) {
         addChild(newDecl->declaredEntity());
+    }
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

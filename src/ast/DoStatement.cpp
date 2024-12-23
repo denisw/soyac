@@ -6,36 +6,23 @@
  * See LICENSE.txt for details.
  */
 
-#include <cassert>
 #include "DoStatement.hpp"
 #include "Visitor.hpp"
+#include <cassert>
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
-
-DoStatement::DoStatement(Expression* condition,
-                         Statement* body)
-    : StatementWithBody(body),
-      mCondition(condition)
+DoStatement::DoStatement(Expression* condition, Statement* body)
+    : StatementWithBody(body)
+    , mCondition(condition)
 {
-    assert (condition != NULL);
+    assert(condition != NULL);
 }
 
+void* DoStatement::visit(Visitor* v) { return v->visitDoStatement(this); }
 
-void*
-DoStatement::visit(Visitor* v)
-{
-    return v->visitDoStatement(this);
-}
+Expression* DoStatement::condition() const { return mCondition.target(); }
 
-
-Expression*
-DoStatement::condition() const
-{
-    return mCondition.target();
-}
-
-
-}}
+} // namespace ast
+} // namespace soyac

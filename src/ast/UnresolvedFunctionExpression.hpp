@@ -9,12 +9,11 @@
 #ifndef _UNRESOLVED_FUNCTION_EXPRESSION_HPP
 #define _UNRESOLVED_FUNCTION_EXPRESSION_HPP
 
-#include "Function.hpp"
 #include "Expression.hpp"
+#include "Function.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Placeholder for an expression which denotes an undetermined overload of
@@ -23,8 +22,7 @@ namespace ast
  * UnresolvedFunctionExpression instances are replaced with semantically
  * meaningful equivalents by the BasicAnalyzer.
  */
-class UnresolvedFunctionExpression : public Expression
-{
+class UnresolvedFunctionExpression : public Expression {
 public:
     /**
      * Iterates over the function overloads possibly denoted by the
@@ -41,11 +39,12 @@ public:
      *                         function overloads.
      */
     template <class InputIterator>
-    UnresolvedFunctionExpression(InputIterator overloads_begin,
-                                 InputIterator overloads_end)
+    UnresolvedFunctionExpression(
+        InputIterator overloads_begin, InputIterator overloads_end)
     {
-        for (InputIterator it = overloads_begin; it != overloads_end; it++)
+        for (InputIterator it = overloads_begin; it != overloads_end; it++) {
             mOverloads.push_back(*it);
+        }
     }
 
     /**
@@ -80,6 +79,7 @@ private:
     NodeList<Function> mOverloads;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

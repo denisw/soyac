@@ -9,23 +9,21 @@
 #ifndef _MODULE_HPP
 #define _MODULE_HPP
 
-#include <map>
-#include <string>
 #include "Block.hpp"
 #include "Import.hpp"
 #include "NamedEntity.hpp"
+#include <map>
+#include <string>
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents a module.
  *
  * (See the Soya Language Reference, Chapter 10.)
  */
-class Module : public NamedEntity
-{
+class Module : public NamedEntity {
 public:
     /**
      * Iterates over the module's imports (constant).
@@ -38,15 +36,16 @@ public:
      * will be created and returned. Otherwise, null is returned.
      *
      * @param name    The name of the module to return.
-     * @param create  Whether to create the requested Module if non-existent.
+     * @param create  Whether to create the requested Module if
+     * non-existent.
      * @return        The requested Module, or null.
      */
     static Module* get(const Name& name, bool create = false);
 
     /*
      * Returns the program module if existant. If it does not exist yet,
-     * @c true is passedas second argument, the program Module will be created
-     * and returned. Otherwise, null is returned.
+     * @c true is passedas second argument, the program Module will be
+     * created and returned. Otherwise, null is returned.
      *
      * @param create  Whether to create the program Module if non-existent.
      * @return        The program Module, or null.
@@ -112,7 +111,7 @@ private:
     void onBodyChanged(Statement* oldStmt, Statement* newStmt);
 };
 
-
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

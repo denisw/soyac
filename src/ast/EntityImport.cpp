@@ -6,34 +6,22 @@
  * See LICENSE.txt for details.
  */
 
-#include <cassert>
 #include "EntityImport.hpp"
 #include "Visitor.hpp"
+#include <cassert>
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 EntityImport::EntityImport(DeclaredEntity* imported)
     : mImported(imported)
 {
-    assert (imported != NULL);
+    assert(imported != NULL);
 }
 
+void* EntityImport::visit(Visitor* v) { return v->visitEntityImport(this); }
 
-void*
-EntityImport::visit(Visitor* v)
-{
-    return v->visitEntityImport(this);
-}
+DeclaredEntity* EntityImport::imported() const { return mImported.target(); }
 
-
-DeclaredEntity*
-EntityImport::imported() const
-{
-    return mImported.target();
-}
-
-
-}}
+} // namespace ast
+} // namespace soyac

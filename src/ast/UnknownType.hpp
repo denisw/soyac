@@ -9,17 +9,16 @@
 #ifndef _UNKNOWN_TYPE_HPP
 #define _UNKNOWN_TYPE_HPP
 
-#include <list>
 #include "Type.hpp"
+#include <list>
 
 /**
  * The UnknownType singleton.
  */
-#define TYPE_UNKNOWN  soyac::ast::UnknownType::getSingleton()
+#define TYPE_UNKNOWN soyac::ast::UnknownType::getSingleton()
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Placeholder for a type which cannot or must still be determined.
@@ -31,8 +30,7 @@ namespace ast
  * constructor). The name is then used by the BasicAnalyzer to determine
  * the denoted type.
  */
-class UnknownType : public Type
-{
+class UnknownType : public Type {
 public:
     /**
      * Creates an UnknownType with a known (possibly qualified) name.
@@ -80,6 +78,7 @@ private:
     std::list<NamedEntity*> mQualifiedNameParents;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

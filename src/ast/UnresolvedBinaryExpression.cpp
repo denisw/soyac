@@ -11,56 +11,40 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 UnresolvedBinaryExpression::UnresolvedBinaryExpression(
-  UnresolvedBinaryExpression::Kind kind,
-  Expression* leftHand,
-  Expression* rightHand)
-    : mKind(kind),
-      mLeftHand(leftHand),
-      mRightHand(rightHand)
+    UnresolvedBinaryExpression::Kind kind, Expression* leftHand,
+    Expression* rightHand)
+    : mKind(kind)
+    , mLeftHand(leftHand)
+    , mRightHand(rightHand)
 {
-    assert (leftHand != NULL);
-    assert (rightHand != NULL);
+    assert(leftHand != NULL);
+    assert(rightHand != NULL);
 }
 
-
-void*
-UnresolvedBinaryExpression::visit(Visitor* v)
+void* UnresolvedBinaryExpression::visit(Visitor* v)
 {
     return v->visitUnresolvedBinaryExpression(this);
 }
 
+Type* UnresolvedBinaryExpression::type() const { return TYPE_UNKNOWN; }
 
-Type*
-UnresolvedBinaryExpression::type() const
-{
-    return TYPE_UNKNOWN;
-}
-
-
-UnresolvedBinaryExpression::Kind
-UnresolvedBinaryExpression::kind() const
+UnresolvedBinaryExpression::Kind UnresolvedBinaryExpression::kind() const
 {
     return mKind;
 }
 
-
-Expression*
-UnresolvedBinaryExpression::leftHand() const
+Expression* UnresolvedBinaryExpression::leftHand() const
 {
     return mLeftHand.target();
 }
 
-
-Expression*
-UnresolvedBinaryExpression::rightHand() const
+Expression* UnresolvedBinaryExpression::rightHand() const
 {
     return mRightHand.target();
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

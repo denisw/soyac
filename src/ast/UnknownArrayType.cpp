@@ -6,35 +6,29 @@
  * See LICENSE.txt for details.
  */
 
-#include <cassert>
 #include "UnknownArrayType.hpp"
 #include "Visitor.hpp"
+#include <cassert>
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 UnknownArrayType::UnknownArrayType(UnknownType* elementType)
-    : UnknownType(elementType->name().str() + "[]"),
-      mElementType(elementType)
+    : UnknownType(elementType->name().str() + "[]")
+    , mElementType(elementType)
 {
-    assert (elementType != NULL);
+    assert(elementType != NULL);
 }
 
-
-void*
-UnknownArrayType::visit(Visitor* v)
+void* UnknownArrayType::visit(Visitor* v)
 {
     return v->visitUnknownArrayType(this);
 }
 
-
-UnknownType*
-UnknownArrayType::elementType() const
+UnknownType* UnknownArrayType::elementType() const
 {
     return mElementType.target();
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

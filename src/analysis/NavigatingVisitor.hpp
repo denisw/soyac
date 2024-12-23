@@ -13,17 +13,15 @@
 using namespace soyac::ast;
 
 namespace soyac {
-namespace analysis
-{
+namespace analysis {
 
 /**
  * An implementation of the Visitor interface that automatically navigates
  * through the abstract syntax trees. This only makes overriding of those
- * visit methods necessary where real work needs to be done; the navigational
- * aspects are handled by NavigatingVisitor.
+ * visit methods necessary where real work needs to be done; the
+ * navigational aspects are handled by NavigatingVisitor.
  */
-class NavigatingVisitor : public Visitor
-{
+class NavigatingVisitor : public Visitor {
 public:
     /**
      * Visits an ArrayCreationExpression.
@@ -159,7 +157,8 @@ public:
      * @param expr  The InstanceFunctionExpression to visit.
      * @return      Nothing.
      */
-    virtual void* visitInstanceFunctionExpression(InstanceFunctionExpression* expr);
+    virtual void* visitInstanceFunctionExpression(
+        InstanceFunctionExpression* expr);
 
     /**
      * Visits an InstanceVariableExpression.
@@ -167,7 +166,8 @@ public:
      * @param expr  The InstanceVariableExpression to visit.
      * @return      Nothing.
      */
-    virtual void* visitInstanceVariableExpression(InstanceVariableExpression* expr);
+    virtual void* visitInstanceVariableExpression(
+        InstanceVariableExpression* expr);
 
     /**
      * Visits a LogicalExpression.
@@ -250,6 +250,7 @@ public:
     virtual void* visitWhileStatement(WhileStatement* stmt);
 };
 
-}}
+} // namespace analysis
+} // namespace soyac
 
 #endif

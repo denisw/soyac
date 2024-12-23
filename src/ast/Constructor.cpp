@@ -10,32 +10,22 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
-
-Constructor::Constructor(ConstructorInitializer* initializer,
-                         Block* body)
-    : Function(CONSTRUCTOR_NAME, TYPE_VOID, body),
-      mInitializer(initializer)
+Constructor::Constructor(ConstructorInitializer* initializer, Block* body)
+    : Function(CONSTRUCTOR_NAME, TYPE_VOID, body)
+    , mInitializer(initializer)
 {
-    assert (initializer != NULL);
-    assert (body != NULL);
+    assert(initializer != NULL);
+    assert(body != NULL);
 }
 
+void* Constructor::visit(Visitor* v) { return v->visitConstructor(this); }
 
-void*
-Constructor::visit(Visitor* v)
-{
-    return v->visitConstructor(this);
-}
-
-
-ConstructorInitializer*
-Constructor::initializer() const
+ConstructorInitializer* Constructor::initializer() const
 {
     return mInitializer.target();
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

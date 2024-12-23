@@ -6,35 +6,26 @@
  * See LICENSE.txt for details.
  */
 
-#include <cassert>
 #include "FunctionParameter.hpp"
 #include "Visitor.hpp"
+#include <cassert>
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 FunctionParameter::FunctionParameter(const Name& name, Type* type)
-    : DeclaredEntity(name),
-      mType(type)
+    : DeclaredEntity(name)
+    , mType(type)
 {
-    assert (type != NULL);
+    assert(type != NULL);
 }
 
-
-void*
-FunctionParameter::visit(Visitor* v)
+void* FunctionParameter::visit(Visitor* v)
 {
     return v->visitFunctionParameter(this);
 }
 
+Type* FunctionParameter::type() const { return mType.target(); }
 
-Type*
-FunctionParameter::type() const
-{
-    return mType.target();
-}
-
-
-}}
+} // namespace ast
+} // namespace soyac

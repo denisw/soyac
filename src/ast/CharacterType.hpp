@@ -14,19 +14,17 @@
 /**
  * The "char" type. This is a shortcut to CharacterType::get().
  */
-#define TYPE_CHAR  soyac::ast::CharacterType::get()
+#define TYPE_CHAR soyac::ast::CharacterType::get()
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents a boolean type.
  *
  * (See the Soya Language Reference,)
  */
-class CharacterType : public BuiltInType
-{
+class CharacterType : public BuiltInType {
 public:
     /**
      * Returns a singleton CharacterType instance representing the
@@ -57,6 +55,7 @@ private:
     CharacterType();
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

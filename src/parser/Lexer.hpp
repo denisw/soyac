@@ -24,16 +24,14 @@ using namespace yy;
 using soyac::ast::IntegerValue;
 
 namespace soyac {
-namespace parser
-{
+namespace parser {
 
 /**
  * Soyac's lexical analyzer.
  *
  * (See the Soya Language Reference, Chapter 3.)
  */
-class Lexer
-{
+class Lexer {
 public:
     /**
      * Creates a Lexer.
@@ -44,9 +42,8 @@ public:
      * @param resultBuilder  A PassResultBuilder to which the Lexer adds
      *                       found syntax errors.
      */
-    Lexer(std::istream* stream,
-          const std::string& fileName,
-          PassResultBuilder* resultBuilder);
+    Lexer(std::istream* stream, const std::string& fileName,
+        PassResultBuilder* resultBuilder);
 
     /**
      * Lexer destructor.
@@ -69,8 +66,8 @@ public:
      * @param yylloc  Storage for the read token's location.
      * @return        The read token's ID.
      */
-    int nextToken(SoyaParser::semantic_type* yylval,
-                  SoyaParser::location_type* yylloc);
+    int nextToken(
+        SoyaParser::semantic_type* yylval, SoyaParser::location_type* yylloc);
 
 private:
     /*
@@ -92,8 +89,8 @@ private:
     const char* mLastChar;
 
     /*
-     * This variable determines whether the static regular expression objects
-     * have already been initialized.
+     * This variable determines whether the static regular expression
+     * objects have already been initialized.
      */
     static bool sInitRegexDone;
 
@@ -107,7 +104,8 @@ private:
     static std::regex sIntegerType;
 
     /*
-     * Maps Soya's keywords as strings to the IDs of their respective tokens.
+     * Maps Soya's keywords as strings to the IDs of their respective
+     * tokens.
      */
     static std::map<std::string, int> sKeywords;
 
@@ -118,26 +116,26 @@ private:
     static void initRegex();
 
     /**
-     * Calls the PassResultBuilder::addError() method of the PassResultBuilder
-     * instance passed to the Lexer constructor. As error location, the Lexer's
-     * current stream position is passed.
+     * Calls the PassResultBuilder::addError() method of the
+     * PassResultBuilder instance passed to the Lexer constructor. As error
+     * location, the Lexer's current stream position is passed.
      *
      * @see PassResultBuilder::addError()
      */
     void addError(const std::string& description);
 
     /**
-     * Reads the next character from the input stream and proceeds to the next
-     * character position in the stream. (This also includes incrementing
-     * mCurrentColumn by one; however, nextChar() does not respect line
-     * terminators and thus does not manage mCurrentLine.)
+     * Reads the next character from the input stream and proceeds to the
+     * next character position in the stream. (This also includes
+     * incrementing mCurrentColumn by one; however, nextChar() does not
+     * respect line terminators and thus does not manage mCurrentLine.)
      *
      * If the end of the input stream was already reached before the call to
      * nextChar(), the null character (@c '\0') is returned; otherwise, the
      * return value is the read character.
      *
-     * @return  The next character from the input stream, or the null character
-     *          if the input stream's end is reached.
+     * @return  The next character from the input stream, or the null
+     * character if the input stream's end is reached.
      */
     const char* nextChar();
 
@@ -146,26 +144,26 @@ private:
      * current position in the input stream. If the end of the stream is
      * encountered, the null character (@c '\0') is returned.
      *
-     * Other than nextChar(), lookAhead() does not change the Lexer's position
-     * in the stream; that is, multiple calls to lookAhead() with the same
-     * argument always return the same character as long as nextChar() is not
-     * called.
+     * Other than nextChar(), lookAhead() does not change the Lexer's
+     * position in the stream; that is, multiple calls to lookAhead() with
+     * the same argument always return the same character as long as
+     * nextChar() is not called.
      *
      * The read characters are buffered using bufferChars().
      *
      * @param numChars  The number of characters to look ahead from the
      *                  current position in the stream.
-     * @return          The requested character, or the null character if the
-     *                  input stream's end is reached.
+     * @return          The requested character, or the null character if
+     * the input stream's end is reached.
      */
     const char* lookAhead(unsigned int numChars = 1);
 
     /**
-     * Reads the next @c n UTF-8 characters (relative to the current position
-     * in the input stream) from the input stream and stores them in the
-     * Lexer's character buffer as null-terminated byte strings. If the end
-     * of the input stream is reached, the null character (@c '\0') is put
-     * into the buffer.
+     * Reads the next @c n UTF-8 characters (relative to the current
+     * position in the input stream) from the input stream and stores them
+     * in the Lexer's character buffer as null-terminated byte strings. If
+     * the end of the input stream is reached, the null character (@c '\0')
+     * is put into the buffer.
      *
      * @param n  The number of characters to buffer.
      */
@@ -208,70 +206,75 @@ private:
      * Called from readIntegerOrFloatingPointLiteral().
      *
      * @param yylval    The @c yylval argument passed to nextToken().
-     * @param negative  Whether the read value should be considered negative.
+     * @param negative  Whether the read value should be considered
+     * negative.
      * @return          The read token's ID.
      */
-    int readDecimalIntegerLiteral(SoyaParser::semantic_type* yylval,
-                                  bool negative);
+    int readDecimalIntegerLiteral(
+        SoyaParser::semantic_type* yylval, bool negative);
 
     /**
      * Reads a binary integer literal and returns the read token's ID.
      * Called from readIntegerOrFloatingPointLiteral().
      *
      * @param yylval    The @c yylval argument passed to nextToken().
-     * @param negative  Whether the read value should be considered negative.
+     * @param negative  Whether the read value should be considered
+     * negative.
      * @return          The read token's ID.
      */
-    int readBinaryIntegerLiteral(SoyaParser::semantic_type* yylval,
-                                 bool negative);
+    int readBinaryIntegerLiteral(
+        SoyaParser::semantic_type* yylval, bool negative);
 
     /**
      * Reads a octal integer literal and returns the read token's ID.
      * Called from readIntegerOrFloatingPointLiteral().
      *
      * @param yylval    The @c yylval argument passed to nextToken().
-     * @param negative  Whether the read value should be considered negative.
+     * @param negative  Whether the read value should be considered
+     * negative.
      * @return          The read token's ID.
      */
-    int readOctalIntegerLiteral(SoyaParser::semantic_type* yylval,
-                                bool negative);
+    int readOctalIntegerLiteral(
+        SoyaParser::semantic_type* yylval, bool negative);
 
     /**
      * Reads a hexadecimal integer literal and returns the read token's ID.
      * Called from readIntegerOrFloatingPointLiteral().
      *
      * @param yylval    The @c yylval argument passed to nextToken().
-     * @param negative  Whether the read value should be considered negative.
+     * @param negative  Whether the read value should be considered
+     * negative.
      * @return          The read token's ID.
      */
-    int readHexadecimalIntegerLiteral(SoyaParser::semantic_type* yylval,
-                                      bool negative);
+    int readHexadecimalIntegerLiteral(
+        SoyaParser::semantic_type* yylval, bool negative);
 
     /**
-     * Converts an integer literal (without number format prefixes like '0x')
-     * to an IntegerValue and stores it in @c yylval. If the value is not in
-     * the range of any of Soya's integer types, an error is reported and the
-     * semantic value is set to null.
+     * Converts an integer literal (without number format prefixes like
+     * '0x') to an IntegerValue and stores it in @c yylval. If the value is
+     * not in the range of any of Soya's integer types, an error is reported
+     * and the semantic value is set to null.
      *
      * @param yylval   The @c yylval argument passed to nextToken().
-     * @param literal  The literal whose value should be stored in @c yylval.
+     * @param literal  The literal whose value should be stored in @c
+     * yylval.
      * @param base     The number base of the literal (e.g. 10 for decimal
      *                 integer literals).
      */
     void setSemanticValueFromIntegerLiteral(SoyaParser::semantic_type* yylval,
-                                            const std::string& literal,
-                                            int base);
+        const std::string& literal, int base);
 
     /**
      * Reads a floating-point literal and returns the read token's ID.
      * Called from readIntegerOrFloatingPointLiteral().
      *
      * @param yylval    The @c yylval argument passed to nextToken().
-     * @param negative  Whether the read value should be considered negative.
+     * @param negative  Whether the read value should be considered
+     * negative.
      * @return          The read token's ID.
      */
-    int readFloatingPointLiteral(SoyaParser::semantic_type* yylval,
-                                 bool negative);
+    int readFloatingPointLiteral(
+        SoyaParser::semantic_type* yylval, bool negative);
 
     /**
      * Reads a character literal and returns the read token's ID.
@@ -310,10 +313,10 @@ private:
  *
  * @see Lexer::nextToken()
  */
-int yylex (SoyaParser::semantic_type* yylval,
-           SoyaParser::location_type* yylloc,
-           ParserDriver* driver);
+int yylex(SoyaParser::semantic_type* yylval, SoyaParser::location_type* yylloc,
+    ParserDriver* driver);
 
-}}
+} // namespace parser
+} // namespace soyac
 
 #endif

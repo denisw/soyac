@@ -9,22 +9,20 @@
 #ifndef _CONTROL_FLOW_ANALYZER_HPP
 #define _CONTROL_FLOW_ANALYZER_HPP
 
-#include <list>
+#include "NavigatingVisitor.hpp"
 #include <common/PassResult.hpp>
 #include <common/PassResultBuilder.hpp>
-#include "NavigatingVisitor.hpp"
+#include <list>
 
 using namespace soyac::ast;
 
 namespace soyac {
-namespace analysis
-{
+namespace analysis {
 
 /**
  * The control flow analysis pass.
  */
-class ControlFlowAnalyzer : public NavigatingVisitor
-{
+class ControlFlowAnalyzer : public NavigatingVisitor {
 public:
     /**
      * Creates a BasicAnalyzer.
@@ -81,7 +79,8 @@ protected:
      * @param expr  The FunctionParameterExpression to visit.
      * @return      Nothing.
      */
-    virtual void* visitFunctionParameterExpression(FunctionParameterExpression* expr);
+    virtual void* visitFunctionParameterExpression(
+        FunctionParameterExpression* expr);
 
     /**
      * Visits an IfStatement.
@@ -131,13 +130,14 @@ private:
     std::list<DeclaredEntity*> mUnused;
 
     /**
-     * Reports the unused declared entities found by the ControlFlowAnalyzer,
-     * and clears the list where the unused entities are collected.
+     * Reports the unused declared entities found by the
+     * ControlFlowAnalyzer, and clears the list where the unused entities
+     * are collected.
      */
     void reportUnused();
 };
 
-
-}}
+} // namespace analysis
+} // namespace soyac
 
 #endif

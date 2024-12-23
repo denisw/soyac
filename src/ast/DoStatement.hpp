@@ -13,16 +13,14 @@
 #include "StatementWithBody.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents an "do" statement.
  *
  * (See the Soya Language Reference,)
  */
-class DoStatement : public StatementWithBody
-{
+class DoStatement : public StatementWithBody {
 public:
     /**
      * Creates a DoStatement.
@@ -51,6 +49,7 @@ private:
     Link<Expression> mCondition;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

@@ -10,23 +10,17 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
-
-void*
-UnresolvedObjectCreationExpression::visit(Visitor* v)
+void* UnresolvedObjectCreationExpression::visit(Visitor* v)
 {
     return v->visitUnresolvedObjectCreationExpression(this);
 }
 
-
-Type*
-UnresolvedObjectCreationExpression::type() const
+Type* UnresolvedObjectCreationExpression::type() const
 {
     return mType.target();
 }
-
 
 UnresolvedObjectCreationExpression::arguments_iterator
 UnresolvedObjectCreationExpression::arguments_begin() const
@@ -34,12 +28,11 @@ UnresolvedObjectCreationExpression::arguments_begin() const
     return mArguments.begin();
 }
 
-
 UnresolvedObjectCreationExpression::arguments_iterator
 UnresolvedObjectCreationExpression::arguments_end() const
 {
     return mArguments.end();
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

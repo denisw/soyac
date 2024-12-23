@@ -9,20 +9,18 @@
 #ifndef _CHARACTER_LITERAL_HPP
 #define _CHARACTER_LITERAL_HPP
 
-#include <stdint.h>
 #include "Expression.hpp"
+#include <stdint.h>
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents a floating-point literal.
  *
  * (See the Soya Language Reference,)
  */
-class CharacterLiteral : public Expression
-{
+class CharacterLiteral : public Expression {
 public:
     /**
      * Creates an CharacterLiteral.
@@ -54,6 +52,7 @@ private:
     uint32_t mValue;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

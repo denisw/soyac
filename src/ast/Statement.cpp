@@ -9,13 +9,9 @@
 #include "Statement.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
+Statement::Statement() { }
 
-Statement::Statement()
-{
-}
-
-
-}}
+} // namespace ast
+} // namespace soyac

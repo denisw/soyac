@@ -13,21 +13,19 @@
 #include "Name.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents an import of a to-be-determined module.
  */
-class UnresolvedModuleImport : public Import
-{
+class UnresolvedModuleImport : public Import {
 public:
     /**
      * Creates a UnresolvedModuleImport.
      *
      * @param importedName  The imported module's name.
-     * @param direct        Whether the module's members are directly imported
-     *                      into the importing module's namespace.
+     * @param direct        Whether the module's members are directly
+     * imported into the importing module's namespace.
      */
     UnresolvedModuleImport(const Name& importedName, bool isDirect);
 
@@ -46,8 +44,9 @@ public:
     const Name& importedName() const;
 
     /**
-     * Returns @c true if the imported module's members are directly imported
-     * into the importing module's namespace. Otherwise, @c false is returned.
+     * Returns @c true if the imported module's members are directly
+     * imported into the importing module's namespace. Otherwise, @c false
+     * is returned.
      *
      * @return  @c true if the module is directly imported;
      *          @c false otherwise.
@@ -59,6 +58,7 @@ private:
     bool mIsDirect;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

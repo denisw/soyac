@@ -9,32 +9,25 @@
 #include "FunctionGroup.hpp"
 
 namespace soyac {
-namespace analysis
-{
+namespace analysis {
 
-
-FunctionGroup::overloads_iterator
-FunctionGroup::overloads_begin() const
+FunctionGroup::overloads_iterator FunctionGroup::overloads_begin() const
 {
     return mOverloads.begin();
 }
 
-
-FunctionGroup::overloads_iterator
-FunctionGroup::overloads_end() const
+FunctionGroup::overloads_iterator FunctionGroup::overloads_end() const
 {
     return mOverloads.end();
 }
 
-
-void
-FunctionGroup::addOverload(Function* func)
+void FunctionGroup::addOverload(Function* func)
 {
-    assert (func->name() == (*overloads_begin())->name());
-    assert (func->parent() == (*overloads_begin())->parent());
+    assert(func->name() == (*overloads_begin())->name());
+    assert(func->parent() == (*overloads_begin())->parent());
 
     mOverloads.push_back(func);
 }
 
-
-}}
+} // namespace analysis
+} // namespace soyac

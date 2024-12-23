@@ -10,21 +10,14 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 StructType::StructType(const Name& name, DeclarationBlock* body)
     : UserDefinedType(name, body)
 {
 }
 
+void* StructType::visit(Visitor* v) { return v->visitStructType(this); }
 
-void*
-StructType::visit(Visitor* v)
-{
-    return v->visitStructType(this);
-}
-
-
-}}
+} // namespace ast
+} // namespace soyac

@@ -6,34 +6,28 @@
  * See LICENSE.txt for details.
  */
 
-#include <cassert>
 #include "DeclarationStatement.hpp"
 #include "Visitor.hpp"
+#include <cassert>
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 DeclarationStatement::DeclarationStatement(DeclaredEntity* decl)
     : mDeclaredEntity(decl)
 {
-    assert (decl != NULL);
+    assert(decl != NULL);
 }
 
-
-void*
-DeclarationStatement::visit(Visitor* v)
+void* DeclarationStatement::visit(Visitor* v)
 {
     return v->visitDeclarationStatement(this);
 }
 
-
-DeclaredEntity*
-DeclarationStatement::declaredEntity() const
+DeclaredEntity* DeclarationStatement::declaredEntity() const
 {
     return mDeclaredEntity.target();
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

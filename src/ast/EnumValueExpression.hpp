@@ -13,14 +13,12 @@
 #include "Expression.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents an expression that denotes an enum value.
  */
-class EnumValueExpression : public Expression
-{
+class EnumValueExpression : public Expression {
 public:
     /**
      * Creates an EnumValueExpression.
@@ -54,6 +52,7 @@ private:
     Link<EnumConstant> mTarget;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

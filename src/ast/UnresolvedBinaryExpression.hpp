@@ -12,8 +12,7 @@
 #include "Expression.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents a binary operator expression that needs to be resolved
@@ -24,11 +23,9 @@ namespace ast
  *
  * (See the Soya Language Reference,)
  */
-class UnresolvedBinaryExpression : public Expression
-{
+class UnresolvedBinaryExpression : public Expression {
 public:
-    enum Kind
-    {
+    enum Kind {
         PLUS,
         MINUS,
         MUL,
@@ -58,9 +55,8 @@ public:
      * @param leftHand   The expression's left-hand expression.
      * @param rightHand  The expression's right-hand expression.
      */
-    UnresolvedBinaryExpression(Kind kind,
-                               Expression* leftHand,
-                               Expression* rightHand);
+    UnresolvedBinaryExpression(
+        Kind kind, Expression* leftHand, Expression* rightHand);
 
     /**
      * Visits the UnresolvedBinaryExpression.
@@ -101,6 +97,7 @@ private:
     Link<Expression> mRightHand;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

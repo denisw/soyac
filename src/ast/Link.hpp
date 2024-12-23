@@ -15,8 +15,7 @@
 
 #include "Node.hpp"
 
-namespace soyac::ast
-{
+namespace soyac::ast {
 
 namespace signals = boost::signals2;
 
@@ -32,9 +31,7 @@ namespace signals = boost::signals2;
  *
  * @tparam T  The target node type.
  */
-template <class T>
-class Link
-{
+template <class T> class Link {
 public:
     /**
      * Creates a Link.
@@ -52,10 +49,9 @@ public:
      */
     ~Link()
     {
-        if (mTarget != NULL)
-        {
+        if (mTarget != NULL) {
             mConnection.disconnect();
-            ((Node*) mTarget)->unref();
+            ((Node*)mTarget)->unref();
         }
     }
 
@@ -82,10 +78,7 @@ public:
      *
      * @return  The link's target.
      */
-    T* target() const
-    {
-        return mTarget;
-    }
+    T* target() const { return mTarget; }
 
     /**
      * Sets the link's target. This triggers the Link's "targetChanged"
@@ -96,17 +89,17 @@ public:
      */
     void setTarget(T* target)
     {
-        if (target != mTarget)
-        {
+        if (target != mTarget) {
             mConnection.disconnect();
 
-            if (target)
-            {
-                ((Node*) target)->ref();
+            if (target) {
+                ((Node*)target)->ref();
 
-                mConnection = ((Node*) target)->replaceRequested().connect([this](auto old_, auto new_) {
-                   onReplaceRequested(old_, new_);
-                });
+                mConnection = ((Node*)target)
+                                  ->replaceRequested()
+                                  .connect([this](auto old_, auto new_) {
+                                      onReplaceRequested(old_, new_);
+                                  });
             }
 
             T* oldTarget = mTarget;
@@ -114,8 +107,9 @@ public:
 
             targetChanged()(oldTarget, mTarget);
 
-            if (oldTarget)
-                ((Node*) oldTarget)->unref();
+            if (oldTarget) {
+                ((Node*)oldTarget)->unref();
+            }
         }
     }
 
@@ -146,10 +140,10 @@ private:
      */
     void onReplaceRequested(Node* oldTarget, Node* newTarget)
     {
-        setTarget((T*) newTarget);
+        setTarget((T*)newTarget);
     }
 };
 
-}
+} // namespace soyac::ast
 
 #endif

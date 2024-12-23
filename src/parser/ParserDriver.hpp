@@ -9,15 +9,14 @@
 #ifndef _PARSER_DRIVER_HPP
 #define _PARSER_DRIVER_HPP
 
-#include <fstream>
-#include <ast/Module.hpp>
-#include <common/PassResultBuilder.hpp>
 #include "Lexer.hpp"
 #include "parser.hpp"
+#include <ast/Module.hpp>
+#include <common/PassResultBuilder.hpp>
+#include <fstream>
 
 namespace soyac {
-namespace parser
-{
+namespace parser {
 
 /*
  * Forward-declare this helper function of the parser to declare it as
@@ -28,8 +27,7 @@ class ParserDriver;
 /**
  * Encapsulates the process of parsing a Soya source file.
  */
-class ParserDriver
-{
+class ParserDriver {
 public:
     /**
      * Creates a ParserDriver.
@@ -95,6 +93,7 @@ private:
     void setSyntaxTree(soyac::ast::Module* syntaxTree);
 };
 
-}}
+} // namespace parser
+} // namespace soyac
 
 #endif

@@ -13,8 +13,7 @@
 #include "Node.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /*
  * Forward-declare UnknownType, it is a friend class of NamedEntity. See the
@@ -27,8 +26,7 @@ class UnknownType;
  *
  * (See the Soya Language Reference,)
  */
-class NamedEntity : public Node
-{
+class NamedEntity : public Node {
 public:
     /**
      * NamedEntity constructor.
@@ -98,9 +96,9 @@ private:
     NamedEntity* mParent;
 
     /*
-     * UnknownType is made a friend class of NamedEntity to allow UnknownType
-     * instances with qualified names. See the comment in the UnkownType
-     * constructor's implementation for more details.
+     * UnknownType is made a friend class of NamedEntity to allow
+     * UnknownType instances with qualified names. See the comment in the
+     * UnkownType constructor's implementation for more details.
      */
     friend class soyac::ast::UnknownType;
 };
@@ -115,6 +113,7 @@ private:
  */
 std::ostream& operator<<(std::ostream& s, const NamedEntity* entity);
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

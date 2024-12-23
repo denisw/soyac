@@ -13,8 +13,7 @@
 #include <string>
 
 namespace soyac {
-namespace driver
-{
+namespace driver {
 
 /**
  * Links the passed list of object files together to an executable
@@ -22,10 +21,11 @@ namespace driver
  * The resulting binary file is placed at the path stored in
  * options::outputPath.
  *
- * @param objectFiles  The object files to link. 
- */ 
+ * @param objectFiles  The object files to link.
+ */
 void linkFiles(const std::list<std::string>& objectFiles);
 
-}}
+} // namespace driver
+} // namespace soyac
 
 #endif

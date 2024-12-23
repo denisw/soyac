@@ -10,22 +10,19 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 UnknownType* UnknownType::sInstance = 0;
-
 
 UnknownType::UnknownType(const Name& name)
     : Type(Name(name.last()))
 {
-    if (!name.isSimple())
-    {
+    if (!name.isSimple()) {
         /*
          * As we need to support UnknownType instances with qualified names,
-         * but NamedEntity's name() method guarantees to return a simple name,
-         * we need a small hack: we create auxiliary NamedEntity instances and
-         * chain them together with addChild() so that the
+         * but NamedEntity's name() method guarantees to return a simple
+         * name, we need a small hack: we create auxiliary NamedEntity
+         * instances and chain them together with addChild() so that the
          * UnknownType's qualifiedName() method will return the correct
          * full name, while name() will only return the simple name.
          */
@@ -35,8 +32,7 @@ UnknownType::UnknownType(const Name& name)
 
         it++;
 
-        for (; it != --name.identifiers_end(); it++)
-        {
+        for (; it != --name.identifiers_end(); it++) {
             NamedEntity* parent = new NamedEntity(Name(*it));
 
             mQualifiedNameParents.back()->addChild(parent);
@@ -47,23 +43,17 @@ UnknownType::UnknownType(const Name& name)
     }
 }
 
-
 UnknownType::~UnknownType()
 {
     for (std::list<NamedEntity*>::iterator it = mQualifiedNameParents.begin();
-         it != mQualifiedNameParents.end();
-         it++)
-    {
+        it != mQualifiedNameParents.end(); it++) {
         delete *it;
     }
 }
 
-
-UnknownType*
-UnknownType::getSingleton()
+UnknownType* UnknownType::getSingleton()
 {
-    if (!sInstance)
-    {
+    if (!sInstance) {
         sInstance = new UnknownType("(unknown)");
         sInstance->ref();
     }
@@ -71,19 +61,9 @@ UnknownType::getSingleton()
     return sInstance;
 }
 
+void* UnknownType::visit(Visitor* v) { return v->visitUnknownType(this); }
 
-void*
-UnknownType::visit(Visitor* v)
-{
-    return v->visitUnknownType(this);
-}
+bool UnknownType::isImplicitlyConvertableTo(Type* other) const { return true; }
 
-
-bool
-UnknownType::isImplicitlyConvertableTo(Type* other) const
-{
-    return true;
-}
-
-
-}}
+} // namespace ast
+} // namespace soyac

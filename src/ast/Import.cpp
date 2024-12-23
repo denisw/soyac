@@ -9,13 +9,9 @@
 #include "Import.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
+Import::Import() { }
 
-Import::Import()
-{
-}
-
-
-}}
+} // namespace ast
+} // namespace soyac

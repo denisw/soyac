@@ -14,22 +14,21 @@
 /**
  * The "bool" type. This is a shortcut to BooleanType::get().
  */
-#define TYPE_BOOL  soyac::ast::BooleanType::get()
+#define TYPE_BOOL soyac::ast::BooleanType::get()
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents the "bool" type.
  *
  * (See the Soya Language Reference,)
  */
-class BooleanType : public BuiltInType
-{
+class BooleanType : public BuiltInType {
 public:
     /**
-     * Returns a singleton BooleanType instance representing the "bool" type.
+     * Returns a singleton BooleanType instance representing the "bool"
+     * type.
      *
      * @return The "bool" type.
      */
@@ -51,6 +50,7 @@ private:
     BooleanType();
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

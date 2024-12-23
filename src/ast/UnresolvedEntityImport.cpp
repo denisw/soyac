@@ -10,28 +10,22 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 UnresolvedEntityImport::UnresolvedEntityImport(const Name& importedName)
     : mImportedName(importedName)
 {
 }
 
-
-void*
-UnresolvedEntityImport::visit(Visitor* v)
+void* UnresolvedEntityImport::visit(Visitor* v)
 {
     return v->visitUnresolvedEntityImport(this);
 }
 
-
-const Name&
-UnresolvedEntityImport::importedName() const
+const Name& UnresolvedEntityImport::importedName() const
 {
     return mImportedName;
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

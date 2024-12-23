@@ -13,35 +13,34 @@
 #include "NodeList.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents a declaration block.
  *
  * (See the Soya Language Reference,)
  */
-class DeclarationBlock : public Statement
-{
+class DeclarationBlock : public Statement {
 public:
     /**
      * Iterates over the declarations in the declaration block (constant).
      */
-    typedef NodeList<DeclarationStatement>::const_iterator declarations_iterator;
+    typedef NodeList<DeclarationStatement>::const_iterator
+        declarations_iterator;
 
     /**
      * Creates a DeclarationBlock.
      *
-     * @param declarations_start  Start iterator for the block's declarations.
+     * @param declarations_start  Start iterator for the block's
+     * declarations.
      * @param declarations_end    End iterator for the block's declarations.
      */
     template <class InputIterator>
-    DeclarationBlock(InputIterator declarations_begin,
-                     InputIterator declarations_end)
+    DeclarationBlock(
+        InputIterator declarations_begin, InputIterator declarations_end)
     {
-        for (InputIterator it = declarations_begin;
-             it != declarations_end; it++)
-        {
+        for (InputIterator it = declarations_begin; it != declarations_end;
+            it++) {
             mDeclarations.push_back(*it);
         }
     }
@@ -96,6 +95,7 @@ private:
     NodeList<DeclarationStatement> mDeclarations;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

@@ -11,57 +11,40 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 CompoundAssignmentExpression::CompoundAssignmentExpression(
-  Expression* leftHand,
-  Expression* rightHand,
-  DeclaredEntity* callee)
-    : mLeftHand(leftHand),
-      mRightHand(rightHand),
-      mCallee(callee)
+    Expression* leftHand, Expression* rightHand, DeclaredEntity* callee)
+    : mLeftHand(leftHand)
+    , mRightHand(rightHand)
+    , mCallee(callee)
 {
-    assert (leftHand != NULL);
-    assert (rightHand != NULL);
-    assert (callee != NULL);
+    assert(leftHand != NULL);
+    assert(rightHand != NULL);
+    assert(callee != NULL);
 }
 
-
-void*
-CompoundAssignmentExpression::visit(Visitor* v)
+void* CompoundAssignmentExpression::visit(Visitor* v)
 {
     return v->visitCompoundAssignmentExpression(this);
 }
 
+Type* CompoundAssignmentExpression::type() const { return leftHand()->type(); }
 
-Type*
-CompoundAssignmentExpression::type() const
-{
-    return leftHand()->type();
-}
-
-
-Expression*
-CompoundAssignmentExpression::leftHand() const
+Expression* CompoundAssignmentExpression::leftHand() const
 {
     return mLeftHand.target();
 }
 
-
-Expression*
-CompoundAssignmentExpression::rightHand() const
+Expression* CompoundAssignmentExpression::rightHand() const
 {
     return mRightHand.target();
 }
 
-
-DeclaredEntity*
-CompoundAssignmentExpression::callee() const
+DeclaredEntity* CompoundAssignmentExpression::callee() const
 {
     return mCallee.target();
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

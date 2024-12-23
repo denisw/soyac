@@ -12,14 +12,12 @@
 #include "UserDefinedType.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents a structure type.
  */
-class StructType : public UserDefinedType
-{
+class StructType : public UserDefinedType {
 public:
     /**
      * Creates a StructType.
@@ -37,6 +35,7 @@ public:
     virtual void* visit(Visitor* v);
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

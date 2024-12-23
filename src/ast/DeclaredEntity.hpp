@@ -9,32 +9,23 @@
 #ifndef _DECLARED_ENTITY_HPP
 #define _DECLARED_ENTITY_HPP
 
-#include <set>
 #include "NamedEntity.hpp"
+#include <set>
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Inherited by node classes representing declared entities.
  *
  * (See the Soya Language Reference,)
  */
-class DeclaredEntity : public NamedEntity
-{
+class DeclaredEntity : public NamedEntity {
 public:
     /**
      * Represents a declaration modifier.
      */
-    enum Modifier
-    {
-        EXTERN,
-        PRIVATE,
-        PROTECTED,
-        PUBLIC,
-        STATIC
-    };
+    enum Modifier { EXTERN, PRIVATE, PROTECTED, PUBLIC, STATIC };
 
     /**
      * DeclaredEntity constructor.
@@ -68,6 +59,7 @@ private:
     std::set<Modifier> mModifiers;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

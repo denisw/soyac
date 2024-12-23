@@ -13,14 +13,12 @@
 #include "Name.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents an import of a to-be-determined entity.
  */
-class UnresolvedEntityImport : public Import
-{
+class UnresolvedEntityImport : public Import {
 public:
     /**
      * Creates a UnresolvedEntityImport.
@@ -47,6 +45,7 @@ private:
     Name mImportedName;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

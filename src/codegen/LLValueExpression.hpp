@@ -9,21 +9,19 @@
 #ifndef _LL_VALUE_EXPRESSION_HPP
 #define _LL_VALUE_EXPRESSION_HPP
 
-#include <llvm/IR/Value.h>
 #include <ast/Expression.hpp>
 #include <ast/Type.hpp>
+#include <llvm/IR/Value.h>
 
 using namespace soyac::ast;
 
 namespace soyac {
-namespace codegen
-{
+namespace codegen {
 
 /**
  * Wrapper for an already-evaluated LLVM value.
  */
-class LLValueExpression : public Expression
-{
+class LLValueExpression : public Expression {
 public:
     /**
      * Creates a LLValueExpression.
@@ -57,6 +55,7 @@ private:
     llvm::Value* mValue;
 };
 
-}}
+} // namespace codegen
+} // namespace soyac
 
 #endif

@@ -6,28 +6,19 @@
  * See LICENSE.txt for details.
  */
 
-#include <cassert>
 #include "UnknownFunctionType.hpp"
 #include "Visitor.hpp"
+#include <cassert>
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
-
-void*
-UnknownFunctionType::visit(Visitor* v)
+void* UnknownFunctionType::visit(Visitor* v)
 {
     return v->visitUnknownFunctionType(this);
 }
 
-
-Type*
-UnknownFunctionType::returnType() const
-{
-    return mReturnType.target();
-}
-
+Type* UnknownFunctionType::returnType() const { return mReturnType.target(); }
 
 UnknownFunctionType::parameterTypes_iterator
 UnknownFunctionType::parameterTypes_begin() const
@@ -35,11 +26,11 @@ UnknownFunctionType::parameterTypes_begin() const
     return mParameterTypes.begin();
 }
 
-
 UnknownFunctionType::parameterTypes_iterator
 UnknownFunctionType::parameterTypes_end() const
 {
     return mParameterTypes.end();
 }
 
-}}
+} // namespace ast
+} // namespace soyac

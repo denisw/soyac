@@ -12,14 +12,12 @@
 #include <string>
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents a location inside a source file.
  */
-class Location
-{
+class Location {
 public:
     /**
      * Creates an unspecified Location.
@@ -36,7 +34,7 @@ public:
      * @param endColumn    The number of the ending column.
      */
     Location(const std::string& fileName, int startLine, int startColumn,
-             int endLine, int endColumn);
+        int endLine, int endColumn);
 
     /**
      * Returns the name of the Location's source file.
@@ -81,7 +79,7 @@ private:
     int mEndColumn;
 };
 
-
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

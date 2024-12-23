@@ -12,22 +12,16 @@
 #include "Expression.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents a logical AND or OR expression.
  *
  * (See the Soya Language Reference,)
  */
-class LogicalExpression : public Expression
-{
+class LogicalExpression : public Expression {
 public:
-    enum Kind
-    {
-        AND,
-        OR
-    };
+    enum Kind { AND, OR };
 
     /**
      * Creates a LogicalExpression.
@@ -77,6 +71,7 @@ private:
     Link<Expression> mRightHand;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

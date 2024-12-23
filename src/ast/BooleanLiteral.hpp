@@ -12,16 +12,14 @@
 #include "Expression.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents a boolean literal.
  *
  * (See the Soya Language Reference,)
  */
-class BooleanLiteral : public Expression
-{
+class BooleanLiteral : public Expression {
 public:
     /**
      * Creates an BooleanLiteral.
@@ -47,12 +45,13 @@ public:
      *
      * @returns  The literal's value.
      */
-     bool value() const;
+    bool value() const;
 
 private:
     bool mValue;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

@@ -10,21 +10,14 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
+DeclarationBlock::DeclarationBlock() { }
 
-DeclarationBlock::DeclarationBlock()
-{
-}
-
-
-void*
-DeclarationBlock::visit(Visitor* v)
+void* DeclarationBlock::visit(Visitor* v)
 {
     return v->visitDeclarationBlock(this);
 }
-
 
 DeclarationBlock::declarations_iterator
 DeclarationBlock::declarations_begin() const
@@ -32,20 +25,16 @@ DeclarationBlock::declarations_begin() const
     return mDeclarations.begin();
 }
 
-
 DeclarationBlock::declarations_iterator
 DeclarationBlock::declarations_end() const
 {
     return mDeclarations.end();
 }
 
-
-void
-DeclarationBlock::addDeclaration(DeclarationStatement* decl)
+void DeclarationBlock::addDeclaration(DeclarationStatement* decl)
 {
     mDeclarations.push_back(decl);
 }
-
 
 boost::signals2::signal<void(DeclarationStatement*, DeclarationStatement*)>&
 DeclarationBlock::declarationListChanged()
@@ -53,5 +42,5 @@ DeclarationBlock::declarationListChanged()
     return mDeclarations.changed();
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

@@ -13,14 +13,12 @@
 #include "UnknownType.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Placeholder for a to-be-determined array type.
  */
-class UnknownArrayType : public UnknownType
-{
+class UnknownArrayType : public UnknownType {
 public:
     /**
      * Creates an UnknownArrayType.
@@ -47,6 +45,7 @@ private:
     Link<UnknownType> mElementType;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

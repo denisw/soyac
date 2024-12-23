@@ -11,23 +11,14 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
-
-void*
-UnresolvedFunctionExpression::visit(Visitor* v)
+void* UnresolvedFunctionExpression::visit(Visitor* v)
 {
     return v->visitUnresolvedFunctionExpression(this);
 }
 
-
-Type*
-UnresolvedFunctionExpression::type() const
-{
-    return TYPE_UNKNOWN;
-}
-
+Type* UnresolvedFunctionExpression::type() const { return TYPE_UNKNOWN; }
 
 UnresolvedFunctionExpression::overloads_iterator
 UnresolvedFunctionExpression::overloads_begin() const
@@ -35,12 +26,11 @@ UnresolvedFunctionExpression::overloads_begin() const
     return mOverloads.begin();
 }
 
-
 UnresolvedFunctionExpression::overloads_iterator
 UnresolvedFunctionExpression::overloads_end() const
 {
     return mOverloads.end();
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

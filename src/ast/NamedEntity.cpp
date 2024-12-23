@@ -6,75 +6,51 @@
  * See LICENSE.txt for details.
  */
 
-#include <cassert>
 #include "NamedEntity.hpp"
+#include <cassert>
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 NamedEntity::NamedEntity(const Name& name)
-    : mName(name),
-      mParent(NULL)
+    : mName(name)
+    , mParent(NULL)
 {
-    assert (name.isSimple());
+    assert(name.isSimple());
 }
 
+const Name& NamedEntity::name() const { return mName; }
 
-const Name&
-NamedEntity::name() const
+Name NamedEntity::qualifiedName() const
 {
-    return mName;
-}
-
-
-Name
-NamedEntity::qualifiedName() const
-{
-    if (mParent == NULL)
+    if (mParent == NULL) {
         return name();
-    else
+    } else {
         return mParent->qualifiedName() + name();
+    }
 }
 
+NamedEntity* NamedEntity::parent() const { return mParent; }
 
-NamedEntity*
-NamedEntity::parent() const
-{
-    return mParent;
-}
+std::string NamedEntity::str() const { return qualifiedName().str(); }
 
-
-std::string
-NamedEntity::str() const
-{
-    return qualifiedName().str();
-}
-
-
-std::ostream&
-operator<<(std::ostream& s, const NamedEntity* entity)
+std::ostream& operator<<(std::ostream& s, const NamedEntity* entity)
 {
     s << entity->str();
     return s;
 }
 
-
-void
-NamedEntity::addChild(NamedEntity* child)
+void NamedEntity::addChild(NamedEntity* child)
 {
-    assert (child->mParent == this || child->mParent == NULL);
+    assert(child->mParent == this || child->mParent == NULL);
     child->mParent = this;
 }
 
-
-void
-NamedEntity::removeChild(NamedEntity* child)
+void NamedEntity::removeChild(NamedEntity* child)
 {
-    assert (child->mParent == this || child->mParent == NULL);
+    assert(child->mParent == this || child->mParent == NULL);
     child->mParent = NULL;
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

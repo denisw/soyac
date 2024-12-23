@@ -9,21 +9,19 @@
 #ifndef _FUNCTION_TYPE_HPP
 #define _FUNCTION_TYPE_HPP
 
-#include <map>
 #include "BuiltInType.hpp"
 #include "NodeList.hpp"
+#include <map>
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents a function type.
  *
  * (See the Soya Language Reference,)
  */
-class FunctionType : public BuiltInType
-{
+class FunctionType : public BuiltInType {
 public:
     /**
      * Iterates over the function type's parameter types (constant).
@@ -43,11 +41,10 @@ public:
      */
     template <class InputIterator>
     static FunctionType* get(Type* returnType,
-                             InputIterator parameterTypes_begin,
-                             InputIterator parameterTypes_end)
+        InputIterator parameterTypes_begin, InputIterator parameterTypes_end)
     {
-        NodeList<Type>* parameterTypes =
-          new NodeList<Type>(parameterTypes_begin, parameterTypes_end);
+        NodeList<Type>* parameterTypes
+            = new NodeList<Type>(parameterTypes_begin, parameterTypes_end);
 
         return _get(returnType, parameterTypes);
     }
@@ -97,27 +94,27 @@ private:
      * Compares two function signatures. Needed as comparator for the
      * instance map.
      */
-    class SignatureComparator
-    {
+    class SignatureComparator {
     public:
         bool operator()(const std::pair<Type*, NodeList<Type>*>& sig1,
-                        const std::pair<Type*, NodeList<Type>*>& sig2) const
+            const std::pair<Type*, NodeList<Type>*>& sig2) const
         {
-            if (sig1.first != sig2.first)
+            if (sig1.first != sig2.first) {
                 return sig1.first < sig2.first;
+            }
 
-            else if (sig1.second->size() != sig2.second->size())
+            else if (sig1.second->size() != sig2.second->size()) {
                 return sig1.second->size() < sig2.second->size();
+            }
 
-            else
-            {
+            else {
                 NodeList<Type>::const_iterator it1 = sig1.second->begin();
                 NodeList<Type>::const_iterator it2 = sig2.second->begin();
 
-                for (; it1 != sig1.second->end(); it1++, it2++)
-                {
-                    if (*it1 != *it2)
+                for (; it1 != sig1.second->end(); it1++, it2++) {
+                    if (*it1 != *it2) {
                         return *it1 < *it2;
+                    }
                 }
             }
 
@@ -125,8 +122,9 @@ private:
         }
     };
 
-    static std::map<std::pair<Type*, NodeList<Type>*>,
-                    FunctionType*, SignatureComparator> sInstances;
+    static std::map<std::pair<Type*, NodeList<Type>*>, FunctionType*,
+        SignatureComparator>
+        sInstances;
 
     Link<Type> mReturnType;
     NodeList<Type>* mParameterTypes;
@@ -137,8 +135,7 @@ private:
      * @param returnType      The function type's return type.
      * @param parameterTypes  The function type's parameter types.
      */
-    static FunctionType* _get(Type* returnType,
-                              NodeList<Type>* parameterTypes);
+    static FunctionType* _get(Type* returnType, NodeList<Type>* parameterTypes);
 
     /**
      * Creates a FunctionType.
@@ -149,6 +146,7 @@ private:
     FunctionType(Type* returnType, NodeList<Type>* parameterTypes);
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

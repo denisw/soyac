@@ -13,16 +13,14 @@
 #include "Type.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
- * Represents a cast expression. 
+ * Represents a cast expression.
  *
  * (See the Soya Language Reference,)
  */
-class CastExpression : public Expression
-{
+class CastExpression : public Expression {
 public:
     /**
      * Creates an CastExpression.
@@ -56,6 +54,7 @@ private:
     Link<Type> mType;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

@@ -9,24 +9,22 @@
 #ifndef _NAME_HPP
 #define _NAME_HPP
 
+#include "Node.hpp"
 #include <cassert>
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
-#include "Node.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents a name.
  *
  * (See the Soya Language Reference, Chapter 7.)
  */
-class Name
-{
+class Name {
 public:
     typedef std::vector<std::string>::const_iterator identifiers_iterator;
 
@@ -53,13 +51,13 @@ public:
      * @param first  The start iterator.
      * @param last   The end iterator.
      */
-    template <class InputIterator>
-    Name(InputIterator start, InputIterator end)
+    template <class InputIterator> Name(InputIterator start, InputIterator end)
     {
-        for (InputIterator it = start; it != end; it++)
+        for (InputIterator it = start; it != end; it++) {
             mIdentifiers.push_back(*it);
+        }
 
-        assert (countIdentifiers() > 0);
+        assert(countIdentifiers() > 0);
     }
 
     /**
@@ -156,6 +154,7 @@ private:
  */
 std::ostream& operator<<(std::ostream& s, const Name& name);
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

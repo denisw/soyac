@@ -13,8 +13,7 @@
 #include "Node.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 class Type;
 
@@ -23,8 +22,7 @@ class Type;
  *
  * (See the Soya Language Reference,)
  */
-class Expression : public Node
-{
+class Expression : public Node {
 public:
     /**
      * Expression constructor.
@@ -42,6 +40,7 @@ public:
     virtual Type* type() const = 0;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

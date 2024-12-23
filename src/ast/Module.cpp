@@ -11,11 +11,9 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 std::map<std::string, Module*> Module::sInstances;
-
 
 Module::Module(const Name& name)
     : NamedEntity(name)
@@ -27,18 +25,15 @@ Module::Module(const Name& name)
     mBody.ref();
 
     mBody.statementListChanged().connect([this](auto oldValue, auto newValue) {
-            onBodyChanged(oldValue, newValue);
+        onBodyChanged(oldValue, newValue);
     });
 }
 
-
-Module*
-Module::get(const Name& name, bool create)
+Module* Module::get(const Name& name, bool create)
 {
     Module* m = sInstances[name.str()];
 
-    if (m == NULL && create == true)
-    {
+    if (m == NULL && create == true) {
         m = sInstances[name.str()] = new Module(name);
         m->ref();
     }
@@ -46,51 +41,25 @@ Module::get(const Name& name, bool create)
     return m;
 }
 
-
-Module*
-Module::getProgram(bool create)
+Module* Module::getProgram(bool create)
 {
     return Module::get("__program__", create);
 }
 
+void* Module::visit(Visitor* v) { return v->visitModule(this); }
 
-void*
-Module::visit(Visitor* v)
-{
-    return v->visitModule(this);
-}
-
-
-Module::imports_iterator
-Module::imports_begin() const
+Module::imports_iterator Module::imports_begin() const
 {
     return mImports.begin();
 }
 
+Module::imports_iterator Module::imports_end() const { return mImports.end(); }
 
-Module::imports_iterator
-Module::imports_end() const
-{
-    return mImports.end();
-}
+void Module::addImport(Import* imp) { mImports.push_back(imp); }
 
+Block* Module::body() { return &mBody; }
 
-void
-Module::addImport(Import* imp)
-{
-    mImports.push_back(imp);
-}
-
-
-Block*
-Module::body()
-{
-    return &mBody;
-}
-
-
-void
-Module::onBodyChanged(Statement* oldStmt, Statement* newStmt)
+void Module::onBodyChanged(Statement* oldStmt, Statement* newStmt)
 {
     /*
      * Make sure that all entities declared directly in
@@ -98,16 +67,20 @@ Module::onBodyChanged(Statement* oldStmt, Statement* newStmt)
      * NamedEntity::addChild() for more information.
      */
 
-    DeclarationStatement* oldDecl = dynamic_cast<DeclarationStatement*>(oldStmt);
+    DeclarationStatement* oldDecl
+        = dynamic_cast<DeclarationStatement*>(oldStmt);
 
-    if (oldDecl != NULL)
+    if (oldDecl != NULL) {
         removeChild(oldDecl->declaredEntity());
+    }
 
-    DeclarationStatement* newDecl = dynamic_cast<DeclarationStatement*>(newStmt);
+    DeclarationStatement* newDecl
+        = dynamic_cast<DeclarationStatement*>(newStmt);
 
-    if (newDecl != NULL)
+    if (newDecl != NULL) {
         addChild(newDecl->declaredEntity());
+    }
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

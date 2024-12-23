@@ -10,41 +10,23 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
+Block::Block() { }
 
-Block::Block()
-{
-}
+void* Block::visit(Visitor* v) { return v->visitBlock(this); }
 
-void*
-Block::visit(Visitor* v)
-{
-    return v->visitBlock(this);
-}
-
-
-Block::statements_iterator
-Block::statements_begin() const
+Block::statements_iterator Block::statements_begin() const
 {
     return mStatements.begin();
 }
 
-
-Block::statements_iterator
-Block::statements_end() const
+Block::statements_iterator Block::statements_end() const
 {
     return mStatements.end();
 }
 
-
-void
-Block::addStatement(Statement* s)
-{
-    mStatements.push_back(s);
-}
-
+void Block::addStatement(Statement* s) { mStatements.push_back(s); }
 
 boost::signals2::signal<void(Statement*, Statement*)>&
 Block::statementListChanged()
@@ -52,5 +34,5 @@ Block::statementListChanged()
     return mStatements.changed();
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

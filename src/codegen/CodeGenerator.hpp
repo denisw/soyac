@@ -14,19 +14,18 @@
 #include <filesystem>
 #include <stdint.h>
 
-#include <llvm/IR/Function.h>
-#include <llvm/IR/IRBuilder.h>
-#include <llvm/IR/Module.h>
-#include <ast/NamedEntity.hpp>
+#include "LLValueExpression.hpp"
 #include <ast/FunctionParameter.hpp>
+#include <ast/NamedEntity.hpp>
 #include <ast/NodeList.hpp>
 #include <ast/UserDefinedType.hpp>
 #include <ast/Visitor.hpp>
-#include "LLValueExpression.hpp"
+#include <llvm/IR/Function.h>
+#include <llvm/IR/IRBuilder.h>
+#include <llvm/IR/Module.h>
 
 namespace soyac {
-namespace codegen
-{
+namespace codegen {
 
 using namespace soyac::ast;
 using std::filesystem::path;
@@ -34,19 +33,16 @@ using std::filesystem::path;
 /**
  * Translates an abstract syntax tree to its LLVM IR representation.
  */
-class CodeGenerator : soyac::ast::Visitor
-{
+class CodeGenerator : soyac::ast::Visitor {
 public:
     /**
      * Creates a CodeGenerator.
      */
     CodeGenerator(Module* module);
-    
-    void toLLVMAssembly(path destination,
-                        std::error_code& error);
-    
-    void toObjectCode(path destination,
-                      std::error_code& error);
+
+    void toLLVMAssembly(path destination, std::error_code& error);
+
+    void toObjectCode(path destination, std::error_code& error);
 
 protected:
     /**
@@ -119,7 +115,8 @@ protected:
      * @param expr  The CombinedRelationalExpression to visit.
      * @return      The equivalent LLVM value.
      */
-    virtual void* visitCombinedRelationalExpression(CombinedRelationalExpression* expr);
+    virtual void* visitCombinedRelationalExpression(
+        CombinedRelationalExpression* expr);
 
     /**
      * Visits an CompoundAssignmentExpression.
@@ -127,7 +124,8 @@ protected:
      * @param expr  The CompoundAssignmentExpression to visit.
      * @return      The equivalent LLVM value.
      */
-    virtual void* visitCompoundAssignmentExpression(CompoundAssignmentExpression* expr);
+    virtual void* visitCompoundAssignmentExpression(
+        CompoundAssignmentExpression* expr);
 
     /**
      * Visits a Constructor.
@@ -215,7 +213,8 @@ protected:
      * @param expr  The FunctionParameterExpression to visit.
      * @return      The equivalent LLVM value.
      */
-    virtual void* visitFunctionParameterExpression(FunctionParameterExpression* expr);
+    virtual void* visitFunctionParameterExpression(
+        FunctionParameterExpression* expr);
 
     /**
      * Visits an IfStatement.
@@ -231,7 +230,8 @@ protected:
      * @param expr  The InstanceFunctionExpression to visit.
      * @return      The equivalent LLVM value.
      */
-    virtual void* visitInstanceFunctionExpression(InstanceFunctionExpression* expr);
+    virtual void* visitInstanceFunctionExpression(
+        InstanceFunctionExpression* expr);
 
     /**
      * Visits an InstanceVariableExpression.
@@ -239,7 +239,8 @@ protected:
      * @param expr  The InstanceVariableExpression to visit.
      * @return      The equivalent LLVM value.
      */
-    virtual void* visitInstanceVariableExpression(InstanceVariableExpression* expr);
+    virtual void* visitInstanceVariableExpression(
+        InstanceVariableExpression* expr);
 
     /**
      * Visits an IntegerLiteral.
@@ -446,9 +447,8 @@ private:
      * @return          An LLVM pointer value which points to the
      *                  class-specific data of the instance.
      */
-    llvm::Value* createGetInstanceData(llvm::Value* instance,
-                                      ClassType* type,
-                                      bool lvalue = false);
+    llvm::Value* createGetInstanceData(
+        llvm::Value* instance, ClassType* type, bool lvalue = false);
 
     /**
      * Generates the initializer function (see llinitializer()) for the
@@ -471,9 +471,8 @@ private:
      * @return            The resulting LLVM value.
      */
     llvm::Value* createBuiltInMethodCall(Expression* operand,
-                                         const Name& methodName,
-                                         Expression* argument = NULL,
-                                         Expression* argument2 = NULL);
+        const Name& methodName, Expression* argument = NULL,
+        Expression* argument2 = NULL);
 
     /**
      * Generates the instructions corresponding to a built-in property's
@@ -485,8 +484,8 @@ private:
      * @param propertyName  The built-in method's name.
      * @return              The resulting LLVM value.
      */
-    llvm::Value* createBuiltInPropertyCall(Expression* operand,
-                                           const Name& propertyName);
+    llvm::Value* createBuiltInPropertyCall(
+        Expression* operand, const Name& propertyName);
 
     /**
      * Creates instructions that determine the object size of the passed
@@ -521,7 +520,7 @@ private:
     llvm::Value* createGCMalloc(llvm::Type* type, llvm::Value* n = nullptr);
 };
 
-
-}}
+} // namespace codegen
+} // namespace soyac
 
 #endif

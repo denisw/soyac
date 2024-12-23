@@ -13,14 +13,12 @@
 #include "FunctionParameter.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents an expression that denotes a function parameter.
  */
-class FunctionParameterExpression : public Expression
-{
+class FunctionParameterExpression : public Expression {
 public:
     /**
      * Creates a FunctionParameterExpression.
@@ -52,6 +50,7 @@ private:
     Link<FunctionParameter> mTarget;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

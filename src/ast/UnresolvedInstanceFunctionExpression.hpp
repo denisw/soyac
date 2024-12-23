@@ -9,13 +9,12 @@
 #ifndef _UNRESOLVED_INSTANCE_FUNCTION_EXPRESSION_HPP
 #define _UNRESOLVED_INSTANCE_FUNCTION_EXPRESSION_HPP
 
-#include <cassert>
-#include "Function.hpp"
 #include "Expression.hpp"
+#include "Function.hpp"
+#include <cassert>
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents an expression denoting a to-be-determined overload
@@ -24,8 +23,7 @@ namespace ast
  * UnresolvedInstanceFunctionExpression instances are replaced with
  * semantically unambiguous equivalents by the BasicAnalyzer.
  */
-class UnresolvedInstanceFunctionExpression : public Expression
-{
+class UnresolvedInstanceFunctionExpression : public Expression {
 public:
     /**
      * Iterates over the instance method overloads possibly denoted by the
@@ -44,14 +42,14 @@ public:
      */
     template <class InputIterator>
     UnresolvedInstanceFunctionExpression(Expression* instance,
-                                         InputIterator overloads_begin,
-                                         InputIterator overloads_end)
+        InputIterator overloads_begin, InputIterator overloads_end)
         : mInstance(instance)
     {
-        assert (instance != NULL);
+        assert(instance != NULL);
 
-        for (InputIterator it = overloads_begin; it != overloads_end; it++)
+        for (InputIterator it = overloads_begin; it != overloads_end; it++) {
             mOverloads.push_back(*it);
+        }
     }
 
     /**
@@ -95,6 +93,7 @@ private:
     NodeList<Function> mOverloads;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

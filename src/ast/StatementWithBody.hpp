@@ -12,8 +12,7 @@
 #include "Statement.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Inherited by node classes representing statements which contain
@@ -21,8 +20,7 @@ namespace ast
  *
  * (See the Soya Language Reference,)
  */
-class StatementWithBody : public Statement
-{
+class StatementWithBody : public Statement {
 public:
     /**
      * StatementWithBody constructor.
@@ -42,6 +40,7 @@ private:
     Link<Statement> mBody;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

@@ -6,47 +6,34 @@
  * See LICENSE.txt for details.
  */
 
-#include <cassert>
 #include "Variable.hpp"
 #include "UnknownType.hpp"
 #include "Visitor.hpp"
+#include <cassert>
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 Variable::Variable(const Name& name, Type* type, Expression* initializer)
-    : DeclaredEntity(name),
-      mType(type),
-      mInitializer(initializer)
+    : DeclaredEntity(name)
+    , mType(type)
+    , mInitializer(initializer)
 {
-    assert (type != NULL);
+    assert(type != NULL);
 }
 
+void* Variable::visit(Visitor* v) { return v->visitVariable(this); }
 
-void*
-Variable::visit(Visitor* v)
+Type* Variable::type() const
 {
-    return v->visitVariable(this);
-}
-
-
-Type*
-Variable::type() const
-{
-    if (mType.target() == TYPE_UNKNOWN && initializer() != NULL)
+    if (mType.target() == TYPE_UNKNOWN && initializer() != NULL) {
         return initializer()->type();
-    else
+    } else {
         return mType.target();
+    }
 }
 
+Expression* Variable::initializer() const { return mInitializer.target(); }
 
-Expression*
-Variable::initializer() const
-{
-    return mInitializer.target();
-}
-
-
-}}
+} // namespace ast
+} // namespace soyac

@@ -10,21 +10,19 @@
 #define _FLOATING_POINT_VALUE_HPP
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents a floating-point value.
  */
-class FloatingPointValue
-{
+class FloatingPointValue {
 public:
     /**
      * Creates a FloatingPointValue.
      *
      * @param data             The floating-point data.
      * @param singlePrecision  Whether the value should be interpreted as
-     *                         single-precision floating-point number.  
+     *                         single-precision floating-point number.
      */
     FloatingPointValue(double data, bool singlePrecision);
 
@@ -51,6 +49,7 @@ private:
     bool mIsSinglePrecision;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

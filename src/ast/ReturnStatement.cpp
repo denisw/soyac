@@ -6,34 +6,28 @@
  * See LICENSE.txt for details.
  */
 
-#include <cassert>
 #include "ReturnStatement.hpp"
 #include "Visitor.hpp"
+#include <cassert>
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 ReturnStatement::ReturnStatement(Expression* returnValue)
     : mReturnValue(returnValue)
 {
-    assert (returnValue != NULL);
+    assert(returnValue != NULL);
 }
 
-
-void*
-ReturnStatement::visit(Visitor* v)
+void* ReturnStatement::visit(Visitor* v)
 {
     return v->visitReturnStatement(this);
 }
 
-
-Expression*
-ReturnStatement::returnValue() const
+Expression* ReturnStatement::returnValue() const
 {
     return mReturnValue.target();
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

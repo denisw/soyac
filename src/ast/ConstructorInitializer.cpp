@@ -11,23 +11,17 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
-
-void*
-ConstructorInitializer::visit(Visitor* v)
+void* ConstructorInitializer::visit(Visitor* v)
 {
     return v->visitConstructorInitializer(this);
 }
 
-
-Constructor*
-ConstructorInitializer::constructor() const
+Constructor* ConstructorInitializer::constructor() const
 {
     return mConstructor.target();
 }
-
 
 ConstructorInitializer::arguments_iterator
 ConstructorInitializer::arguments_begin() const
@@ -35,12 +29,11 @@ ConstructorInitializer::arguments_begin() const
     return mArguments.begin();
 }
 
-
 ConstructorInitializer::arguments_iterator
 ConstructorInitializer::arguments_end() const
 {
     return mArguments.end();
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

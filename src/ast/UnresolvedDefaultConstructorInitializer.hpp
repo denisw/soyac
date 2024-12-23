@@ -12,8 +12,7 @@
 #include "ConstructorInitializer.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents a constructor initializer with to-be-determined
@@ -22,8 +21,7 @@ namespace ast
  *
  * @see  UnresolvedBaseConstructorInitializer
  */
-class UnresolvedDefaultConstructorInitializer : public ConstructorInitializer
-{
+class UnresolvedDefaultConstructorInitializer : public ConstructorInitializer {
 public:
     /**
      * Creates an UnresolvedDefaultConstructorInitializer.
@@ -38,6 +36,7 @@ public:
     virtual void* visit(Visitor* v);
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

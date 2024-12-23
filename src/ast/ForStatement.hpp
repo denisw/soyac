@@ -9,25 +9,24 @@
 #ifndef _FOR_STATEMENT_HPP
 #define _FOR_STATEMENT_HPP
 
-#include <cassert>
 #include "Expression.hpp"
 #include "NodeList.hpp"
 #include "StatementWithBody.hpp"
+#include <cassert>
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents an "for" statement.
  *
  * (See the Soya Language Reference,)
  */
-class ForStatement : public StatementWithBody
-{
+class ForStatement : public StatementWithBody {
 public:
     /**
-     * Iterates over the "for" statement's initializer statements (constant).
+     * Iterates over the "for" statement's initializer statements
+     * (constant).
      */
     typedef NodeList<Statement>::const_iterator initializers_iterator;
 
@@ -51,25 +50,18 @@ public:
      * @param body                The "for" statement's body.
      */
     template <class InputIterator1, class InputIterator2>
-    ForStatement(Expression* condition,
-                 InputIterator1 initializers_begin,
-                 InputIterator1 initializers_end,
-                 InputIterator2 iterators_begin,
-                 InputIterator2 iterators_end,
-                 Statement* body)
-        : StatementWithBody(body),
-          mCondition(condition)
+    ForStatement(Expression* condition, InputIterator1 initializers_begin,
+        InputIterator1 initializers_end, InputIterator2 iterators_begin,
+        InputIterator2 iterators_end, Statement* body)
+        : StatementWithBody(body)
+        , mCondition(condition)
     {
-        for (InputIterator1 it = initializers_begin;
-             it != initializers_end; it++)
-        {
+        for (InputIterator1 it = initializers_begin; it != initializers_end;
+            it++) {
             mInitializers.push_back(*it);
         }
 
-
-        for (InputIterator2 it = iterators_begin;
-             it != iterators_end; it++)
-        {
+        for (InputIterator2 it = iterators_begin; it != iterators_end; it++) {
             mIterators.push_back(*it);
         }
     }
@@ -130,6 +122,7 @@ private:
     NodeList<Statement> mIterators;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

@@ -11,38 +11,25 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 IntegerLiteral::IntegerLiteral(const IntegerValue& value)
     : mValue(value)
 {
 }
 
+void* IntegerLiteral::visit(Visitor* v) { return v->visitIntegerLiteral(this); }
 
-void*
-IntegerLiteral::visit(Visitor* v)
+Type* IntegerLiteral::type() const
 {
-    return v->visitIntegerLiteral(this);
-}
-
-
-Type*
-IntegerLiteral::type() const
-{
-    if (value() >= TYPE_INT->min() && value() <= TYPE_INT->max())
+    if (value() >= TYPE_INT->min() && value() <= TYPE_INT->max()) {
         return TYPE_INT;
-    else
+    } else {
         return TYPE_LONG;
+    }
 }
 
+const IntegerValue& IntegerLiteral::value() const { return mValue; }
 
-const IntegerValue&
-IntegerLiteral::value() const
-{
-    return mValue;
-}
-
-
-}}
+} // namespace ast
+} // namespace soyac

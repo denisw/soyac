@@ -6,42 +6,28 @@
  * See LICENSE.txt for details.
  */
 
-#include <cassert>
 #include "ModuleExpression.hpp"
 #include "UnknownType.hpp"
 #include "Visitor.hpp"
+#include <cassert>
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 ModuleExpression::ModuleExpression(Module* target)
     : mTarget(target)
 {
-    assert (target != NULL);
+    assert(target != NULL);
 }
 
-
-void*
-ModuleExpression::visit(Visitor* v)
+void* ModuleExpression::visit(Visitor* v)
 {
     return v->visitModuleExpression(this);
 }
 
+Type* ModuleExpression::type() const { return TYPE_UNKNOWN; }
 
-Type*
-ModuleExpression::type() const
-{
-    return TYPE_UNKNOWN;
-}
+Module* ModuleExpression::target() const { return mTarget.target(); }
 
-
-Module*
-ModuleExpression::target() const
-{
-    return mTarget.target();
-}
-
-
-}}
+} // namespace ast
+} // namespace soyac

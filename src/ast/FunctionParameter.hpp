@@ -14,16 +14,14 @@
 #include "Type.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents a function parameter.
  *
  * (See the Soya Language Reference,)
  */
-class FunctionParameter : public DeclaredEntity
-{
+class FunctionParameter : public DeclaredEntity {
 public:
     /**
      * Creates a FunctionParameter.
@@ -51,6 +49,7 @@ private:
     Link<Type> mType;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

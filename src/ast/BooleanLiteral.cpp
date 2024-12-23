@@ -11,35 +11,18 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 BooleanLiteral::BooleanLiteral(bool value)
     : mValue(value)
 {
 }
 
+void* BooleanLiteral::visit(Visitor* v) { return v->visitBooleanLiteral(this); }
 
-void*
-BooleanLiteral::visit(Visitor* v)
-{
-    return v->visitBooleanLiteral(this);
-}
+Type* BooleanLiteral::type() const { return TYPE_BOOL; }
 
+bool BooleanLiteral::value() const { return mValue; }
 
-Type*
-BooleanLiteral::type() const
-{
-    return TYPE_BOOL;
-}
-
-
-bool
-BooleanLiteral::value() const
-{
-    return mValue;
-}
-
-
-}}
+} // namespace ast
+} // namespace soyac

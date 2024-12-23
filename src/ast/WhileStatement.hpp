@@ -13,16 +13,14 @@
 #include "StatementWithBody.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents an "while" statement.
  *
  * (See the Soya Language Reference,)
  */
-class WhileStatement : public StatementWithBody
-{
+class WhileStatement : public StatementWithBody {
 public:
     /**
      * Creates a WhileStatement.
@@ -40,8 +38,8 @@ public:
     virtual void* visit(Visitor* v);
 
     /**
-     * Returns the expression that determines if the "while" statement's body
-     * is executed (again).
+     * Returns the expression that determines if the "while" statement's
+     * body is executed (again).
      *
      * @return  The loop condition.
      */
@@ -51,6 +49,7 @@ private:
     Link<Expression> mCondition;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

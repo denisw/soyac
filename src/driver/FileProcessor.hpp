@@ -9,24 +9,22 @@
 #ifndef _FILE_PROCESSOR_HPP
 #define _FILE_PROCESSOR_HPP
 
+#include <analysis/ModulesRequiredException.hpp>
+#include <ast/Module.hpp>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <string>
 #include <llvm/IR/Module.h>
 #include <llvm/Support/Path.h>
-#include <analysis/ModulesRequiredException.hpp>
-#include <ast/Module.hpp>
+#include <string>
 
 namespace soyac {
-namespace driver
-{
+namespace driver {
 
 /**
  * Encapsulates the processing of a single input file.
  */
-class FileProcessor
-{
+class FileProcessor {
 public:
     /**
      * Creates a FileProcessor.
@@ -41,12 +39,12 @@ public:
     ~FileProcessor();
 
     /**
-     * Processes the input file associated with the FileProcessor and returns
-     * the name of the generated output file. If no processing is required
-     * (e.g., if "-c" is specified as command-line argument and the input file
-     * is already an object file), the returned output file is identical to
-     * the input file. If processing fails (e.g. due to compilation errors),
-     * an empty string is returned instead.
+     * Processes the input file associated with the FileProcessor and
+     * returns the name of the generated output file. If no processing is
+     * required (e.g., if "-c" is specified as command-line argument and the
+     * input file is already an object file), the returned output file is
+     * identical to the input file. If processing fails (e.g. due to
+     * compilation errors), an empty string is returned instead.
      *
      * If an I/O error occurs while an input source or interface file is
      * read, a std::ifstream::failure exception is thrown.
@@ -69,9 +67,10 @@ private:
     std::filesystem::path mTempDir;
 
     /**
-     * Analyzes the passed Module. If there are modules required which are not
-     * processed yet, a ModulesRequiredException is thrown. Otherwise, @c true
-     * is returned if no errors are found in the module. If errors are found,
+     * Analyzes the passed Module. If there are modules required which are
+     * not processed yet, a ModulesRequiredException is thrown. Otherwise,
+     * @c true is returned if no errors are found in the module. If errors
+     * are found,
      * @c false is returned.
      *
      * @param m  The module to analyze.
@@ -79,7 +78,7 @@ private:
      *           @c false otherwise.
      */
     bool analyze(soyac::ast::Module* m);
-    
+
     /**
      * Compiles the passed module to the target format requested by the
      * current compiler options.
@@ -91,9 +90,9 @@ private:
 
     /**
      * Generates an LLVM assembly file from the passed module and returns
-     * its path. (If the FileProcessor's target output format is LLVM assembly,
-     * the file will be located in the input file's directory. Otherwise, it
-     * is stored in the FileProcessor's temporary directory.)
+     * its path. (If the FileProcessor's target output format is LLVM
+     * assembly, the file will be located in the input file's directory.
+     * Otherwise, it is stored in the FileProcessor's temporary directory.)
      *
      * @param m  The module to generate code for.
      * @return   The resulting LLVM assembly file's path.
@@ -110,6 +109,7 @@ private:
     std::filesystem::path generateObjectFile(soyac::ast::Module* m);
 };
 
-}}
+} // namespace driver
+} // namespace soyac
 
 #endif

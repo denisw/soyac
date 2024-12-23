@@ -12,16 +12,14 @@
 #include "DeclaredEntity.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Inherited by node classes representing types.
  *
  * (See the Soya Language Reference,)
  */
-class Type : public DeclaredEntity
-{
+class Type : public DeclaredEntity {
 public:
     /**
      * Creates a Type.
@@ -55,7 +53,8 @@ public:
      * or if the type is a subtype of the other (see isSubtypeOf())..
      *
      * @param type  The other type.
-     * @return      @c true if the declared type is compatible with the other;
+     * @return      @c true if the declared type is compatible with the
+     * other;
      *              @c false otherwise.
      */
     virtual bool isImplicitlyConvertableTo(Type* other) const;
@@ -74,6 +73,7 @@ public:
     virtual bool isSubtypeOf(Type* other) const;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

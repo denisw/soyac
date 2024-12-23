@@ -13,14 +13,12 @@
 #include "Module.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents an import of a module.
  */
-class ModuleImport : public Import
-{
+class ModuleImport : public Import {
 public:
     /**
      * Creates a ModuleImport.
@@ -46,8 +44,9 @@ public:
     Module* imported() const;
 
     /**
-     * Returns @c true if the imported module's members are directly imported
-     * into the importing module's namespace. Otherwise, @c false is returned.
+     * Returns @c true if the imported module's members are directly
+     * imported into the importing module's namespace. Otherwise, @c false
+     * is returned.
      *
      * @return  @c true if the module is directly imported;
      *          @c false otherwise.
@@ -59,6 +58,7 @@ private:
     bool mIsDirect;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

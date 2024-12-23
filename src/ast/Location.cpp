@@ -9,64 +9,36 @@
 #include "Location.hpp"
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 Location::Location()
-    : mFileName("<unknown>"),
-      mStartLine(0),
-      mStartColumn(0),
-      mEndLine(0),
-      mEndColumn(0)
+    : mFileName("<unknown>")
+    , mStartLine(0)
+    , mStartColumn(0)
+    , mEndLine(0)
+    , mEndColumn(0)
 {
 }
-
 
 Location::Location(const std::string& fileName, int startLine, int startColumn,
-                   int endLine, int endColumn)
-    : mFileName (fileName),
-      mStartLine(startLine),
-      mStartColumn(startColumn),
-      mEndLine(endLine),
-      mEndColumn(endColumn)
+    int endLine, int endColumn)
+    : mFileName(fileName)
+    , mStartLine(startLine)
+    , mStartColumn(startColumn)
+    , mEndLine(endLine)
+    , mEndColumn(endColumn)
 {
 }
 
+const std::string& Location::fileName() const { return mFileName; }
 
-const std::string&
-Location::fileName() const
-{
-    return mFileName;
-}
+int Location::startLine() const { return mStartLine; }
 
+int Location::startColumn() const { return mStartColumn; }
 
-int
-Location::startLine() const
-{
-    return mStartLine;
-}
+int Location::endLine() const { return mEndLine; }
 
+int Location::endColumn() const { return mEndColumn; }
 
-int
-Location::startColumn() const
-{
-    return mStartColumn;
-}
-
-
-int
-Location::endLine() const
-{
-    return mEndLine;
-}
-
-
-int
-Location::endColumn() const
-{
-    return mEndColumn;
-}
-
-
-}}
+} // namespace ast
+} // namespace soyac

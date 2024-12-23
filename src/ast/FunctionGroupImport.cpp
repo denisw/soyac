@@ -11,16 +11,12 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
-
-void*
-FunctionGroupImport::visit(Visitor* v)
+void* FunctionGroupImport::visit(Visitor* v)
 {
     return v->visitFunctionGroupImport(this);
 }
-
 
 FunctionGroupImport::overloads_iterator
 FunctionGroupImport::overloads_begin() const
@@ -28,12 +24,11 @@ FunctionGroupImport::overloads_begin() const
     return mOverloads.begin();
 }
 
-
 FunctionGroupImport::overloads_iterator
 FunctionGroupImport::overloads_end() const
 {
     return mOverloads.end();
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

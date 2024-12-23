@@ -6,25 +6,21 @@
  * See LICENSE.txt for details.
  */
 
-#include <iostream>
-#include <cstdlib>
-#include <string>
-#include <llvm/Support/Program.h>
 #include "link.hpp"
 #include "config.hpp"
+#include <cstdlib>
+#include <iostream>
+#include <llvm/Support/Program.h>
+#include <string>
 
 namespace soyac {
-namespace driver
+namespace driver {
+
+void linkFiles(const std::list<std::string>& objectFiles)
 {
+    llvm::ErrorOr<std::string> gcc = llvm::sys::findProgramByName("cc");
 
-
-void
-linkFiles(const std::list<std::string>& objectFiles)
-{
-  llvm::ErrorOr<std::string> gcc = llvm::sys::findProgramByName("cc");
-
-    if (std::error_code code = gcc.getError())
-    {
+    if (std::error_code code = gcc.getError()) {
         std::cerr << config::programName << ": could not find cc" << std::endl;
         std::exit(1);
     }
@@ -33,13 +29,13 @@ linkFiles(const std::list<std::string>& objectFiles)
     args.push_back("ld");
 
     for (std::list<std::string>::const_iterator it = objectFiles.begin();
-         it != objectFiles.end(); it++)
-    {
+        it != objectFiles.end(); it++) {
         args.push_back(it->c_str());
     }
 
-    for (auto lp : config::libraryPaths)
+    for (auto lp : config::libraryPaths) {
         args.push_back("-L" + lp);
+    }
 
     args.push_back("-lsr");
     args.push_back("-lgc");
@@ -49,4 +45,5 @@ linkFiles(const std::list<std::string>& objectFiles)
     llvm::sys::ExecuteAndWait(*gcc, args);
 }
 
-}}
+} // namespace driver
+} // namespace soyac

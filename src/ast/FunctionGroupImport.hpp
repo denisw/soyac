@@ -15,14 +15,12 @@
 #include "NodeList.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents an import of a declared entity.
  */
-class FunctionGroupImport : public Import
-{
+class FunctionGroupImport : public Import {
 public:
     /**
      * Iterates over the imported function overloads (constant).
@@ -38,11 +36,12 @@ public:
      *                         overloads.
      */
     template <class InputIterator>
-    FunctionGroupImport(InputIterator overloads_begin,
-                        InputIterator overloads_end)
+    FunctionGroupImport(
+        InputIterator overloads_begin, InputIterator overloads_end)
     {
-        for (InputIterator it = overloads_begin; it != overloads_end; it++)
+        for (InputIterator it = overloads_begin; it != overloads_end; it++) {
             mOverloads.push_back(*it);
+        }
     }
 
     /**
@@ -51,7 +50,6 @@ public:
      * @see Node::visit()
      */
     virtual void* visit(Visitor* v);
-
 
     /**
      * Returns a constant iterator pointing to the first function overload
@@ -73,6 +71,7 @@ private:
     NodeList<Function> mOverloads;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

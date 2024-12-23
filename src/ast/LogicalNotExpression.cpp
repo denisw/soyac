@@ -11,36 +11,22 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 LogicalNotExpression::LogicalNotExpression(Expression* operand)
     : mOperand(operand)
 {
-    assert (operand != NULL);
+    assert(operand != NULL);
 }
 
-
-void*
-LogicalNotExpression::visit(Visitor* v)
+void* LogicalNotExpression::visit(Visitor* v)
 {
     return v->visitLogicalNotExpression(this);
 }
 
+Type* LogicalNotExpression::type() const { return TYPE_BOOL; }
 
-Type*
-LogicalNotExpression::type() const
-{
-    return TYPE_BOOL;
-}
+Expression* LogicalNotExpression::operand() const { return mOperand.target(); }
 
-
-Expression*
-LogicalNotExpression::operand() const
-{
-    return mOperand.target();
-}
-
-
-}}
+} // namespace ast
+} // namespace soyac

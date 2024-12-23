@@ -13,14 +13,12 @@
 #include "Import.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents an import of a declared entity.
  */
-class EntityImport : public Import
-{
+class EntityImport : public Import {
 public:
     /**
      * Creates a EntityImport.
@@ -47,6 +45,7 @@ private:
     Link<DeclaredEntity> mImported;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

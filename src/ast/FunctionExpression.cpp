@@ -6,42 +6,28 @@
  * See LICENSE.txt for details.
  */
 
-#include <cassert>
 #include "FunctionExpression.hpp"
 #include "FunctionType.hpp"
 #include "Visitor.hpp"
+#include <cassert>
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 FunctionExpression::FunctionExpression(Function* target)
     : mTarget(target)
 {
-    assert (target != NULL);
+    assert(target != NULL);
 }
 
-
-void*
-FunctionExpression::visit(Visitor* v)
+void* FunctionExpression::visit(Visitor* v)
 {
     return v->visitFunctionExpression(this);
 }
 
+Type* FunctionExpression::type() const { return target()->type(); }
 
-Type*
-FunctionExpression::type() const
-{
-    return target()->type();
-}
+Function* FunctionExpression::target() const { return mTarget.target(); }
 
-
-Function*
-FunctionExpression::target() const
-{
-    return mTarget.target();
-}
-
-
-}}
+} // namespace ast
+} // namespace soyac

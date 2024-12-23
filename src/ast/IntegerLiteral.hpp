@@ -9,22 +9,20 @@
 #ifndef _INTEGER_LITERAL_HPP
 #define _INTEGER_LITERAL_HPP
 
-#include <stdint.h>
 #include "Expression.hpp"
 #include "IntegerValue.hpp"
 #include "Visitor.hpp"
+#include <stdint.h>
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents an integer literal.
  *
  * (See the Soya Language Reference,)
  */
-class IntegerLiteral : public Expression
-{
+class IntegerLiteral : public Expression {
 public:
     /**
      * Creates an IntegerLiteral.
@@ -56,6 +54,7 @@ private:
     IntegerValue mValue;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

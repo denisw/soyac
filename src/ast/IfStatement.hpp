@@ -13,16 +13,14 @@
 #include "StatementWithBody.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents an "if" statement.
  *
  * (See the Soya Language Reference,)
  */
-class IfStatement : public StatementWithBody
-{
+class IfStatement : public StatementWithBody {
 public:
     /**
      * Creates a IfStatement.
@@ -62,6 +60,7 @@ private:
     Link<Statement> mElseBody;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

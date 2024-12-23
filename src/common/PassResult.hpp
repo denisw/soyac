@@ -9,19 +9,17 @@
 #ifndef _PASS_RESULT_HPP
 #define _PASS_RESULT_HPP
 
-#include <list>
 #include "Problem.hpp"
+#include <list>
 
-namespace soyac
-{
+namespace soyac {
 
 /**
  * Holds information about the result of a compiler pass.
  *
  * PassResult instances are created using the PassResultBuilder class.
  */
-class PassResult
-{
+class PassResult {
 public:
     /**
      * Iterates over the problems found in the pass.
@@ -84,6 +82,6 @@ private:
     PassResult();
 };
 
-}
+} // namespace soyac
 
 #endif

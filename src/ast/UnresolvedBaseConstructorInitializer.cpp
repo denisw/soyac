@@ -10,20 +10,17 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 UnresolvedBaseConstructorInitializer::UnresolvedBaseConstructorInitializer()
-    : ConstructorInitializer((Expression**) NULL, (Expression**) NULL)
+    : ConstructorInitializer((Expression**)NULL, (Expression**)NULL)
 {
 }
 
-
-void*
-UnresolvedBaseConstructorInitializer::visit(Visitor* v)
+void* UnresolvedBaseConstructorInitializer::visit(Visitor* v)
 {
     return v->visitUnresolvedBaseConstructorInitializer(this);
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

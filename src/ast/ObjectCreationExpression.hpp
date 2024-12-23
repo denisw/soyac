@@ -9,23 +9,21 @@
 #ifndef _OBJECT_CREATION_EXPRESSION_HPP
 #define _OBJECT_CREATION_EXPRESSION_HPP
 
-#include <cassert>
 #include "Constructor.hpp"
 #include "Expression.hpp"
 #include "NodeList.hpp"
 #include "Type.hpp"
+#include <cassert>
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents an object creation expression.
  *
  * @see ArrayCreationExpression
  */
-class ObjectCreationExpression : public Expression
-{
+class ObjectCreationExpression : public Expression {
 public:
     /**
      * Iterates over the creation expression's constructor arguments
@@ -42,18 +40,17 @@ public:
      * @param arguments_end    End iterator for the constructor arguments.
      */
     template <class InputIterator>
-    ObjectCreationExpression(Type* type,
-                             Constructor* constructor,
-                             InputIterator arguments_begin,
-                             InputIterator arguments_end)
-        : mType(type),
-          mConstructor(constructor)
+    ObjectCreationExpression(Type* type, Constructor* constructor,
+        InputIterator arguments_begin, InputIterator arguments_end)
+        : mType(type)
+        , mConstructor(constructor)
     {
-        assert (type != NULL);
-        assert (constructor != NULL);
+        assert(type != NULL);
+        assert(constructor != NULL);
 
-        for (InputIterator it = arguments_begin; it != arguments_end; it++)
+        for (InputIterator it = arguments_begin; it != arguments_end; it++) {
             mArguments.push_back(*it);
+        }
     }
 
     /**
@@ -97,6 +94,7 @@ private:
     NodeList<Expression> mArguments;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

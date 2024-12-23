@@ -9,19 +9,18 @@
 #ifndef _SYMBOL_TABLE_HPP
 #define _SYMBOL_TABLE_HPP
 
+#include <ast/Module.hpp>
+#include <ast/Name.hpp>
+#include <ast/NamedEntity.hpp>
+#include <ast/NodeList.hpp>
 #include <list>
 #include <map>
 #include <string>
-#include <ast/NamedEntity.hpp>
-#include <ast/Module.hpp>
-#include <ast/Name.hpp>
-#include <ast/NodeList.hpp>
 
 using namespace soyac::ast;
 
 namespace soyac {
-namespace analysis
-{
+namespace analysis {
 
 /**
  * Forward declare the private Scope class, which is declared and defined
@@ -33,8 +32,7 @@ class Scope;
  * An implementation of a symbol table, which is used for name resolution to
  * query for modules and declared entites by name.
  */
-class SymbolTable
-{
+class SymbolTable {
 public:
     /**
      * SymbolTable destructor.
@@ -115,7 +113,7 @@ public:
      * Looks up the passed identifier in the scope associated with the
      * specified entity (see enterScope(DeclaredEntity*)).
      *
-     * @see lookup(const std::string&) 
+     * @see lookup(const std::string&)
      *
      * @param identifier  The identifier to look up.
      * @param scope       The named entity in whose scope the identifier
@@ -136,6 +134,7 @@ private:
     SymbolTable();
 };
 
-}}
+} // namespace analysis
+} // namespace soyac
 
 #endif

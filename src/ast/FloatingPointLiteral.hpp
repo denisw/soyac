@@ -13,16 +13,14 @@
 #include "FloatingPointValue.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents a floating-point literal.
  *
  * (See the Soya Language Reference,)
  */
-class FloatingPointLiteral : public Expression
-{
+class FloatingPointLiteral : public Expression {
 public:
     /**
      * Creates an FloatingPointLiteral.
@@ -54,6 +52,7 @@ private:
     FloatingPointValue mValue;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

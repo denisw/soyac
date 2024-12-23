@@ -12,8 +12,7 @@
 #include "ConstructorInitializer.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents a constructor initializer calling a to-be-determined
@@ -21,8 +20,7 @@ namespace ast
  *
  * @see  UnresolvedBaseBaseConstructorInitializer
  */
-class UnresolvedBaseConstructorInitializer : public ConstructorInitializer
-{
+class UnresolvedBaseConstructorInitializer : public ConstructorInitializer {
 public:
     /**
      * Creates an UnresolvedBaseConstructorInitializer.
@@ -33,8 +31,8 @@ public:
      *                         constructor arguments.
      */
     template <class InputIterator>
-    UnresolvedBaseConstructorInitializer(InputIterator arguments_begin,
-                                         InputIterator arguments_end)
+    UnresolvedBaseConstructorInitializer(
+        InputIterator arguments_begin, InputIterator arguments_end)
         : ConstructorInitializer(arguments_begin, arguments_end)
     {
     }
@@ -53,6 +51,7 @@ public:
     virtual void* visit(Visitor* v);
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

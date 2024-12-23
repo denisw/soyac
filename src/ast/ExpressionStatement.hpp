@@ -9,20 +9,18 @@
 #ifndef _EXPRESSION_STATEMENT_HPP
 #define _EXPRESSION_STATEMENT_HPP
 
-#include "Statement.hpp"
 #include "Expression.hpp"
+#include "Statement.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents an expression statement.
  *
  * (See the Soya Language Reference,)
  */
-class ExpressionStatement : public Statement
-{
+class ExpressionStatement : public Statement {
 public:
     /**
      * Creates an ExpressionStatement.
@@ -49,6 +47,7 @@ private:
     Link<Expression> mExpression;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

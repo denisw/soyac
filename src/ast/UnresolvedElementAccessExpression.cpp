@@ -11,47 +11,33 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 UnresolvedElementAccessExpression::UnresolvedElementAccessExpression(
-  Expression* operand,
-  Expression* index)
-    : mOperand(operand),
-      mIndex(index)
+    Expression* operand, Expression* index)
+    : mOperand(operand)
+    , mIndex(index)
 {
-    assert (operand != NULL);
-    assert (index != NULL);
+    assert(operand != NULL);
+    assert(index != NULL);
 }
 
-
-void*
-UnresolvedElementAccessExpression::visit(Visitor* v)
+void* UnresolvedElementAccessExpression::visit(Visitor* v)
 {
     return v->visitUnresolvedElementAccessExpression(this);
 }
 
+Type* UnresolvedElementAccessExpression::type() const { return TYPE_UNKNOWN; }
 
-Type*
-UnresolvedElementAccessExpression::type() const
-{
-    return TYPE_UNKNOWN;
-}
-
-
-Expression*
-UnresolvedElementAccessExpression::operand() const
+Expression* UnresolvedElementAccessExpression::operand() const
 {
     return mOperand.target();
 }
 
-
-Expression*
-UnresolvedElementAccessExpression::index() const
+Expression* UnresolvedElementAccessExpression::index() const
 {
     return mIndex.target();
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

@@ -10,46 +10,33 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
-
-AssignmentExpression::AssignmentExpression(Expression* leftHand,
-                                           Expression* rightHand)
-    : mLeftHand(leftHand),
-      mRightHand(rightHand)
+AssignmentExpression::AssignmentExpression(
+    Expression* leftHand, Expression* rightHand)
+    : mLeftHand(leftHand)
+    , mRightHand(rightHand)
 {
-    assert (leftHand != NULL);
-    assert (rightHand != NULL);
+    assert(leftHand != NULL);
+    assert(rightHand != NULL);
 }
 
-
-void*
-AssignmentExpression::visit(Visitor* v)
+void* AssignmentExpression::visit(Visitor* v)
 {
     return v->visitAssignmentExpression(this);
 }
 
+Type* AssignmentExpression::type() const { return leftHand()->type(); }
 
-Type*
-AssignmentExpression::type() const
-{
-    return leftHand()->type();
-}
-
-
-Expression*
-AssignmentExpression::leftHand() const
+Expression* AssignmentExpression::leftHand() const
 {
     return mLeftHand.target();
 }
 
-
-Expression*
-AssignmentExpression::rightHand() const
+Expression* AssignmentExpression::rightHand() const
 {
     return mRightHand.target();
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

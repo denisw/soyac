@@ -14,16 +14,14 @@
 #include "Type.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 class Function;
 
 /**
  * Represents an enum type.
  */
-class EnumType : public Type
-{
+class EnumType : public Type {
 public:
     /**
      * Iterates over the enum type's values (constant).
@@ -39,19 +37,18 @@ public:
      * @param constants_end    End iterator for the enum type's values.
      */
     template <class InputIterator>
-    EnumType(const Name& name,
-             IntegerType* underlyingType,
-             InputIterator values_begin,
-             InputIterator values_end)
-        : Type(name),
-          mUnderlyingType(underlyingType)
+    EnumType(const Name& name, IntegerType* underlyingType,
+        InputIterator values_begin, InputIterator values_end)
+        : Type(name)
+        , mUnderlyingType(underlyingType)
     {
         mValues.changed().connect([this](auto oldValue, auto newValue) {
             onValuesChanged(oldValue, newValue);
         });
 
-        for (InputIterator it = values_begin; it != values_end; it++)
+        for (InputIterator it = values_begin; it != values_end; it++) {
             mValues.push_back(*it);
+        }
 
         initEqualsMethod();
     }
@@ -122,6 +119,7 @@ private:
     void onValuesChanged(EnumConstant* oldVal, EnumConstant* newVal);
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

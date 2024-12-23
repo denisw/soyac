@@ -16,17 +16,15 @@
 
 #include <llvm/IR/DataLayout.h>
 
-namespace soyac::codegen
-{
+namespace soyac::codegen {
 
 /**
  * Implements the mapping from Soya data types to LLVM equivalents.
  */
-class LLVMTypeMapper
-{
-  public:
-    LLVMTypeMapper(llvm::LLVMContext& context,
-                   const llvm::DataLayout& dataLayout);
+class LLVMTypeMapper {
+public:
+    LLVMTypeMapper(
+        llvm::LLVMContext& context, const llvm::DataLayout& dataLayout);
 
     /**
      * Given a Soya type, returns its value representation as an LLVM type.
@@ -35,8 +33,7 @@ class LLVMTypeMapper
      * @param type  The Soya type.
      * @return      The matching LLVM type for stac.
      */
-    llvm::Type*
-    valueType(soyac::ast::Type* type);
+    llvm::Type* valueType(soyac::ast::Type* type);
 
     /**
      * Returns the LLVM type describing the data layout of the given Soya type.
@@ -46,18 +43,15 @@ class LLVMTypeMapper
      * @param type  The Soya type.
      * @return      The matching LLVM type for stac.
      */
-    llvm::Type*
-    objectType(ast::Type* type);
+    llvm::Type* objectType(ast::Type* type);
 
-  private:
+private:
     llvm::LLVMContext& mContext;
     const llvm::DataLayout& mDataLayout;
 
-    llvm::Type*
-    getPointerSizeType();
+    llvm::Type* getPointerSizeType();
 
-    llvm::Type*
-    getStructOrClassLayoutType(ast::UserDefinedType* type);
+    llvm::Type* getStructOrClassLayoutType(ast::UserDefinedType* type);
 };
 
 } // namespace soyac::codegen

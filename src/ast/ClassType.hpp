@@ -12,14 +12,12 @@
 #include "UserDefinedType.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents a class type.
  */
-class ClassType : public UserDefinedType
-{
+class ClassType : public UserDefinedType {
 public:
     /**
      * Creates a ClassType.
@@ -36,9 +34,7 @@ public:
      * @param baseClass  The class type's base class.
      * @param body       The type declaration's body.
      */
-    ClassType(const Name& name,
-              Type* baseClass,
-              DeclarationBlock* body);
+    ClassType(const Name& name, Type* baseClass, DeclarationBlock* body);
 
     /**
      * Visits the ClassType.
@@ -63,6 +59,7 @@ private:
     Link<Type> mBaseClass;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

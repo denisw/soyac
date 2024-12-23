@@ -9,26 +9,20 @@
 #ifndef _PROBLEM_HPP
 #define _PROBLEM_HPP
 
-#include <string>
 #include <ast/Location.hpp>
+#include <string>
 
-namespace soyac
-{
+namespace soyac {
 
 /**
  * Represents a problem with a source file found by a compiler pass.
  */
-class Problem
-{
+class Problem {
 public:
     /**
      * The problem's type (whether it is an error or a waring).
      */
-    enum Type
-    {
-        ERROR,
-        WARNING
-    };
+    enum Type { ERROR, WARNING };
 
     /**
      * Creates a Problem.
@@ -37,9 +31,8 @@ public:
      * @param location     The location where the problem was found.
      * @param description  The problem's description.
      */
-    Problem(Type type,
-            const soyac::ast::Location& location,
-            const std::string& description);
+    Problem(Type type, const soyac::ast::Location& location,
+        const std::string& description);
 
     /**
      * Returns the problems type. There are two types of problems: errors
@@ -71,6 +64,6 @@ private:
     std::string mDescription;
 };
 
-}
+} // namespace soyac
 
 #endif

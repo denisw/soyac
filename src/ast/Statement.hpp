@@ -13,16 +13,14 @@
 #include "Node.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Inherited by node classes representing statements.
  *
  * (See the Soya Language Reference, Chapter 9.)
  */
-class Statement : public Node
-{
+class Statement : public Node {
 public:
     /**
      * Initializes a Statement.
@@ -30,6 +28,7 @@ public:
     Statement();
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

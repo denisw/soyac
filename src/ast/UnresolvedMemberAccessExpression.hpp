@@ -9,13 +9,12 @@
 #ifndef _UNRESOLVED_MEMBER_ACCESS_EXPRESSION_HPP
 #define _UNRESOLVED_MEMBER_ACCESS_EXPRESSION_HPP
 
-#include <cassert>
-#include "Function.hpp"
 #include "Expression.hpp"
+#include "Function.hpp"
+#include <cassert>
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents an expression denoting a to-be-determined member of
@@ -24,18 +23,16 @@ namespace ast
  * UnresolvedMemberAccessExpression instances are replaced with semantically
  * meaningful equivalents by the BasicAnalyzer.
  */
-class UnresolvedMemberAccessExpression : public Expression
-{
+class UnresolvedMemberAccessExpression : public Expression {
 public:
-
     /**
      * Creates a UnresolvedMemberAccessExpression.
      *
      * @param operand     The operand.
      * @param memberName  The accessed member's name.
      */
-    UnresolvedMemberAccessExpression(Expression* operand,
-                                     const Name& memberName);
+    UnresolvedMemberAccessExpression(
+        Expression* operand, const Name& memberName);
 
     /**
      * Visits the UnresolvedMemberAccessExpression.
@@ -68,6 +65,7 @@ private:
     Name mMemberName;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

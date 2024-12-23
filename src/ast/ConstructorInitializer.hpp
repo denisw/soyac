@@ -13,8 +13,7 @@
 #include "NodeList.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 class Constructor;
 
@@ -24,8 +23,7 @@ class Constructor;
  * @see  UnresolvedConstructorInitializer
  * @see  UnresolvedBaseConstructorInitializer
  */
-class ConstructorInitializer : public Node
-{
+class ConstructorInitializer : public Node {
 public:
     /**
      * Iterates over the constructor initializer's arguments (constant).
@@ -43,12 +41,11 @@ public:
      */
     template <class InputIterator>
     ConstructorInitializer(Constructor* constructor,
-                           InputIterator arguments_begin,
-                           InputIterator arguments_end)
-        : mConstructor(constructor),
-          mArguments(arguments_begin, arguments_end)
+        InputIterator arguments_begin, InputIterator arguments_end)
+        : mConstructor(constructor)
+        , mArguments(arguments_begin, arguments_end)
     {
-        assert (constructor != NULL);
+        assert(constructor != NULL);
     }
 
     /**
@@ -93,10 +90,10 @@ protected:
      *                         constructor arguments.
      */
     template <class InputIterator>
-    ConstructorInitializer(InputIterator arguments_begin,
-                           InputIterator arguments_end)
-        : mConstructor(NULL),
-          mArguments(arguments_begin, arguments_end)
+    ConstructorInitializer(
+        InputIterator arguments_begin, InputIterator arguments_end)
+        : mConstructor(NULL)
+        , mArguments(arguments_begin, arguments_end)
     {
     }
 
@@ -105,6 +102,7 @@ private:
     NodeList<Expression> mArguments;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

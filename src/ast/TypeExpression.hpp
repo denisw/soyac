@@ -13,14 +13,12 @@
 #include "Type.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents an expression that denotes a type.
  */
-class TypeExpression : public Expression
-{
+class TypeExpression : public Expression {
 public:
     /**
      * Creates a TypeExpression.
@@ -52,6 +50,7 @@ private:
     Link<Type> mTarget;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

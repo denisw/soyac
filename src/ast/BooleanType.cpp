@@ -12,11 +12,9 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 BooleanType* BooleanType::sInstance = NULL;
-
 
 BooleanType::BooleanType()
     : BuiltInType("bool")
@@ -27,12 +25,9 @@ BooleanType::BooleanType()
     addMember(equals);
 }
 
-
-BooleanType*
-BooleanType::get()
+BooleanType* BooleanType::get()
 {
-    if (sInstance == NULL)
-    {
+    if (sInstance == NULL) {
         sInstance = new BooleanType;
         sInstance->ref();
     }
@@ -40,12 +35,7 @@ BooleanType::get()
     return sInstance;
 }
 
+void* BooleanType::visit(Visitor* v) { return v->visitBooleanType(this); }
 
-void*
-BooleanType::visit(Visitor* v)
-{
-    return v->visitBooleanType(this);
-}
-
-
-}}
+} // namespace ast
+} // namespace soyac

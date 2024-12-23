@@ -7,22 +7,19 @@
  */
 
 #include "SymbolTable.hpp"
-#include <ast/Function.hpp>
 #include "FunctionGroup.hpp"
+#include <ast/Function.hpp>
 
 namespace soyac {
-namespace analysis
-{
+namespace analysis {
 
-
-///// Scope ////////////////////////////////////////////////////////////////////
-
+///// Scope
+///////////////////////////////////////////////////////////////////////
 
 /**
  * Represents a scope.
  */
-class Scope
-{
+class Scope {
 public:
     /**
      * Creates a scope.
@@ -39,10 +36,9 @@ public:
      */
     ~Scope()
     {
-        for (std::map<std::string, Link<NamedEntity>*>::iterator it =
-               mMembers.begin();
-             it != mMembers.end(); it++)
-        {
+        for (std::map<std::string, Link<NamedEntity>*>::iterator it
+            = mMembers.begin();
+            it != mMembers.end(); it++) {
             delete it->second;
         }
     }
@@ -53,10 +49,7 @@ public:
      * @return  @c true if the scope is anonymous;
      *          @c false otherwise.
      */
-    bool isAnonymous() const
-    {
-        return mIsAnonymous;
-    }
+    bool isAnonymous() const { return mIsAnonymous; }
 
     /**
      * Looks for a named entity with the passed name in the scope.
@@ -65,13 +58,14 @@ public:
      */
     NamedEntity* lookup(const std::string& name) const
     {
-        std::map<std::string, Link<NamedEntity>*>::const_iterator it =
-          mMembers.find(name);
+        std::map<std::string, Link<NamedEntity>*>::const_iterator it
+            = mMembers.find(name);
 
-        if (it == mMembers.end())
+        if (it == mMembers.end()) {
             return NULL;
-        else
+        } else {
             return it->second->target();
+        }
     }
 
     /**
@@ -83,45 +77,42 @@ public:
     {
         NamedEntity* lookupResult = lookup(entity->name().str());
 
-        if (lookupResult != NULL)
-        {
+        if (lookupResult != NULL) {
             FunctionGroup* group;
             Function* func;
 
             /*
-             * If the scope already has members with the passed entity's name,
-             * this doesn't necessarily mean there is a conflict, provided the
-             * entity is a function. In this case, there is only a conflict if
-             * the existing member is not a function; otherwise, both functions
-             * may coexist in the same scope if they have non-identical
-             * signatures.
+             * If the scope already has members with the passed entity's
+             * name, this doesn't necessarily mean there is a conflict,
+             * provided the entity is a function. In this case, there is
+             * only a conflict if the existing member is not a function;
+             * otherwise, both functions may coexist in the same scope if
+             * they have non-identical signatures.
              */
-            if ((group = dynamic_cast<FunctionGroup*>(lookupResult)) != NULL &&
-                (func = dynamic_cast<Function*>(entity)) != NULL)
-            {
-                for (FunctionGroup::overloads_iterator it =
-                       group->overloads_begin();
-                     it != group->overloads_end(); it++)
-                {
-                    if (func->type() == (*it)->type())
+            if ((group = dynamic_cast<FunctionGroup*>(lookupResult)) != NULL
+                && (func = dynamic_cast<Function*>(entity)) != NULL) {
+                for (FunctionGroup::overloads_iterator it
+                    = group->overloads_begin();
+                    it != group->overloads_end(); it++) {
+                    if (func->type() == (*it)->type()) {
                         return false;
+                    }
                 }
 
                 group->addOverload(func);
                 return true;
-            }
-            else
+            } else {
                 return false;
-        }
-        else
-        {
+            }
+        } else {
             Link<NamedEntity>* link = new Link<NamedEntity>;
             Function* func;
 
-            if ((func = dynamic_cast<Function*>(entity)) != NULL)
+            if ((func = dynamic_cast<Function*>(entity)) != NULL) {
                 link->setTarget(new FunctionGroup(&func, &func + 1));
-            else
+            } else {
                 link->setTarget(entity);
+            }
 
             mMembers[entity->name().str()] = link;
             return true;
@@ -135,11 +126,10 @@ public:
      */
     void remove(NamedEntity* entity)
     {
-        std::map<std::string, Link<NamedEntity>*>::iterator it =
-          mMembers.find(entity->name().str());
+        std::map<std::string, Link<NamedEntity>*>::iterator it
+            = mMembers.find(entity->name().str());
 
-        if (it != mMembers.end())
-        {
+        if (it != mMembers.end()) {
             delete it->second;
             mMembers.erase(it);
         }
@@ -150,11 +140,10 @@ private:
     std::map<std::string, Link<NamedEntity>*> mMembers;
 };
 
-///// SymbolTable //////////////////////////////////////////////////////////////
-
+///// SymbolTable
+/////////////////////////////////////////////////////////////////
 
 std::map<Module*, SymbolTable*> SymbolTable::sInstances;
-
 
 SymbolTable::SymbolTable()
 {
@@ -165,34 +154,30 @@ SymbolTable::SymbolTable()
     mScopeStack.push_back(new Scope(false));
 }
 
-
 SymbolTable::~SymbolTable()
 {
-    while (mScopeStack.size() > 1)
+    while (mScopeStack.size() > 1) {
         leaveScope();
+    }
 
     for (std::map<NamedEntity*, Scope*>::iterator it = mEntityScopes.begin();
-         it != mEntityScopes.end(); it++)
-    {
+        it != mEntityScopes.end(); it++) {
         delete (*it).second;
     }
 
     for (std::map<Module*, SymbolTable*>::iterator it = sInstances.begin();
-         it != sInstances.end(); it++)
-    {
-        if (it->second == this)
+        it != sInstances.end(); it++) {
+        if (it->second == this) {
             it->second = NULL;
+        }
     }
 }
 
-
-SymbolTable*
-SymbolTable::get(Module* module, bool create)
+SymbolTable* SymbolTable::get(Module* module, bool create)
 {
     SymbolTable* table = sInstances[module];
 
-    if (table == NULL && create)
-    {
+    if (table == NULL && create) {
         table = new SymbolTable;
         sInstances[module] = table;
     }
@@ -200,94 +185,77 @@ SymbolTable::get(Module* module, bool create)
     return table;
 }
 
+void SymbolTable::enterScope() { mScopeStack.push_back(new Scope(true)); }
 
-void
-SymbolTable::enterScope()
-{
-    mScopeStack.push_back(new Scope(true));
-}
-
-
-void
-SymbolTable::enterScope(NamedEntity* entity)
+void SymbolTable::enterScope(NamedEntity* entity)
 {
     Scope* s = mEntityScopes[entity];
 
-    if (s == NULL)
-        s =  mEntityScopes[entity] = new Scope(false);
+    if (s == NULL) {
+        s = mEntityScopes[entity] = new Scope(false);
+    }
 
     mScopeStack.push_back(s);
 }
 
-
-void
-SymbolTable::leaveScope()
+void SymbolTable::leaveScope()
 {
-    if (mScopeStack.size() > 1)
-    {
+    if (mScopeStack.size() > 1) {
         Scope* current = mScopeStack.back();
 
-        if (current->isAnonymous())
+        if (current->isAnonymous()) {
             delete current;
+        }
 
         mScopeStack.pop_back();
-    }   
+    }
 }
 
-
-bool
-SymbolTable::add(NamedEntity* entity)
+bool SymbolTable::add(NamedEntity* entity)
 {
     return mScopeStack.back()->add(entity);
 }
 
-
-bool
-SymbolTable::addGlobal(NamedEntity* entity)
+bool SymbolTable::addGlobal(NamedEntity* entity)
 {
     return mScopeStack.front()->add(entity);
 }
 
-
-void
-SymbolTable::remove(NamedEntity* entity)
+void SymbolTable::remove(NamedEntity* entity)
 {
     mScopeStack.back()->remove(entity);
 }
 
-
-NamedEntity*
-SymbolTable::lookup(const Name& identifier) const
+NamedEntity* SymbolTable::lookup(const Name& identifier) const
 {
-    assert (identifier.isSimple());
+    assert(identifier.isSimple());
 
     for (std::list<Scope*>::const_reverse_iterator it = mScopeStack.rbegin();
-         it != mScopeStack.rend(); it++)
-    {
+        it != mScopeStack.rend(); it++) {
         NamedEntity* lookupResult = (*it)->lookup(identifier.str());
 
-        if (lookupResult != NULL)
+        if (lookupResult != NULL) {
             return lookupResult;
+        }
     }
 
     return NULL;
 }
 
-
-NamedEntity*
-SymbolTable::lookup(const Name& identifier,
-                    NamedEntity* scope) const
+NamedEntity* SymbolTable::lookup(
+    const Name& identifier, NamedEntity* scope) const
 {
-    assert (identifier.isSimple());
+    assert(identifier.isSimple());
 
-    std::map<NamedEntity*, Scope*>::const_iterator it =
-      mEntityScopes.find(scope);
+    std::map<NamedEntity*, Scope*>::const_iterator it
+        = mEntityScopes.find(scope);
 
-    if (it == mEntityScopes.end())
+    if (it == mEntityScopes.end()) {
         return NULL;
-    else
+    } else {
         return it->second->lookup(identifier.str());
+    }
 }
 
-
-}}
+} // namespace analysis
+} // namespace soyac

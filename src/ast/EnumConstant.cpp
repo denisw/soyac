@@ -10,29 +10,17 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 EnumConstant::EnumConstant(const Name& name, const IntegerValue& value)
-    : DeclaredEntity(name),
-      mValue(value)
+    : DeclaredEntity(name)
+    , mValue(value)
 {
 }
 
+void* EnumConstant::visit(Visitor* v) { return v->visitEnumConstant(this); }
 
-void*
-EnumConstant::visit(Visitor* v)
-{
-    return v->visitEnumConstant(this);
-}
+const IntegerValue& EnumConstant::value() const { return mValue; }
 
-
-const IntegerValue&
-EnumConstant::value() const
-{
-    return mValue;
-}
-
-
-}}
+} // namespace ast
+} // namespace soyac

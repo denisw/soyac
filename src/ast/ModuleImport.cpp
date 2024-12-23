@@ -6,42 +6,25 @@
  * See LICENSE.txt for details.
  */
 
-#include <cassert>
 #include "ModuleImport.hpp"
 #include "Visitor.hpp"
+#include <cassert>
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 ModuleImport::ModuleImport(Module* imported, bool isDirect)
-    : mImported(imported),
-      mIsDirect(isDirect)
+    : mImported(imported)
+    , mIsDirect(isDirect)
 {
-    assert (imported != NULL);
+    assert(imported != NULL);
 }
 
+void* ModuleImport::visit(Visitor* v) { return v->visitModuleImport(this); }
 
-void*
-ModuleImport::visit(Visitor* v)
-{
-    return v->visitModuleImport(this);
-}
+Module* ModuleImport::imported() const { return mImported.target(); }
 
+bool ModuleImport::isDirect() const { return mIsDirect; }
 
-Module*
-ModuleImport::imported() const
-{
-    return mImported.target();
-}
-
-
-bool
-ModuleImport::isDirect() const
-{
-    return mIsDirect;
-}
-
-
-}}
+} // namespace ast
+} // namespace soyac

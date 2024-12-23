@@ -6,44 +6,29 @@
  * See LICENSE.txt for details.
  */
 
-#include <cassert>
 #include "EnumValueExpression.hpp"
 #include "Visitor.hpp"
+#include <cassert>
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
-
-EnumValueExpression::EnumValueExpression(EnumType* type,
-                                         EnumConstant* target)
-    : mType(type),
-      mTarget(target)
+EnumValueExpression::EnumValueExpression(EnumType* type, EnumConstant* target)
+    : mType(type)
+    , mTarget(target)
 {
-    assert (type != NULL);
-    assert (target != NULL);
+    assert(type != NULL);
+    assert(target != NULL);
 }
 
-
-void*
-EnumValueExpression::visit(Visitor* v)
+void* EnumValueExpression::visit(Visitor* v)
 {
     return v->visitEnumValueExpression(this);
 }
 
+Type* EnumValueExpression::type() const { return mType.target(); }
 
-Type*
-EnumValueExpression::type() const
-{
-    return mType.target();
-}
+EnumConstant* EnumValueExpression::target() const { return mTarget.target(); }
 
-
-EnumConstant*
-EnumValueExpression::target() const
-{
-    return mTarget.target();
-}
-
-
-}}
+} // namespace ast
+} // namespace soyac

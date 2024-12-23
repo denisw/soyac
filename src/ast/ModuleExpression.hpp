@@ -13,14 +13,12 @@
 #include "Module.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents an expression that denotes a module.
  */
-class ModuleExpression : public Expression
-{
+class ModuleExpression : public Expression {
 public:
     /**
      * Creates a ModuleExpression.
@@ -52,6 +50,7 @@ private:
     Link<Module> mTarget;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

@@ -9,21 +9,19 @@
 #ifndef _CALL_EXPRESSION_HPP
 #define _CALL_EXPRESSION_HPP
 
-#include <cassert>
 #include "Expression.hpp"
 #include "NodeList.hpp"
+#include <cassert>
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents a call expression.
  *
  * (See the Soya Language Reference,)
  */
-class CallExpression : public Expression
-{
+class CallExpression : public Expression {
 public:
     /**
      * Iterates over the call expression's arguments (constant).
@@ -40,15 +38,15 @@ public:
      *                         arguments.
      */
     template <class InputIterator>
-    CallExpression(Expression* callee,
-                   InputIterator arguments_begin,
-                   InputIterator arguments_end)
+    CallExpression(Expression* callee, InputIterator arguments_begin,
+        InputIterator arguments_end)
         : mCallee(callee)
     {
-        assert (callee != NULL);
+        assert(callee != NULL);
 
-        for (InputIterator it = arguments_begin; it != arguments_end; it++)
+        for (InputIterator it = arguments_begin; it != arguments_end; it++) {
             mArguments.push_back(*it);
+        }
     }
 
     /**
@@ -99,6 +97,7 @@ private:
     NodeList<Expression> mArguments;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

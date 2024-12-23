@@ -6,29 +6,24 @@
  * See LICENSE.txt for details.
  */
 
+#include "ParserDriver.hpp"
 #include <cerrno>
 #include <cstring>
 #include <iostream>
-#include "ParserDriver.hpp"
 
 namespace soyac {
-namespace parser
-{
-
+namespace parser {
 
 ParserDriver::ParserDriver(const std::string& fileName)
-    : mFileName(fileName),
-      mLexer(NULL)
+    : mFileName(fileName)
+    , mLexer(NULL)
 {
 }
 
-
-soyac::ast::Module*
-ParserDriver::parse(PassResult*& result)
+soyac::ast::Module* ParserDriver::parse(PassResult*& result)
 {
     std::ifstream stream;
-    stream.exceptions(std::ifstream::failbit |
-                      std::ifstream::badbit);
+    stream.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 
     stream.open(mFileName.c_str(), std::ios_base::binary);
 
@@ -40,13 +35,11 @@ ParserDriver::parse(PassResult*& result)
     /*
      * A return value of 1 indicates failure.
      */
-    try
-    {
-        if (parser.parse() == 1)
+    try {
+        if (parser.parse() == 1) {
             mSyntaxTree = NULL;
-    }
-    catch (const std::ifstream::failure& exc)
-    {
+        }
+    } catch (const std::ifstream::failure& exc) {
         delete mLexer;
         mLexer = NULL;
         delete mResultBuilder;
@@ -63,26 +56,17 @@ ParserDriver::parse(PassResult*& result)
     return mSyntaxTree;
 }
 
+Lexer* ParserDriver::lexer() const { return mLexer; }
 
-Lexer*
-ParserDriver::lexer() const
-{
-    return mLexer;
-}
-
-
-PassResultBuilder*
-ParserDriver::resultBuilder() const
+PassResultBuilder* ParserDriver::resultBuilder() const
 {
     return mResultBuilder;
 }
 
-
-void
-ParserDriver::setSyntaxTree(soyac::ast::Module* syntaxTree)
+void ParserDriver::setSyntaxTree(soyac::ast::Module* syntaxTree)
 {
     mSyntaxTree = syntaxTree;
 }
 
-
-}}
+} // namespace parser
+} // namespace soyac

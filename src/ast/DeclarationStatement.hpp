@@ -9,20 +9,18 @@
 #ifndef _DECLARATION_STATEMENT_HPP
 #define _DECLARATION_STATEMENT_HPP
 
-#include "Statement.hpp"
 #include "DeclaredEntity.hpp"
+#include "Statement.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents a declaration statement.
  *
  * (See the Soya Language Reference,)
  */
-class DeclarationStatement : public Statement
-{
+class DeclarationStatement : public Statement {
 public:
     /**
      * Creates a DeclarationStatement.
@@ -49,6 +47,7 @@ private:
     Link<DeclaredEntity> mDeclaredEntity;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

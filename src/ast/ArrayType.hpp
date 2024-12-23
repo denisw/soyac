@@ -9,12 +9,11 @@
 #ifndef _ARRAY_TYPE_HPP
 #define _ARRAY_TYPE_HPP
 
-#include <map>
 #include "Type.hpp"
+#include <map>
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 class Function;
 class Property;
@@ -22,8 +21,7 @@ class Property;
 /**
  * Represents a structure type.
  */
-class ArrayType : public Type
-{
+class ArrayType : public Type {
 public:
     /**
      * Returns the ArrayType instance representing the array type with
@@ -68,7 +66,7 @@ public:
      *
      * @return  The array type's "length" property.
      */
-     Property* lengthProperty() const;
+    Property* lengthProperty() const;
 
 private:
     static std::map<Type*, ArrayType*> mInstances;
@@ -86,6 +84,7 @@ private:
     ArrayType(Type* elementType);
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

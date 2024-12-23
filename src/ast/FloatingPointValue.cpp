@@ -9,29 +9,20 @@
 #include "FloatingPointValue.hpp"
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 FloatingPointValue::FloatingPointValue(double data, bool singlePrecision)
-    : mData(data),
-      mIsSinglePrecision(singlePrecision)
+    : mData(data)
+    , mIsSinglePrecision(singlePrecision)
 {
 }
 
+double FloatingPointValue::data() const { return mData; }
 
-double
-FloatingPointValue::data() const
-{
-    return mData;
-}
-
-
-bool
-FloatingPointValue::isSinglePrecision() const
+bool FloatingPointValue::isSinglePrecision() const
 {
     return mIsSinglePrecision;
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

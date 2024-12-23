@@ -6,91 +6,81 @@
  * See LICENSE.txt for details.
  */
 
-#include <iostream>
 #include "ProblemReport.hpp"
+#include <iostream>
 
 namespace soyac {
-namespace driver
-{
+namespace driver {
 
 std::list<PassResult*> ProblemReport::sResults;
 
-
-void
-ProblemReport::addPassResult(PassResult* result)
+void ProblemReport::addPassResult(PassResult* result)
 {
     sResults.push_back(result);
 }
 
-
-bool
-ProblemReport::show()
+bool ProblemReport::show()
 {
     int numErrors = 0;
     int numWarnings = 0;
 
     for (std::list<PassResult*>::iterator it = sResults.begin();
-         it != sResults.end();
-         it++)
-    {
+        it != sResults.end(); it++) {
         PassResult* result = *it;
 
         for (PassResult::problems_iterator it2 = result->problems_begin();
-             it2 != result->problems_end(); it2++)
-        {
+            it2 != result->problems_end(); it2++) {
             Problem* prob = *it2;
 
             std::cerr << std::endl;
 
-            if (prob->type() == Problem::ERROR)
-            {
+            if (prob->type() == Problem::ERROR) {
                 std::cerr << "error";
                 numErrors++;
-            }
-            else
-            {
+            } else {
                 std::cerr << "warning";
                 numWarnings++;
             }
 
-            std::cerr << " (" << prob->location().fileName() << ", " <<
-                                 prob->location().startLine() << "):" <<
-                                 std::endl << prob->description() <<
-                                 std::endl;
+            std::cerr << " (" << prob->location().fileName() << ", "
+                      << prob->location().startLine() << "):" << std::endl
+                      << prob->description() << std::endl;
         }
 
         delete result;
     }
 
-    if (numErrors > 0 || numWarnings > 0)
-    {
+    if (numErrors > 0 || numWarnings > 0) {
         std::cerr << std::endl;
 
-        if (numErrors == 0)
+        if (numErrors == 0) {
             std::cerr << "SUCCESS (";
-        else
+        } else {
             std::cerr << "FAILURE (";
+        }
 
         std::cerr << numErrors << " ";
 
-        if (numErrors == 1)
+        if (numErrors == 1) {
             std::cerr << "error";
-        else
+        } else {
             std::cerr << "errors";
+        }
 
         std::cerr << ", " << numWarnings << " ";
 
-        if (numWarnings == 1)
+        if (numWarnings == 1) {
             std::cerr << "warning";
-        else
+        } else {
             std::cerr << "warnings";
+        }
 
         std::cerr << ")" << std::endl;
         return (numErrors > 0);
-    }
-    else
+    } else {
         return false;
+    }
 }
 
-
-}}
+} // namespace driver
+} // namespace soyac

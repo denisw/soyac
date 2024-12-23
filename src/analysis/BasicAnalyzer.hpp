@@ -9,19 +9,18 @@
 #ifndef _BASIC_ANALYZER_HPP
 #define _BASIC_ANALYZER_HPP
 
+#include "SymbolTable.hpp"
 #include <ast/Expression.hpp>
 #include <ast/Function.hpp>
 #include <ast/NodeList.hpp>
 #include <ast/Visitor.hpp>
 #include <common/PassResult.hpp>
 #include <common/PassResultBuilder.hpp>
-#include "SymbolTable.hpp"
 
 using namespace soyac::ast;
 
 namespace soyac {
-namespace analysis
-{
+namespace analysis {
 
 class FunctionGroup;
 
@@ -29,10 +28,9 @@ class FunctionGroup;
  * A basic analysis and transformation pass including name resolution,
  * type checking and other checks for conformance with the Soya Language
  * Reference. This doesn't include control flow related checks; these are
- * done by the ControlFlowAnalyzer.  
+ * done by the ControlFlowAnalyzer.
  */
-class BasicAnalyzer : public Visitor
-{
+class BasicAnalyzer : public Visitor {
 public:
     /**
      * Creates a BasicAnalyzer.
@@ -205,7 +203,8 @@ protected:
      * @param expr  The InstanceVariableExpression to visit.
      * @return      Nothing.
      */
-    virtual void* visitInstanceVariableExpression(InstanceVariableExpression* expr);
+    virtual void* visitInstanceVariableExpression(
+        InstanceVariableExpression* expr);
 
     /**
      * Visits a LogicalExpression.
@@ -309,7 +308,8 @@ protected:
      * @param init  The UnresolvedBaseConstructorInitializer to visit.
      * @return      Nothing.
      */
-    virtual void* visitUnresolvedBaseConstructorInitializer(UnresolvedBaseConstructorInitializer* init);
+    virtual void* visitUnresolvedBaseConstructorInitializer(
+        UnresolvedBaseConstructorInitializer* init);
 
     /**
      * Visits an UnresolvedBinaryExpression.
@@ -317,7 +317,8 @@ protected:
      * @param expr  The UnresolvedBinaryExpression to visit.
      * @return      Nothing.
      */
-    virtual void* visitUnresolvedBinaryExpression(UnresolvedBinaryExpression* expr);
+    virtual void* visitUnresolvedBinaryExpression(
+        UnresolvedBinaryExpression* expr);
 
     /**
      * Visits an UnresolvedConstructorInitializer.
@@ -325,7 +326,8 @@ protected:
      * @param init  The UnresolvedConstructorInitializer to visit.
      * @return      Nothing.
      */
-    virtual void* visitUnresolvedConstructorInitializer(UnresolvedConstructorInitializer* init);
+    virtual void* visitUnresolvedConstructorInitializer(
+        UnresolvedConstructorInitializer* init);
 
     /**
      * Visits an UnresolvedDefaultConstructorInitializer.
@@ -333,7 +335,8 @@ protected:
      * @param init  The UnresolvedDefaultConstructorInitializer to visit.
      * @return      Nothing.
      */
-    virtual void* visitUnresolvedDefaultConstructorInitializer(UnresolvedDefaultConstructorInitializer* init);
+    virtual void* visitUnresolvedDefaultConstructorInitializer(
+        UnresolvedDefaultConstructorInitializer* init);
 
     /**
      * Visits an UnresolvedElementAccessExpression.
@@ -341,7 +344,8 @@ protected:
      * @param expr  The UnresolvedElementAccessExpression to visit.
      * @return      Nothing.
      */
-    virtual void* visitUnresolvedElementAccessExpression(UnresolvedElementAccessExpression* expr);
+    virtual void* visitUnresolvedElementAccessExpression(
+        UnresolvedElementAccessExpression* expr);
 
     /**
      * Visits an UnresolvedEntityImport.
@@ -357,7 +361,8 @@ protected:
      * @param expr  The UnresolvedInstancePropertyExpression to visit.
      * @return      Nothing.
      */
-    virtual void* visitUnresolvedInstancePropertyExpression(UnresolvedInstancePropertyExpression* expr);
+    virtual void* visitUnresolvedInstancePropertyExpression(
+        UnresolvedInstancePropertyExpression* expr);
 
     /**
      * Visits an UnresolvedMemberAccessExpression.
@@ -365,7 +370,8 @@ protected:
      * @param expr  The UnresolvedMemberAccessExpression to visit.
      * @return      Nothing.
      */
-    virtual void* visitUnresolvedMemberAccessExpression(UnresolvedMemberAccessExpression* expr);
+    virtual void* visitUnresolvedMemberAccessExpression(
+        UnresolvedMemberAccessExpression* expr);
 
     /**
      * Visits an UnresolvedModuleImport.
@@ -381,7 +387,8 @@ protected:
      * @param expr  The UnresolvedObjectCreationExpression to visit.
      * @return      Nothing.
      */
-    virtual void* visitUnresolvedObjectCreationExpression(UnresolvedObjectCreationExpression* expr);
+    virtual void* visitUnresolvedObjectCreationExpression(
+        UnresolvedObjectCreationExpression* expr);
 
     /**
      * Visits an UnresolvedSimpleNameExpression.
@@ -389,7 +396,8 @@ protected:
      * @param expr  The UnresolvedSimpleNameExpression to visit.
      * @return      Nothing.
      */
-    virtual void* visitUnresolvedSimpleNameExpression(UnresolvedSimpleNameExpression* expr);
+    virtual void* visitUnresolvedSimpleNameExpression(
+        UnresolvedSimpleNameExpression* expr);
 
     /**
      * Visits an UnresolvedThisExpression.
@@ -477,32 +485,33 @@ private:
     bool isVisible(DeclaredEntity* entity);
 
     /**
-     * Checks if the passed entity is visible in the current scope's context,
-     * and reports an error at the specified location if it isn't.
+     * Checks if the passed entity is visible in the current scope's
+     * context, and reports an error at the specified location if it isn't.
      *
      * @param entity    The entity.
      * @param errorLoc  The error location.
      */
-    void checkVisible(DeclaredEntity* entity,
-                      const Location& errorLoc);
+    void checkVisible(DeclaredEntity* entity, const Location& errorLoc);
 
     /**
      * Checks if the passed expression's value can be converted to the
      * specified type, and returns @c true in this case. Otherwise,
      * @c false is returned.
      *
-     * By default, only the possibility of an implicit conversions is checked.
-     * If @c true is passed as the third parameter, explicit conversions
-     * are also taken into account.
+     * By default, only the possibility of an implicit conversions is
+     * checked. If @c true is passed as the third parameter, explicit
+     * conversions are also taken into account.
      *
-     * This method should be used rather than direct calls to isConvertable()
-     * and isImplicitlyConvertable() inside the BasicAnalyzer, as it also
-     * respects some special cases e.g. for integer literal conversions.
+     * This method should be used rather than direct calls to
+     * isConvertable() and isImplicitlyConvertable() inside the
+     * BasicAnalyzer, as it also respects some special cases e.g. for
+     * integer literal conversions.
      *
      * @param expr       The expression.
      * @param type       The type.
      * @param _explicit  Whether to consider explicit conversions.
-     * @return           @c true if the expression is convertable to the type;
+     * @return           @c true if the expression is convertable to the
+     * type;
      *                   @c false otherwise.
      */
     bool canConvert(Expression* expr, Type* type, bool _explicit = false);
@@ -515,9 +524,9 @@ private:
      * On success, @c true is returned. If the conversion is *not* possible,
      * nothing is done, and the return value is @c false.
      *
-     * By default, only the possibility of an implicit conversions is checked.
-     * If @c true is passed as the third parameter, explicit conversions
-     * are also taken into account.
+     * By default, only the possibility of an implicit conversions is
+     * checked. If @c true is passed as the third parameter, explicit
+     * conversions are also taken into account.
      *
      * @param expr       The expression to convert.
      * @param type       The type to convert to.
@@ -526,7 +535,7 @@ private:
      *                   @c false otherwise.
      */
     bool convert(Expression* expr, Type* type, bool _explicit = false);
-    
+
     /**
      * Looks through the passed group of overloaded functions and returns
      * the overload that matches the specified arguments best. If multiple
@@ -543,9 +552,9 @@ private:
      *                         UnresolvedFunctionExpression, or null.
      */
     Function* bestMatch(FunctionGroup* overloads,
-                        NodeList<Expression>::const_iterator arguments_begin,
-                        NodeList<Expression>::const_iterator arguments_end,
-                        const Location& errorLoc);
+        NodeList<Expression>::const_iterator arguments_begin,
+        NodeList<Expression>::const_iterator arguments_end,
+        const Location& errorLoc);
 
     /**
      * From two passed function overloads, return the one whose parameter
@@ -560,10 +569,9 @@ private:
      * @param arguments_end    End iterator for the arguments to match.
      * @return                 The better-matching function, or null.
      */
-    Function* betterMatch(Function* func1,
-                          Function* func2,
-                          NodeList<Expression>::const_iterator arguments_begin,
-                          NodeList<Expression>::const_iterator arguments_end);
+    Function* betterMatch(Function* func1, Function* func2,
+        NodeList<Expression>::const_iterator arguments_begin,
+        NodeList<Expression>::const_iterator arguments_end);
 
     /**
      * Creates an entity-denoting Expression from the passed entity
@@ -582,11 +590,11 @@ private:
      * @param instance  The instance expression.
      * @return          An Expression denoting the instance and member.
      */
-    Expression* createMemberExpression(NamedEntity* member,
-                                       Expression* instance);
+    Expression* createMemberExpression(
+        NamedEntity* member, Expression* instance);
 };
 
-
-}}
+} // namespace analysis
+} // namespace soyac
 
 #endif

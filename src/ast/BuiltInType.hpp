@@ -13,15 +13,13 @@
 #include "Type.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Inherited by node classes representing types which are built into
  * the Soya language.
  */
-class BuiltInType : public Type
-{
+class BuiltInType : public Type {
 public:
     /**
      * Iterates over the built-in type's members.
@@ -63,6 +61,7 @@ private:
     NodeList<DeclaredEntity> mMembers;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

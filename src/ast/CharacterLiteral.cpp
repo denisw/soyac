@@ -11,35 +11,21 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 CharacterLiteral::CharacterLiteral(uint32_t value)
     : mValue(value)
 {
 }
 
-
-void*
-CharacterLiteral::visit(Visitor* v)
+void* CharacterLiteral::visit(Visitor* v)
 {
     return v->visitCharacterLiteral(this);
 }
 
+Type* CharacterLiteral::type() const { return TYPE_CHAR; }
 
-Type*
-CharacterLiteral::type() const
-{
-    return TYPE_CHAR;
-}
+uint32_t CharacterLiteral::value() const { return mValue; }
 
-
-uint32_t
-CharacterLiteral::value() const
-{
-    return mValue;
-}
-
-
-}}
+} // namespace ast
+} // namespace soyac

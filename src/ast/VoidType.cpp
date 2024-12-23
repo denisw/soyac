@@ -10,23 +10,18 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 VoidType* VoidType::sInstance = NULL;
-
 
 VoidType::VoidType()
     : BuiltInType("void")
 {
 }
 
-
-VoidType*
-VoidType::get()
+VoidType* VoidType::get()
 {
-    if (sInstance == NULL)
-    {
+    if (sInstance == NULL) {
         sInstance = new VoidType;
         sInstance->ref();
     }
@@ -34,12 +29,7 @@ VoidType::get()
     return sInstance;
 }
 
+void* VoidType::visit(Visitor* v) { return v->visitVoidType(this); }
 
-void*
-VoidType::visit(Visitor* v)
-{
-    return v->visitVoidType(this);
-}
-
-
-}}
+} // namespace ast
+} // namespace soyac

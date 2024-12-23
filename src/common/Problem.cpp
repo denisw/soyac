@@ -8,39 +8,20 @@
 
 #include "Problem.hpp"
 
-namespace soyac
-{
+namespace soyac {
 
-
-Problem::Problem(Problem::Type type,
-                 const soyac::ast::Location& location,
-                 const std::string& description)
-    : mType(type),
-      mLocation(location),
-      mDescription(description)
+Problem::Problem(Problem::Type type, const soyac::ast::Location& location,
+    const std::string& description)
+    : mType(type)
+    , mLocation(location)
+    , mDescription(description)
 {
 }
 
+Problem::Type Problem::type() const { return mType; }
 
-Problem::Type
-Problem::type() const
-{
-    return mType;
-}
+const soyac::ast::Location& Problem::location() const { return mLocation; }
 
+const std::string& Problem::description() const { return mDescription; }
 
-const soyac::ast::Location&
-Problem::location() const
-{
-    return mLocation;
-}
-
-
-const std::string&
-Problem::description() const
-{
-    return mDescription;
-}
-
-
-}
+} // namespace soyac

@@ -10,30 +10,19 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
-
-void*
-ObjectCreationExpression::visit(Visitor* v)
+void* ObjectCreationExpression::visit(Visitor* v)
 {
     return v->visitObjectCreationExpression(this);
 }
 
+Type* ObjectCreationExpression::type() const { return mType.target(); }
 
-Type*
-ObjectCreationExpression::type() const
-{
-    return mType.target();
-}
-
-
-Constructor*
-ObjectCreationExpression::constructor() const
+Constructor* ObjectCreationExpression::constructor() const
 {
     return mConstructor.target();
 }
-
 
 ObjectCreationExpression::arguments_iterator
 ObjectCreationExpression::arguments_begin() const
@@ -41,12 +30,11 @@ ObjectCreationExpression::arguments_begin() const
     return mArguments.begin();
 }
 
-
 ObjectCreationExpression::arguments_iterator
 ObjectCreationExpression::arguments_end() const
 {
     return mArguments.end();
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

@@ -6,33 +6,27 @@
  * See LICENSE.txt for details.
  */
 
-#include <cassert>
 #include "DeclaredEntity.hpp"
+#include <cassert>
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 DeclaredEntity::DeclaredEntity(const Name& name)
     : NamedEntity(name)
 {
-    assert (name.isSimple());
+    assert(name.isSimple());
 }
 
-
-bool
-DeclaredEntity::hasModifier(DeclaredEntity::Modifier m)
+bool DeclaredEntity::hasModifier(DeclaredEntity::Modifier m)
 {
     return mModifiers.find(m) != mModifiers.end();
 }
 
-
-bool
-DeclaredEntity::addModifier(DeclaredEntity::Modifier m)
+bool DeclaredEntity::addModifier(DeclaredEntity::Modifier m)
 {
     return mModifiers.insert(m).second;
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

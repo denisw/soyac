@@ -12,20 +12,18 @@
 #include "Expression.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents an element access expression that acts as a shortcut for a
  * call to a to-be-determined getElement() or setElement() method.
  *
- * UnresolvedElementAccessExpression instances are replaced with corresponding
- * CallExpression instances by the BasicAnalyzer.
+ * UnresolvedElementAccessExpression instances are replaced with
+ * corresponding CallExpression instances by the BasicAnalyzer.
  *
  * (See the Soya Language Reference,)
  */
-class UnresolvedElementAccessExpression : public Expression
-{
+class UnresolvedElementAccessExpression : public Expression {
 public:
     /**
      * Creates an UnresolvedElementAccessExpression.
@@ -33,8 +31,7 @@ public:
      * @param operand  The expression's operand.
      * @param index    The element index expression.
      */
-    UnresolvedElementAccessExpression(Expression* operand,
-                                      Expression* index);
+    UnresolvedElementAccessExpression(Expression* operand, Expression* index);
 
     /**
      * Visits the UnresolvedElementAccessExpression.
@@ -68,6 +65,7 @@ private:
     Link<Expression> mIndex;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

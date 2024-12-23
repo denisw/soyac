@@ -12,8 +12,7 @@
 #include <stdint.h>
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents an integer value. In order to be able to represent
@@ -24,8 +23,7 @@ namespace ast
  * - A signdness flag which determines whether the stored bits are
  *   interpreted as signed or unsigned value.
  */
-class IntegerValue
-{
+class IntegerValue {
 public:
     /**
      * Creates an IntegerValue.
@@ -57,7 +55,7 @@ public:
      *          @c false if it is unsigned.
      */
     bool isSigned() const;
-    
+
     /**
      * Returns @c true if the two integer values are identical.
      *
@@ -112,6 +110,7 @@ private:
     bool mIsSigned;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

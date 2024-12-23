@@ -13,12 +13,9 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
-
-void
-EnumType::initEqualsMethod()
+void EnumType::initEqualsMethod()
 {
     FunctionParameter* param = new FunctionParameter("x", this);
 
@@ -26,60 +23,41 @@ EnumType::initEqualsMethod()
     mEqualsMethod->ref();
 }
 
+void* EnumType::visit(Visitor* v) { return v->visitEnumType(this); }
 
-void*
-EnumType::visit(Visitor* v)
+bool EnumType::isConvertableTo(Type* other) const
 {
-    return v->visitEnumType(this);
-}
-
-
-bool
-EnumType::isConvertableTo(Type* other) const
-{
-    if (isImplicitlyConvertableTo(other))
+    if (isImplicitlyConvertableTo(other)) {
         return true;
-    else
+    } else {
         return underlyingType()->isConvertableTo(other);
+    }
 }
 
-
-IntegerType*
-EnumType::underlyingType() const
+IntegerType* EnumType::underlyingType() const
 {
     return mUnderlyingType.target();
 }
 
-
-EnumType::values_iterator
-EnumType::values_begin() const
+EnumType::values_iterator EnumType::values_begin() const
 {
     return mValues.begin();
 }
 
+EnumType::values_iterator EnumType::values_end() const { return mValues.end(); }
 
-EnumType::values_iterator
-EnumType::values_end() const
+Function* EnumType::equalsMethod() const { return mEqualsMethod; }
+
+void EnumType::onValuesChanged(EnumConstant* oldVal, EnumConstant* newVal)
 {
-    return mValues.end();
-}
-
-
-Function*
-EnumType::equalsMethod() const
-{
-    return mEqualsMethod;
-}
-
-
-void
-EnumType::onValuesChanged(EnumConstant* oldVal, EnumConstant* newVal)
-{
-    if (oldVal != NULL)
+    if (oldVal != NULL) {
         removeChild(oldVal);
+    }
 
-    if (newVal != NULL)
+    if (newVal != NULL) {
         addChild(newVal);
+    }
 }
 
-}}
+} // namespace ast
+} // namespace soyac

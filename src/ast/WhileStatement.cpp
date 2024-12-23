@@ -6,36 +6,23 @@
  * See LICENSE.txt for details.
  */
 
-#include <cassert>
 #include "WhileStatement.hpp"
 #include "Visitor.hpp"
+#include <cassert>
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
-
-WhileStatement::WhileStatement(Expression* condition,
-                               Statement* body)
-    : StatementWithBody(body),
-      mCondition(condition)
+WhileStatement::WhileStatement(Expression* condition, Statement* body)
+    : StatementWithBody(body)
+    , mCondition(condition)
 {
-    assert (condition != NULL);
+    assert(condition != NULL);
 }
 
+void* WhileStatement::visit(Visitor* v) { return v->visitWhileStatement(this); }
 
-void*
-WhileStatement::visit(Visitor* v)
-{
-    return v->visitWhileStatement(this);
-}
+Expression* WhileStatement::condition() const { return mCondition.target(); }
 
-
-Expression*
-WhileStatement::condition() const
-{
-    return mCondition.target();
-}
-
-
-}}
+} // namespace ast
+} // namespace soyac

@@ -12,15 +12,13 @@
 #include <common/PassResult.hpp>
 
 namespace soyac {
-namespace driver
-{
+namespace driver {
 
 /**
  * Provides static methods for collecting the errors and warnings found
  * by the compiler passes and displaying them on the commandline.
  */
-class ProblemReport
-{
+class ProblemReport {
 public:
     /**
      * Adds the problems stored in the passed PassResult to the
@@ -31,10 +29,10 @@ public:
     static void addPassResult(PassResult* result);
 
     /**
-     * Writes the error report to the standard error stream (thereby removing
-     * all PassResults from the report). If the problem report contained any
-     * error messages (warnings are not considered), @c true is returned;
-     * otherwise, the return value is @c false.
+     * Writes the error report to the standard error stream (thereby
+     * removing all PassResults from the report). If the problem report
+     * contained any error messages (warnings are not considered), @c true
+     * is returned; otherwise, the return value is @c false.
      *
      * @return  @c true if errors were printed;
      *          @c false otherwise.
@@ -45,6 +43,7 @@ private:
     static std::list<PassResult*> sResults;
 };
 
-}}
+} // namespace driver
+} // namespace soyac
 
 #endif

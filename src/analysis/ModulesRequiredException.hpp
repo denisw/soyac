@@ -15,15 +15,13 @@
 #include <string>
 
 namespace soyac {
-namespace analysis
-{
+namespace analysis {
 
 /**
  * Signals that a source file requires particular modules to be
  * processed before it can be compiled.
  */
-class ModulesRequiredException : public std::exception
-{
+class ModulesRequiredException : public std::exception {
 public:
     /**
      * Iterates over the required modules' names (constant).
@@ -38,38 +36,33 @@ public:
     ModulesRequiredException(const std::list<std::string>& modules)
         : mModules(modules)
     {
-        assert (!mModules.empty());
+        assert(!mModules.empty());
     }
 
     /**
      * ModulesRequiredException destructor.
      */
-    virtual ~ModulesRequiredException() throw () {}
+    virtual ~ModulesRequiredException() throw() { }
 
     /**
      * Returns an iterator pointing to the first required module's name.
      *
      * @return  The start iterator.
      */
-    const_modules_iterator modules_begin() const
-    {
-        return mModules.begin();
-    }
+    const_modules_iterator modules_begin() const { return mModules.begin(); }
 
     /**
      * Returns an iterator pointing past the last required module's name.
      *
      * @return  The end iterator.
      */
-    const_modules_iterator modules_end() const
-    {
-        return mModules.end();
-    }
+    const_modules_iterator modules_end() const { return mModules.end(); }
 
 private:
     std::list<std::string> mModules;
 };
 
-}}
+} // namespace analysis
+} // namespace soyac
 
 #endif

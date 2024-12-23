@@ -11,55 +11,30 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
-
-LogicalExpression::LogicalExpression(LogicalExpression::Kind kind,
-                                     Expression* leftHand,
-                                     Expression* rightHand)
-    : mKind(kind),
-      mLeftHand(leftHand),
-      mRightHand(rightHand)
+LogicalExpression::LogicalExpression(
+    LogicalExpression::Kind kind, Expression* leftHand, Expression* rightHand)
+    : mKind(kind)
+    , mLeftHand(leftHand)
+    , mRightHand(rightHand)
 {
-    assert (leftHand != NULL);
-    assert (rightHand != NULL);
+    assert(leftHand != NULL);
+    assert(rightHand != NULL);
 }
 
-
-void*
-LogicalExpression::visit(Visitor* v)
+void* LogicalExpression::visit(Visitor* v)
 {
     return v->visitLogicalExpression(this);
 }
 
+Type* LogicalExpression::type() const { return TYPE_BOOL; }
 
-Type*
-LogicalExpression::type() const
-{
-    return TYPE_BOOL;
-}
+LogicalExpression::Kind LogicalExpression::kind() const { return mKind; }
 
+Expression* LogicalExpression::leftHand() const { return mLeftHand.target(); }
 
-LogicalExpression::Kind
-LogicalExpression::kind() const
-{
-    return mKind;
-}
+Expression* LogicalExpression::rightHand() const { return mRightHand.target(); }
 
-
-Expression*
-LogicalExpression::leftHand() const
-{
-    return mLeftHand.target();
-}
-
-
-Expression*
-LogicalExpression::rightHand() const
-{
-    return mRightHand.target();
-}
-
-
-}}
+} // namespace ast
+} // namespace soyac

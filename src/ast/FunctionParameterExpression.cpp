@@ -10,35 +10,25 @@
 #include "Visitor.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
-
-FunctionParameterExpression::FunctionParameterExpression(FunctionParameter* target)
+FunctionParameterExpression::FunctionParameterExpression(
+    FunctionParameter* target)
     : mTarget(target)
 {
 }
 
-
-void*
-FunctionParameterExpression::visit(Visitor* v)
+void* FunctionParameterExpression::visit(Visitor* v)
 {
     return v->visitFunctionParameterExpression(this);
 }
 
+Type* FunctionParameterExpression::type() const { return target()->type(); }
 
-Type*
-FunctionParameterExpression::type() const
-{
-    return target()->type();
-}
-
-
-FunctionParameter*
-FunctionParameterExpression::target() const
+FunctionParameter* FunctionParameterExpression::target() const
 {
     return mTarget.target();
 }
 
-
-}}
+} // namespace ast
+} // namespace soyac

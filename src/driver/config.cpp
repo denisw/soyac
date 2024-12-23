@@ -10,23 +10,20 @@
 
 namespace soyac {
 namespace driver {
-namespace config
-{
+namespace config {
 
 bool compileOnly = false;
 bool emitAssembly = false;
 bool emitLLVM = false;
-std::vector<std::string> interfacePaths{};
-std::vector<std::string> libraryPaths{};
+std::vector<std::string> interfacePaths {};
+std::vector<std::string> libraryPaths {};
 std::string outputPath("./a.out");
 std::string programName("soyac");
-std::vector<std::string> sourcePaths{};
+std::vector<std::string> sourcePaths {};
 
-std::vector<std::string> defaultInterfacePaths = {
-    "/usr/local/include/soya",
-    "/usr/local/include",
-    "/usr/include/soya",
-    "/usr/include"
-};
+std::vector<std::string> defaultInterfacePaths = { "/usr/local/include/soya",
+    "/usr/local/include", "/usr/include/soya", "/usr/include" };
 
-}}}
+} // namespace config
+} // namespace driver
+} // namespace soyac

@@ -9,13 +9,9 @@
 #include "Expression.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
+Expression::Expression() { }
 
-Expression::Expression()
-{
-}
-
-
-}}
+} // namespace ast
+} // namespace soyac

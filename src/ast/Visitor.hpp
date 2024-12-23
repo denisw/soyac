@@ -10,8 +10,7 @@
 #define _VISITOR_HPP
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /*
  * We don't want to introduce circular dependencies, so we just include
@@ -109,8 +108,7 @@ class WhileStatement;
  * visited abstract syntax tree node. The default implementation of every
  * visit method just returns null.
  */
-class Visitor
-{
+class Visitor {
 protected:
     /*
      * All AST node classes need to be friends of the Visitor class to call
@@ -191,7 +189,7 @@ protected:
     friend class VoidType;
     friend class WhileStatement;
 
-    virtual ~Visitor() {}
+    virtual ~Visitor() { }
 
     /**
      * Visits an ArrayCreationExpression.
@@ -210,10 +208,7 @@ protected:
      * @param type  The ArrayType to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitArrayType(ArrayType* type)
-    {
-        return NULL;
-    }
+    virtual void* visitArrayType(ArrayType* type) { return NULL; }
 
     /**
      * Visits an AssignmentExpression.
@@ -232,10 +227,7 @@ protected:
      * @param b  The Block to visit.
      * @return   The subclass-specific return value.
      */
-    virtual void* visitBlock(Block* b)
-    {
-        return NULL;
-    }
+    virtual void* visitBlock(Block* b) { return NULL; }
 
     /**
      * Visits a BooleanLiteral.
@@ -243,10 +235,7 @@ protected:
      * @param lit  The BooleanLiteral to visit.
      * @return     The subclass-specific return value.
      */
-    virtual void* visitBooleanLiteral(BooleanLiteral* lit)
-    {
-        return NULL;
-    }
+    virtual void* visitBooleanLiteral(BooleanLiteral* lit) { return NULL; }
 
     /**
      * Visits a BooleanType.
@@ -254,10 +243,7 @@ protected:
      * @param type  The BooleanType to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitBooleanType(BooleanType* type)
-    {
-        return NULL;
-    }
+    virtual void* visitBooleanType(BooleanType* type) { return NULL; }
 
     /**
      * Visits a CallExpression.
@@ -265,10 +251,7 @@ protected:
      * @param expr  The CallExpression to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitCallExpression(CallExpression* expr)
-    {
-        return NULL;
-    }
+    virtual void* visitCallExpression(CallExpression* expr) { return NULL; }
 
     /**
      * Visits a CastExpression.
@@ -276,10 +259,7 @@ protected:
      * @param expr  The CastExpression to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitCastExpression(CastExpression* expr)
-    {
-        return NULL;
-    }
+    virtual void* visitCastExpression(CastExpression* expr) { return NULL; }
 
     /**
      * Visits a CharacterLiteral.
@@ -287,10 +267,7 @@ protected:
      * @param lit  The CharacterLiteral to visit.
      * @return     The subclass-specific return value.
      */
-    virtual void* visitCharacterLiteral(CharacterLiteral* lit)
-    {
-        return NULL;
-    }
+    virtual void* visitCharacterLiteral(CharacterLiteral* lit) { return NULL; }
 
     /**
      * Visits a CharacterType.
@@ -298,10 +275,7 @@ protected:
      * @param type  The CharacterType to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitCharacterType(CharacterType* type)
-    {
-        return NULL;
-    }
+    virtual void* visitCharacterType(CharacterType* type) { return NULL; }
 
     /**
      * Visits a ClassType.
@@ -309,10 +283,7 @@ protected:
      * @param type  The ClassType to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitClassType(ClassType* type)
-    {
-        return NULL;
-    }
+    virtual void* visitClassType(ClassType* type) { return NULL; }
 
     /**
      * Visits a CombinedRelationalExpression.
@@ -320,7 +291,8 @@ protected:
      * @param expr  The CombinedRelationalExpression to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitCombinedRelationalExpression(CombinedRelationalExpression* expr)
+    virtual void* visitCombinedRelationalExpression(
+        CombinedRelationalExpression* expr)
     {
         return NULL;
     }
@@ -331,7 +303,8 @@ protected:
      * @param expr  The CompoundAssignmentExpression to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitCompoundAssignmentExpression(CompoundAssignmentExpression* expr)
+    virtual void* visitCompoundAssignmentExpression(
+        CompoundAssignmentExpression* expr)
     {
         return NULL;
     }
@@ -342,10 +315,7 @@ protected:
      * @param cons  The Constructor to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitConstructor(Constructor* cons)
-    {
-        return NULL;
-    }
+    virtual void* visitConstructor(Constructor* cons) { return NULL; }
 
     /**
      * Visits a ConstructorInitializer.
@@ -364,10 +334,7 @@ protected:
      * @param stmt  The DeclarationBlock to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitDeclarationBlock(DeclarationBlock* b)
-    {
-        return NULL;
-    }
+    virtual void* visitDeclarationBlock(DeclarationBlock* b) { return NULL; }
 
     /**
      * Visits a DeclarationStatement.
@@ -386,10 +353,7 @@ protected:
      * @param stmt  The DoStatement to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitDoStatement(DoStatement* stmt)
-    {
-        return NULL;
-    }
+    virtual void* visitDoStatement(DoStatement* stmt) { return NULL; }
 
     /**
      * Visits an EntityImport.
@@ -397,10 +361,7 @@ protected:
      * @param imp  The EntityImport to visit.
      * @return     The subclass-specific return value.
      */
-    virtual void* visitEntityImport(EntityImport* imp)
-    {
-        return NULL;
-    }
+    virtual void* visitEntityImport(EntityImport* imp) { return NULL; }
 
     /**
      * Visits an EnumConstant.
@@ -408,10 +369,7 @@ protected:
      * @param ec  The EnumConstant to visit.
      * @return    The subclass-specific return value.
      */
-    virtual void* visitEnumConstant(EnumConstant* ec)
-    {
-        return NULL;
-    }
+    virtual void* visitEnumConstant(EnumConstant* ec) { return NULL; }
 
     /**
      * Visits an EnumType.
@@ -419,10 +377,7 @@ protected:
      * @param type  The EnumType to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitEnumType(EnumType* type)
-    {
-        return NULL;
-    }
+    virtual void* visitEnumType(EnumType* type) { return NULL; }
 
     /**
      * Visits an EnumValueExpression.
@@ -474,10 +429,7 @@ protected:
      * @param stmt  The ForStatement to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitForStatement(ForStatement* stmt)
-    {
-        return NULL;
-    }
+    virtual void* visitForStatement(ForStatement* stmt) { return NULL; }
 
     /**
      * Visits a Function.
@@ -485,10 +437,7 @@ protected:
      * @param func  The Function to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitFunction(Function* func)
-    {
-        return NULL;
-    }
+    virtual void* visitFunction(Function* func) { return NULL; }
 
     /**
      * Visits a FunctionExpression.
@@ -529,7 +478,8 @@ protected:
      * @param expr  The FunctionParameterExpression to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitFunctionParameterExpression(FunctionParameterExpression* expr)
+    virtual void* visitFunctionParameterExpression(
+        FunctionParameterExpression* expr)
     {
         return NULL;
     }
@@ -540,10 +490,7 @@ protected:
      * @param type  The FunctionType to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitFunctionType(FunctionType* type)
-    {
-        return NULL;
-    }
+    virtual void* visitFunctionType(FunctionType* type) { return NULL; }
 
     /**
      * Visits an IfStatement.
@@ -551,10 +498,7 @@ protected:
      * @param stmt  The IfStatement to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitIfStatement(IfStatement* stmt)
-    {
-        return NULL;
-    }
+    virtual void* visitIfStatement(IfStatement* stmt) { return NULL; }
 
     /**
      * Visits an InstanceFunctionExpression.
@@ -562,7 +506,8 @@ protected:
      * @param expr  The InstanceFunctionExpression to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitInstanceFunctionExpression(InstanceFunctionExpression* expr)
+    virtual void* visitInstanceFunctionExpression(
+        InstanceFunctionExpression* expr)
     {
         return NULL;
     }
@@ -573,7 +518,8 @@ protected:
      * @param expr  The InstancePropertyGetExpression to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitInstancePropertyGetExpression(InstancePropertyGetExpression* expr)
+    virtual void* visitInstancePropertyGetExpression(
+        InstancePropertyGetExpression* expr)
     {
         return NULL;
     }
@@ -584,7 +530,8 @@ protected:
      * @param expr  The InstancePropertySetExpression to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitInstancePropertySetExpression(InstancePropertySetExpression* expr)
+    virtual void* visitInstancePropertySetExpression(
+        InstancePropertySetExpression* expr)
     {
         return NULL;
     }
@@ -595,7 +542,8 @@ protected:
      * @param expr  The InstanceVariableExpression to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitInstanceVariableExpression(InstanceVariableExpression* expr)
+    virtual void* visitInstanceVariableExpression(
+        InstanceVariableExpression* expr)
     {
         return NULL;
     }
@@ -606,10 +554,7 @@ protected:
      * @param lit  The IntegerLiteral to visit.
      * @return     The subclass-specific return value.
      */
-    virtual void* visitIntegerLiteral(IntegerLiteral* lit)
-    {
-        return NULL;
-    }
+    virtual void* visitIntegerLiteral(IntegerLiteral* lit) { return NULL; }
 
     /**
      * Visits a IntegerType.
@@ -617,10 +562,7 @@ protected:
      * @param type  The IntegerType to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitIntegerType(IntegerType* type)
-    {
-        return NULL;
-    }
+    virtual void* visitIntegerType(IntegerType* type) { return NULL; }
 
     /**
      * Visits a LogicalExpression.
@@ -661,10 +603,7 @@ protected:
      * @param m  The Module to visit.
      * @return   The subclass-specific return value.
      */
-    virtual void* visitModule(Module* m)
-    {
-        return NULL;
-    }
+    virtual void* visitModule(Module* m) { return NULL; }
 
     /**
      * Visits a ModuleExpression.
@@ -672,10 +611,7 @@ protected:
      * @param expr  The ModuleExpression to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitModuleExpression(ModuleExpression* expr)
-    {
-        return NULL;
-    }
+    virtual void* visitModuleExpression(ModuleExpression* expr) { return NULL; }
 
     /**
      * Visits a ModuleImport.
@@ -683,10 +619,7 @@ protected:
      * @param imp  The ModuleImport to visit.
      * @return     The subclass-specific return value.
      */
-    virtual void* visitModuleImport(ModuleImport* imp)
-    {
-        return NULL;
-    }
+    virtual void* visitModuleImport(ModuleImport* imp) { return NULL; }
 
     /**
      * Visits an ObjectCreationExpression.
@@ -705,10 +638,7 @@ protected:
      * @param prop  The Property to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitProperty(Property* prop)
-    {
-        return NULL;
-    }
+    virtual void* visitProperty(Property* prop) { return NULL; }
 
     /**
      * Visits a PropertyGetAccessor.
@@ -738,10 +668,7 @@ protected:
      * @param stmt  The ReturnStatement to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitReturnStatement(ReturnStatement* stmt)
-    {
-        return NULL;
-    }
+    virtual void* visitReturnStatement(ReturnStatement* stmt) { return NULL; }
 
     /**
      * Visits a StructType.
@@ -749,10 +676,7 @@ protected:
      * @param type  The StructType to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitStructType(StructType* type)
-    {
-        return NULL;
-    }
+    virtual void* visitStructType(StructType* type) { return NULL; }
 
     /**
      * Visits a ThisExpression.
@@ -760,10 +684,7 @@ protected:
      * @param expr  The ThisExpression to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitThisExpression(ThisExpression* expr)
-    {
-        return NULL;
-    }
+    virtual void* visitThisExpression(ThisExpression* expr) { return NULL; }
 
     /**
      * Visits a TypeExpression.
@@ -771,10 +692,7 @@ protected:
      * @param expr  The TypeExpression to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitTypeExpression(TypeExpression* expr)
-    {
-        return NULL;
-    }
+    virtual void* visitTypeExpression(TypeExpression* expr) { return NULL; }
 
     /**
      * Visits an UnknownType.
@@ -782,10 +700,7 @@ protected:
      * @param type  The UnknownType to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitUnknownType(UnknownType* type)
-    {
-        return NULL;
-    }
+    virtual void* visitUnknownType(UnknownType* type) { return NULL; }
 
     /**
      * Visits an UnknownArrayType.
@@ -793,10 +708,7 @@ protected:
      * @param type  The UnknownArrayType to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitUnknownArrayType(UnknownArrayType* type)
-    {
-        return NULL;
-    }
+    virtual void* visitUnknownArrayType(UnknownArrayType* type) { return NULL; }
 
     /**
      * Visits an UnknownFunctionType.
@@ -815,7 +727,8 @@ protected:
      * @param init  The UnresolvedBaseConstructorInitializer to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitUnresolvedBaseConstructorInitializer(UnresolvedBaseConstructorInitializer* init)
+    virtual void* visitUnresolvedBaseConstructorInitializer(
+        UnresolvedBaseConstructorInitializer* init)
     {
         return NULL;
     }
@@ -826,7 +739,8 @@ protected:
      * @param expr  The UnresolvedBinaryExpression to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitUnresolvedBinaryExpression(UnresolvedBinaryExpression* expr)
+    virtual void* visitUnresolvedBinaryExpression(
+        UnresolvedBinaryExpression* expr)
     {
         return NULL;
     }
@@ -837,7 +751,8 @@ protected:
      * @param init  The UnresolvedConstructorInitializer to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitUnresolvedConstructorInitializer(UnresolvedConstructorInitializer* init)
+    virtual void* visitUnresolvedConstructorInitializer(
+        UnresolvedConstructorInitializer* init)
     {
         return NULL;
     }
@@ -848,7 +763,8 @@ protected:
      * @param init  The UnresolvedDefaultConstructorInitializer to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitUnresolvedDefaultConstructorInitializer(UnresolvedDefaultConstructorInitializer* init)
+    virtual void* visitUnresolvedDefaultConstructorInitializer(
+        UnresolvedDefaultConstructorInitializer* init)
     {
         return NULL;
     }
@@ -859,7 +775,8 @@ protected:
      * @param expr  The UnresolvedElementAccessExpression to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitUnresolvedElementAccessExpression(UnresolvedElementAccessExpression* expr)
+    virtual void* visitUnresolvedElementAccessExpression(
+        UnresolvedElementAccessExpression* expr)
     {
         return NULL;
     }
@@ -881,7 +798,8 @@ protected:
      * @param expr  The UnresolvedFunctionExpression to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitUnresolvedFunctionExpression(UnresolvedFunctionExpression* expr)
+    virtual void* visitUnresolvedFunctionExpression(
+        UnresolvedFunctionExpression* expr)
     {
         return NULL;
     }
@@ -892,7 +810,8 @@ protected:
      * @param expr  The UnresolvedInstanceFunctionExpression to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitUnresolvedInstanceFunctionExpression(UnresolvedInstanceFunctionExpression* expr)
+    virtual void* visitUnresolvedInstanceFunctionExpression(
+        UnresolvedInstanceFunctionExpression* expr)
     {
         return NULL;
     }
@@ -903,7 +822,8 @@ protected:
      * @param expr  The UnresolvedInstancePropertyExpression to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitUnresolvedInstancePropertyExpression(UnresolvedInstancePropertyExpression* expr)
+    virtual void* visitUnresolvedInstancePropertyExpression(
+        UnresolvedInstancePropertyExpression* expr)
     {
         return NULL;
     }
@@ -914,7 +834,8 @@ protected:
      * @param expr  The UnresolvedMemberAccessExpression to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitUnresolvedMemberAccessExpression(UnresolvedMemberAccessExpression* expr)
+    virtual void* visitUnresolvedMemberAccessExpression(
+        UnresolvedMemberAccessExpression* expr)
     {
         return NULL;
     }
@@ -936,7 +857,8 @@ protected:
      * @param expr  The UnresolvedObjectCreationExpression to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitUnresolvedObjectCreationExpression(UnresolvedObjectCreationExpression* expr)
+    virtual void* visitUnresolvedObjectCreationExpression(
+        UnresolvedObjectCreationExpression* expr)
     {
         return NULL;
     }
@@ -947,7 +869,8 @@ protected:
      * @param expr  The UnresolvedSimpleNameExpression to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitUnresolvedSimpleNameExpression(UnresolvedSimpleNameExpression* expr)
+    virtual void* visitUnresolvedSimpleNameExpression(
+        UnresolvedSimpleNameExpression* expr)
     {
         return NULL;
     }
@@ -969,10 +892,7 @@ protected:
      * @param var  The Variable to visit.
      * @return     The subclass-specific return value.
      */
-    virtual void* visitVariable(Variable* var)
-    {
-        return NULL;
-    }
+    virtual void* visitVariable(Variable* var) { return NULL; }
 
     /**
      * Visits a VariableExpression.
@@ -991,10 +911,7 @@ protected:
      * @param type  The VoidType to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitVoidType(VoidType* type)
-    {
-        return NULL;
-    }
+    virtual void* visitVoidType(VoidType* type) { return NULL; }
 
     /**
      * Visits a WhileStatement.
@@ -1002,13 +919,10 @@ protected:
      * @param expr  The WhileStatement to visit.
      * @return      The subclass-specific return value.
      */
-    virtual void* visitWhileStatement(WhileStatement* stmt)
-    {
-        return NULL;
-    }
+    virtual void* visitWhileStatement(WhileStatement* stmt) { return NULL; }
 };
 
-
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

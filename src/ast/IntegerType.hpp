@@ -9,43 +9,41 @@
 #ifndef _INTEGER_TYPE_HPP
 #define _INTEGER_TYPE_HPP
 
-#include <map>
-#include <set>
 #include "BuiltInType.hpp"
 #include "IntegerValue.hpp"
 #include "NodeList.hpp"
+#include <map>
+#include <set>
 
 /**
  * The "int" type. This is a shortcut to IntegerType::getInt().
  */
-#define TYPE_INT    soyac::ast::IntegerType::getInt()
+#define TYPE_INT soyac::ast::IntegerType::getInt()
 
 /**
  * The "uint" type. This is a shortcut to IntegerType::getUInt().
  */
-#define TYPE_UINT   soyac::ast::IntegerType::getUInt()
+#define TYPE_UINT soyac::ast::IntegerType::getUInt()
 
 /**
  * The "long" type. This is a shortcut to IntegerType::getLong().
  */
-#define TYPE_LONG   soyac::ast::IntegerType::getLong()
+#define TYPE_LONG soyac::ast::IntegerType::getLong()
 
 /**
  * The "uloung" type. This is a shortcut to IntegerType::getULong().
  */
-#define TYPE_ULONG  soyac::ast::IntegerType::getULong()
+#define TYPE_ULONG soyac::ast::IntegerType::getULong()
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents an integer type.
  *
  * (See the Soya Language Reference,)
  */
-class IntegerType : public BuiltInType
-{
+class IntegerType : public BuiltInType {
 public:
     /**
      * Returns an IntegerType. Passing the same arguments will
@@ -171,6 +169,7 @@ private:
     IntegerType(const Name& name, int size, bool isSigned);
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

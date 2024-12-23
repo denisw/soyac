@@ -12,8 +12,7 @@
 #include "Expression.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 class DeclaredEntity;
 
@@ -23,8 +22,7 @@ class DeclaredEntity;
  *
  * (See the Soya Language Reference,)
  */
-class CompoundAssignmentExpression : public Expression
-{
+class CompoundAssignmentExpression : public Expression {
 public:
     /**
      * Creates an CompoundAssignmentExpression.
@@ -33,9 +31,8 @@ public:
      * @param rightHand         The expression's right-hand expression.
      * @param operatorCallee    The called operator method.
      */
-    CompoundAssignmentExpression(Expression* leftHand,
-                                 Expression* rightHand,
-                                 DeclaredEntity* callee);
+    CompoundAssignmentExpression(
+        Expression* leftHand, Expression* rightHand, DeclaredEntity* callee);
 
     /**
      * Visits the CompoundAssignmentExpression.
@@ -77,6 +74,7 @@ private:
     Link<DeclaredEntity> mCallee;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

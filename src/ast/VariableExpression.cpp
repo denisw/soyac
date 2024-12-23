@@ -6,41 +6,27 @@
  * See LICENSE.txt for details.
  */
 
-#include <cassert>
 #include "VariableExpression.hpp"
 #include "Visitor.hpp"
+#include <cassert>
 
 namespace soyac {
-namespace ast
-{
-
+namespace ast {
 
 VariableExpression::VariableExpression(Variable* target)
     : mTarget(target)
 {
-    assert (target != NULL);
+    assert(target != NULL);
 }
 
-
-void*
-VariableExpression::visit(Visitor* v)
+void* VariableExpression::visit(Visitor* v)
 {
     return v->visitVariableExpression(this);
 }
 
+Type* VariableExpression::type() const { return target()->type(); }
 
-Type*
-VariableExpression::type() const
-{
-    return target()->type();
-}
+Variable* VariableExpression::target() const { return mTarget.target(); }
 
-
-Variable*
-VariableExpression::target() const
-{
-    return mTarget.target();
-}
-
-
-}}
+} // namespace ast
+} // namespace soyac

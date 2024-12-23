@@ -13,14 +13,12 @@
 #include "Type.hpp"
 
 namespace soyac {
-namespace ast
-{
+namespace ast {
 
 /**
  * Represents a "this" expression.
  */
-class ThisExpression : public Expression
-{
+class ThisExpression : public Expression {
 public:
     /**
      * Creates a ThisExpression.
@@ -45,6 +43,7 @@ private:
     Link<Type> mType;
 };
 
-}}
+} // namespace ast
+} // namespace soyac
 
 #endif

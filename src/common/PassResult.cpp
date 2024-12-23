@@ -8,61 +8,46 @@
 
 #include "PassResult.hpp"
 
-namespace soyac
-{
-
+namespace soyac {
 
 PassResult::PassResult()
     : mProblems(0)
 {
-    
 }
-
 
 PassResult::~PassResult()
 {
     for (PassResult::problems_iterator it = problems_begin();
-         it != problems_end(); it++)
-    {
+        it != problems_end(); it++) {
         delete *it;
     }
 }
 
+bool PassResult::foundProblems() const { return mProblems.size() > 0; }
 
-bool
-PassResult::foundProblems() const
+bool PassResult::foundErrors() const
 {
-    return mProblems.size() > 0;
-}
-
-
-bool
-PassResult::foundErrors() const
-{
-    if (mProblems.size() == 0) return false;
+    if (mProblems.size() == 0) {
+        return false;
+    }
     for (PassResult::problems_iterator it = problems_begin();
-         it != problems_end(); it++)
-    {
-        if ((*it)->type() == Problem::ERROR)
+        it != problems_end(); it++) {
+        if ((*it)->type() == Problem::ERROR) {
             return true;
+        }
     }
 
     return false;
 }
 
-
-PassResult::problems_iterator
-PassResult::problems_begin() const
+PassResult::problems_iterator PassResult::problems_begin() const
 {
     return mProblems.begin();
 }
 
-
-PassResult::problems_iterator
-PassResult::problems_end() const
+PassResult::problems_iterator PassResult::problems_end() const
 {
     return mProblems.end();
 }
 
-
-}
+} // namespace soyac
