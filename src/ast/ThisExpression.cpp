@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "ThisExpression.hpp"
-#include "Visitor.hpp"
+#include "ThisExpression.h"
+#include "Visitor.h"
 #include <cassert>
 
 namespace soyac {
@@ -16,7 +16,7 @@ namespace ast {
 ThisExpression::ThisExpression(Type* type)
     : mType(type)
 {
-    assert(type != NULL);
+    assert(type != nullptr);
 }
 
 void* ThisExpression::visit(Visitor* v) { return v->visitThisExpression(this); }

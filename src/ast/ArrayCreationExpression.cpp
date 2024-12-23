@@ -6,10 +6,10 @@
  * See LICENSE.txt for details.
  */
 
-#include "ArrayCreationExpression.hpp"
-#include "ArrayType.hpp"
-#include "UnknownArrayType.hpp"
-#include "Visitor.hpp"
+#include "ArrayCreationExpression.h"
+#include "ArrayType.h"
+#include "UnknownArrayType.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {
@@ -19,10 +19,10 @@ ArrayCreationExpression::ArrayCreationExpression(
     : mType(type)
     , mLengthExpression(lengthExpression)
 {
-    assert(type != NULL);
-    assert(dynamic_cast<ArrayType*>(type) != NULL
-        || dynamic_cast<UnknownArrayType*>(type) != NULL);
-    assert(lengthExpression != NULL);
+    assert(type != nullptr);
+    assert(dynamic_cast<ArrayType*>(type) != nullptr
+        || dynamic_cast<UnknownArrayType*>(type) != nullptr);
+    assert(lengthExpression != nullptr);
 }
 
 void* ArrayCreationExpression::visit(Visitor* v)

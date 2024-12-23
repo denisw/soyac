@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "IfStatement.hpp"
-#include "Visitor.hpp"
+#include "IfStatement.h"
+#include "Visitor.h"
 #include <cassert>
 
 namespace soyac {
@@ -19,7 +19,7 @@ IfStatement::IfStatement(
     , mCondition(condition)
     , mElseBody(elseBody)
 {
-    assert(condition != NULL);
+    assert(condition != nullptr);
 }
 
 void* IfStatement::visit(Visitor* v) { return v->visitIfStatement(this); }

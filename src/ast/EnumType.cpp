@@ -6,11 +6,11 @@
  * See LICENSE.txt for details.
  */
 
-#include "EnumType.hpp"
-#include "BooleanType.hpp"
-#include "Function.hpp"
-#include "FunctionParameter.hpp"
-#include "Visitor.hpp"
+#include "EnumType.h"
+#include "BooleanType.h"
+#include "Function.h"
+#include "FunctionParameter.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {
@@ -50,11 +50,11 @@ Function* EnumType::equalsMethod() const { return mEqualsMethod; }
 
 void EnumType::onValuesChanged(EnumConstant* oldVal, EnumConstant* newVal)
 {
-    if (oldVal != NULL) {
+    if (oldVal != nullptr) {
         removeChild(oldVal);
     }
 
-    if (newVal != NULL) {
+    if (newVal != nullptr) {
         addChild(newVal);
     }
 }

@@ -6,9 +6,9 @@
  * See LICENSE.txt for details.
  */
 
-#include "Property.hpp"
-#include "UnknownType.hpp"
-#include "Visitor.hpp"
+#include "Property.h"
+#include "UnknownType.h"
+#include "Visitor.h"
 #include <cassert>
 
 namespace soyac {
@@ -19,7 +19,7 @@ Property::Property(const Name& name, Type* type,
     : DeclaredEntity(name)
     , mType(type)
 {
-    assert(type != NULL);
+    assert(type != nullptr);
 
     mGetAccessor.targetChanged().connect([this](auto oldAcc, auto newAcc) {
         onGetAccessorChanged(oldAcc, newAcc);
@@ -49,11 +49,11 @@ PropertySetAccessor* Property::setAccessor() const
 void Property::onGetAccessorChanged(
     PropertyGetAccessor* oldAcc, PropertyGetAccessor* newAcc)
 {
-    if (oldAcc != NULL) {
+    if (oldAcc != nullptr) {
         removeChild(oldAcc);
     }
 
-    if (newAcc != NULL) {
+    if (newAcc != nullptr) {
         addChild(newAcc);
         newAcc->returnType()->replaceWith(type());
     }
@@ -62,11 +62,11 @@ void Property::onGetAccessorChanged(
 void Property::onSetAccessorChanged(
     PropertySetAccessor* oldAcc, PropertySetAccessor* newAcc)
 {
-    if (oldAcc != NULL) {
+    if (oldAcc != nullptr) {
         removeChild(oldAcc);
     }
 
-    if (newAcc != NULL) {
+    if (newAcc != nullptr) {
         addChild(newAcc);
         newAcc->valueParameter()->type()->replaceWith(type());
     }

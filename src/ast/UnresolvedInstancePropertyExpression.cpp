@@ -6,9 +6,9 @@
  * See LICENSE.txt for details.
  */
 
-#include "UnresolvedInstancePropertyExpression.hpp"
-#include "UnknownType.hpp"
-#include "Visitor.hpp"
+#include "UnresolvedInstancePropertyExpression.h"
+#include "UnknownType.h"
+#include "Visitor.h"
 #include <cassert>
 
 namespace soyac {
@@ -19,8 +19,8 @@ UnresolvedInstancePropertyExpression::UnresolvedInstancePropertyExpression(
     : mInstance(instance)
     , mTarget(target)
 {
-    assert(instance != NULL);
-    assert(target != NULL);
+    assert(instance != nullptr);
+    assert(target != nullptr);
 }
 
 void* UnresolvedInstancePropertyExpression::visit(Visitor* v)

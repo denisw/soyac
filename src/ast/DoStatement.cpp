@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "DoStatement.hpp"
-#include "Visitor.hpp"
+#include "DoStatement.h"
+#include "Visitor.h"
 #include <cassert>
 
 namespace soyac {
@@ -17,7 +17,7 @@ DoStatement::DoStatement(Expression* condition, Statement* body)
     : StatementWithBody(body)
     , mCondition(condition)
 {
-    assert(condition != NULL);
+    assert(condition != nullptr);
 }
 
 void* DoStatement::visit(Visitor* v) { return v->visitDoStatement(this); }

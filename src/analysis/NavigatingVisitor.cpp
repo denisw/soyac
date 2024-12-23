@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "NavigatingVisitor.hpp"
-#include <ast/ast.hpp>
+#include "NavigatingVisitor.h"
+#include <ast/ast.h>
 
 namespace soyac {
 namespace analysis {
@@ -23,7 +23,7 @@ void* NavigatingVisitor::visitModule(Module* m)
     }
 
     m->body()->visit(this);
-    return NULL;
+    return nullptr;
 }
 
 ///// Statements
@@ -36,7 +36,7 @@ void* NavigatingVisitor::visitBlock(Block* b)
         (*it)->visit(this);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* NavigatingVisitor::visitDeclarationBlock(DeclarationBlock* b)
@@ -46,26 +46,26 @@ void* NavigatingVisitor::visitDeclarationBlock(DeclarationBlock* b)
         (*it)->visit(this);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* NavigatingVisitor::visitDeclarationStatement(DeclarationStatement* stmt)
 {
     stmt->declaredEntity()->visit(this);
-    return NULL;
+    return nullptr;
 }
 
 void* NavigatingVisitor::visitDoStatement(DoStatement* stmt)
 {
     stmt->condition()->visit(this);
     stmt->body()->visit(this);
-    return NULL;
+    return nullptr;
 }
 
 void* NavigatingVisitor::visitExpressionStatement(ExpressionStatement* stmt)
 {
     stmt->expression()->visit(this);
-    return NULL;
+    return nullptr;
 }
 
 void* NavigatingVisitor::visitForStatement(ForStatement* stmt)
@@ -83,7 +83,7 @@ void* NavigatingVisitor::visitForStatement(ForStatement* stmt)
     }
 
     stmt->body()->visit(this);
-    return NULL;
+    return nullptr;
 }
 
 void* NavigatingVisitor::visitIfStatement(IfStatement* stmt)
@@ -95,23 +95,23 @@ void* NavigatingVisitor::visitIfStatement(IfStatement* stmt)
         stmt->elseBody()->visit(this);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* NavigatingVisitor::visitReturnStatement(ReturnStatement* stmt)
 {
-    if (stmt->returnValue() != NULL) {
+    if (stmt->returnValue() != nullptr) {
         stmt->returnValue()->visit(this);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* NavigatingVisitor::visitWhileStatement(WhileStatement* stmt)
 {
     stmt->condition()->visit(this);
     stmt->body()->visit(this);
-    return NULL;
+    return nullptr;
 }
 
 ///// Declared Entities
@@ -120,7 +120,7 @@ void* NavigatingVisitor::visitWhileStatement(WhileStatement* stmt)
 void* NavigatingVisitor::visitClassType(ClassType* type)
 {
     type->body()->visit(this);
-    return NULL;
+    return nullptr;
 }
 
 void* NavigatingVisitor::visitConstructor(Constructor* cons)
@@ -132,11 +132,11 @@ void* NavigatingVisitor::visitConstructor(Constructor* cons)
 
     cons->initializer()->visit(this);
 
-    if (cons->body() != NULL) {
+    if (cons->body() != nullptr) {
         cons->body()->visit(this);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* NavigatingVisitor::visitConstructorInitializer(
@@ -148,7 +148,7 @@ void* NavigatingVisitor::visitConstructorInitializer(
         (*it)->visit(this);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* NavigatingVisitor::visitEnumType(EnumType* type)
@@ -158,7 +158,7 @@ void* NavigatingVisitor::visitEnumType(EnumType* type)
         (*it)->visit(this);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* NavigatingVisitor::visitFunction(Function* func)
@@ -168,61 +168,61 @@ void* NavigatingVisitor::visitFunction(Function* func)
         (*it)->visit(this);
     }
 
-    if (func->body() != NULL) {
+    if (func->body() != nullptr) {
         func->body()->visit(this);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* NavigatingVisitor::visitProperty(Property* prop)
 {
-    if (dynamic_cast<UnknownType*>(prop->type()) != NULL) {
+    if (dynamic_cast<UnknownType*>(prop->type()) != nullptr) {
         prop->type()->visit(this);
     }
 
-    if (prop->getAccessor() != NULL) {
+    if (prop->getAccessor() != nullptr) {
         prop->getAccessor()->visit(this);
     }
 
-    if (prop->setAccessor() != NULL) {
+    if (prop->setAccessor() != nullptr) {
         prop->setAccessor()->visit(this);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* NavigatingVisitor::visitPropertyGetAccessor(PropertyGetAccessor* acc)
 {
-    if (acc->body() != NULL) {
+    if (acc->body() != nullptr) {
         acc->body()->visit(this);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* NavigatingVisitor::visitPropertySetAccessor(PropertySetAccessor* acc)
 {
-    if (acc->body() != NULL) {
+    if (acc->body() != nullptr) {
         acc->body()->visit(this);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* NavigatingVisitor::visitStructType(StructType* type)
 {
     type->body()->visit(this);
-    return NULL;
+    return nullptr;
 }
 
 void* NavigatingVisitor::visitVariable(Variable* var)
 {
-    if (var->initializer() != NULL) {
+    if (var->initializer() != nullptr) {
         var->initializer()->visit(this);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 ///// Expressions
@@ -231,7 +231,7 @@ void* NavigatingVisitor::visitVariable(Variable* var)
 void* NavigatingVisitor::visitArrayCreationExpression(
     ArrayCreationExpression* expr)
 {
-    if (expr->lengthExpression() != NULL) {
+    if (expr->lengthExpression() != nullptr) {
         expr->lengthExpression()->visit(this);
     }
 
@@ -240,14 +240,14 @@ void* NavigatingVisitor::visitArrayCreationExpression(
         (*it)->visit(this);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* NavigatingVisitor::visitAssignmentExpression(AssignmentExpression* expr)
 {
     expr->leftHand()->visit(this);
     expr->rightHand()->visit(this);
-    return NULL;
+    return nullptr;
 }
 
 void* NavigatingVisitor::visitCallExpression(CallExpression* expr)
@@ -259,40 +259,40 @@ void* NavigatingVisitor::visitCallExpression(CallExpression* expr)
         (*it)->visit(this);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* NavigatingVisitor::visitCastExpression(CastExpression* expr)
 {
     expr->operand()->visit(this);
-    return NULL;
+    return nullptr;
 }
 
 void* NavigatingVisitor::visitInstanceFunctionExpression(
     InstanceFunctionExpression* expr)
 {
     expr->instance()->visit(this);
-    return NULL;
+    return nullptr;
 }
 
 void* NavigatingVisitor::visitInstanceVariableExpression(
     InstanceVariableExpression* expr)
 {
     expr->instance()->visit(this);
-    return NULL;
+    return nullptr;
 }
 
 void* NavigatingVisitor::visitLogicalExpression(LogicalExpression* expr)
 {
     expr->leftHand()->visit(this);
     expr->rightHand()->visit(this);
-    return NULL;
+    return nullptr;
 }
 
 void* NavigatingVisitor::visitLogicalNotExpression(LogicalNotExpression* expr)
 {
     expr->operand()->visit(this);
-    return NULL;
+    return nullptr;
 }
 
 } // namespace analysis

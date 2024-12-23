@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "Type.hpp"
-#include "UnknownType.hpp"
+#include "Type.h"
+#include "UnknownType.h"
 
 namespace soyac {
 namespace ast {
@@ -29,12 +29,12 @@ bool Type::isImplicitlyConvertableTo(Type* other) const
      * to produce type mismatch errors.
      */
     return (this == other || this->isSubtypeOf(other)
-        || dynamic_cast<UnknownType*>(other) != NULL);
+        || dynamic_cast<UnknownType*>(other) != nullptr);
 }
 
 bool Type::isSubtypeOf(Type* other) const
 {
-    return (dynamic_cast<UnknownType*>(other) != NULL);
+    return (dynamic_cast<UnknownType*>(other) != nullptr);
 }
 
 } // namespace ast

@@ -6,9 +6,9 @@
  * See LICENSE.txt for details.
  */
 
-#include "ClassType.hpp"
-#include "UnknownType.hpp"
-#include "Visitor.hpp"
+#include "ClassType.h"
+#include "UnknownType.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {
@@ -23,7 +23,7 @@ ClassType::ClassType(const Name& name, Type* baseClass, DeclarationBlock* body)
     : UserDefinedType(name, body)
     , mBaseClass(baseClass)
 {
-    assert(baseClass != NULL);
+    assert(baseClass != nullptr);
 }
 
 void* ClassType::visit(Visitor* v) { return v->visitClassType(this); }
@@ -36,7 +36,7 @@ bool ClassType::isImplicitlyConvertableTo(Type* other) const
 
     ClassType* cls = const_cast<ClassType*>(this);
 
-    while (cls != NULL) {
+    while (cls != nullptr) {
         if (cls == other) {
             return true;
         } else {

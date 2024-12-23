@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "EnumValueExpression.hpp"
-#include "Visitor.hpp"
+#include "EnumValueExpression.h"
+#include "Visitor.h"
 #include <cassert>
 
 namespace soyac {
@@ -17,8 +17,8 @@ EnumValueExpression::EnumValueExpression(EnumType* type, EnumConstant* target)
     : mType(type)
     , mTarget(target)
 {
-    assert(type != NULL);
-    assert(target != NULL);
+    assert(type != nullptr);
+    assert(target != nullptr);
 }
 
 void* EnumValueExpression::visit(Visitor* v)

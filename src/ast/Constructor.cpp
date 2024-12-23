@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "Constructor.hpp"
-#include "Visitor.hpp"
+#include "Constructor.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {
@@ -16,8 +16,8 @@ Constructor::Constructor(ConstructorInitializer* initializer, Block* body)
     : Function(CONSTRUCTOR_NAME, TYPE_VOID, body)
     , mInitializer(initializer)
 {
-    assert(initializer != NULL);
-    assert(body != NULL);
+    assert(initializer != nullptr);
+    assert(body != nullptr);
 }
 
 void* Constructor::visit(Visitor* v) { return v->visitConstructor(this); }

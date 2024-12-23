@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "UnresolvedEntityImport.hpp"
-#include "Visitor.hpp"
+#include "UnresolvedEntityImport.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {

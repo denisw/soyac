@@ -6,12 +6,12 @@
  * See LICENSE.txt for details.
  */
 
-#include "PropertySetAccessor.hpp"
-#include "FunctionParameter.hpp"
-#include "Property.hpp"
-#include "UnknownType.hpp"
-#include "Visitor.hpp"
-#include "VoidType.hpp"
+#include "PropertySetAccessor.h"
+#include "FunctionParameter.h"
+#include "Property.h"
+#include "UnknownType.h"
+#include "Visitor.h"
+#include "VoidType.h"
 #include <cassert>
 
 namespace soyac {

@@ -6,7 +6,7 @@
  * See LICENSE.txt for details.
  */
 
-#include "StatementWithBody.hpp"
+#include "StatementWithBody.h"
 #include <cassert>
 
 namespace soyac {
@@ -15,7 +15,7 @@ namespace ast {
 StatementWithBody::StatementWithBody(Statement* body)
     : mBody(body)
 {
-    assert(body != NULL);
+    assert(body != nullptr);
 }
 
 Statement* StatementWithBody::body() const { return mBody.target(); }

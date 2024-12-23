@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "UnresolvedObjectCreationExpression.hpp"
-#include "Visitor.hpp"
+#include "UnresolvedObjectCreationExpression.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {

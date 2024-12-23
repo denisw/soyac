@@ -6,7 +6,7 @@
  * See LICENSE.txt for details.
  */
 
-#include "PassResult.hpp"
+#include "PassResult.h"
 
 namespace soyac {
 

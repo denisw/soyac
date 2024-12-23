@@ -6,10 +6,10 @@
  * See LICENSE.txt for details.
  */
 
-#include "InstanceFunctionExpression.hpp"
-#include "FunctionType.hpp"
-#include "UnknownType.hpp"
-#include "Visitor.hpp"
+#include "InstanceFunctionExpression.h"
+#include "FunctionType.h"
+#include "UnknownType.h"
+#include "Visitor.h"
 #include <cassert>
 
 namespace soyac {
@@ -20,8 +20,8 @@ InstanceFunctionExpression::InstanceFunctionExpression(
     : mInstance(instance)
     , mTarget(target)
 {
-    assert(instance != NULL);
-    assert(target != NULL);
+    assert(instance != nullptr);
+    assert(target != nullptr);
 }
 
 void* InstanceFunctionExpression::visit(Visitor* v)

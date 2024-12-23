@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "FunctionParameter.hpp"
-#include "Visitor.hpp"
+#include "FunctionParameter.h"
+#include "Visitor.h"
 #include <cassert>
 
 namespace soyac {
@@ -17,7 +17,7 @@ FunctionParameter::FunctionParameter(const Name& name, Type* type)
     : DeclaredEntity(name)
     , mType(type)
 {
-    assert(type != NULL);
+    assert(type != nullptr);
 }
 
 void* FunctionParameter::visit(Visitor* v)

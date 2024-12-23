@@ -6,9 +6,9 @@
  * See LICENSE.txt for details.
  */
 
-#include "BooleanLiteral.hpp"
-#include "BooleanType.hpp"
-#include "Visitor.hpp"
+#include "BooleanLiteral.h"
+#include "BooleanType.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {

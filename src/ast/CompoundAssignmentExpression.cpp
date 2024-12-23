@@ -6,9 +6,9 @@
  * See LICENSE.txt for details.
  */
 
-#include "CompoundAssignmentExpression.hpp"
-#include "BooleanType.hpp"
-#include "Visitor.hpp"
+#include "CompoundAssignmentExpression.h"
+#include "BooleanType.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {
@@ -19,9 +19,9 @@ CompoundAssignmentExpression::CompoundAssignmentExpression(
     , mRightHand(rightHand)
     , mCallee(callee)
 {
-    assert(leftHand != NULL);
-    assert(rightHand != NULL);
-    assert(callee != NULL);
+    assert(leftHand != nullptr);
+    assert(rightHand != nullptr);
+    assert(callee != nullptr);
 }
 
 void* CompoundAssignmentExpression::visit(Visitor* v)

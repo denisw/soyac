@@ -6,9 +6,9 @@
  * See LICENSE.txt for details.
  */
 
-#include "TypeExpression.hpp"
-#include "UnknownType.hpp"
-#include "Visitor.hpp"
+#include "TypeExpression.h"
+#include "UnknownType.h"
+#include "Visitor.h"
 #include <cassert>
 
 namespace soyac {
@@ -17,7 +17,7 @@ namespace ast {
 TypeExpression::TypeExpression(Type* target)
     : mTarget(target)
 {
-    assert(target != NULL);
+    assert(target != nullptr);
 }
 
 void* TypeExpression::visit(Visitor* v) { return v->visitTypeExpression(this); }

@@ -6,13 +6,13 @@
  * See LICENSE.txt for details.
  */
 
-#include "IntegerType.hpp"
-#include "BooleanType.hpp"
-#include "CharacterType.hpp"
-#include "FloatingPointType.hpp"
-#include "Function.hpp"
-#include "FunctionParameter.hpp"
-#include "Visitor.hpp"
+#include "IntegerType.h"
+#include "BooleanType.h"
+#include "CharacterType.h"
+#include "FloatingPointType.h"
+#include "Function.h"
+#include "FunctionParameter.h"
+#include "Visitor.h"
 #include <sstream>
 
 namespace soyac {
@@ -60,7 +60,7 @@ IntegerType* IntegerType::get(int size, bool isSigned)
      * If an instance with the specified size and signedness has not been
      * requested yet, create it now.
      */
-    if (sInstances[p] == NULL) {
+    if (sInstances[p] == nullptr) {
         /*
          * Determine the requested integer type's name. The name starts
          * with "int" for signed and with "uint" for unsigned integer
@@ -195,20 +195,20 @@ void* IntegerType::visit(Visitor* v) { return v->visitIntegerType(this); }
 
 bool IntegerType::isConvertableTo(Type* other) const
 {
-    return (dynamic_cast<IntegerType*>(other) != NULL
-        || dynamic_cast<FloatingPointType*>(other) != NULL
+    return (dynamic_cast<IntegerType*>(other) != nullptr
+        || dynamic_cast<FloatingPointType*>(other) != nullptr
         || other == TYPE_CHAR);
 }
 
 bool IntegerType::isImplicitlyConvertableTo(Type* other) const
 {
     if (Type::isImplicitlyConvertableTo(other)
-        || dynamic_cast<FloatingPointType*>(other) != NULL) {
+        || dynamic_cast<FloatingPointType*>(other) != nullptr) {
         return true;
     } else {
         IntegerType* int2 = dynamic_cast<IntegerType*>(other);
 
-        if (int2 == NULL) {
+        if (int2 == nullptr) {
             return false;
         } else {
             return min() >= int2->min() && max() <= int2->max();

@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "link.hpp"
-#include "config.hpp"
+#include "link.h"
+#include "config.h"
 #include <cstdlib>
 #include <iostream>
 #include <llvm/Support/Program.h>

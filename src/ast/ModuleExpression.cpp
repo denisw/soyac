@@ -6,9 +6,9 @@
  * See LICENSE.txt for details.
  */
 
-#include "ModuleExpression.hpp"
-#include "UnknownType.hpp"
-#include "Visitor.hpp"
+#include "ModuleExpression.h"
+#include "UnknownType.h"
+#include "Visitor.h"
 #include <cassert>
 
 namespace soyac {
@@ -17,7 +17,7 @@ namespace ast {
 ModuleExpression::ModuleExpression(Module* target)
     : mTarget(target)
 {
-    assert(target != NULL);
+    assert(target != nullptr);
 }
 
 void* ModuleExpression::visit(Visitor* v)

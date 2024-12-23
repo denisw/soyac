@@ -6,7 +6,7 @@
  * See LICENSE.txt for details.
  */
 
-#include "Expression.hpp"
+#include "Expression.h"
 
 namespace soyac {
 namespace ast {

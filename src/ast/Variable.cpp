@@ -6,9 +6,9 @@
  * See LICENSE.txt for details.
  */
 
-#include "Variable.hpp"
-#include "UnknownType.hpp"
-#include "Visitor.hpp"
+#include "Variable.h"
+#include "UnknownType.h"
+#include "Visitor.h"
 #include <cassert>
 
 namespace soyac {
@@ -19,14 +19,14 @@ Variable::Variable(const Name& name, Type* type, Expression* initializer)
     , mType(type)
     , mInitializer(initializer)
 {
-    assert(type != NULL);
+    assert(type != nullptr);
 }
 
 void* Variable::visit(Visitor* v) { return v->visitVariable(this); }
 
 Type* Variable::type() const
 {
-    if (mType.target() == TYPE_UNKNOWN && initializer() != NULL) {
+    if (mType.target() == TYPE_UNKNOWN && initializer() != nullptr) {
         return initializer()->type();
     } else {
         return mType.target();

@@ -6,9 +6,9 @@
  * See LICENSE.txt for details.
  */
 
-#include "UnresolvedBinaryExpression.hpp"
-#include "UnknownType.hpp"
-#include "Visitor.hpp"
+#include "UnresolvedBinaryExpression.h"
+#include "UnknownType.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {
@@ -20,8 +20,8 @@ UnresolvedBinaryExpression::UnresolvedBinaryExpression(
     , mLeftHand(leftHand)
     , mRightHand(rightHand)
 {
-    assert(leftHand != NULL);
-    assert(rightHand != NULL);
+    assert(leftHand != nullptr);
+    assert(rightHand != nullptr);
 }
 
 void* UnresolvedBinaryExpression::visit(Visitor* v)

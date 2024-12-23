@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "UnknownType.hpp"
-#include "Visitor.hpp"
+#include "UnknownType.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {

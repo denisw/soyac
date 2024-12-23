@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "ExpressionStatement.hpp"
-#include "Visitor.hpp"
+#include "ExpressionStatement.h"
+#include "Visitor.h"
 #include <cassert>
 
 namespace soyac {
@@ -16,7 +16,7 @@ namespace ast {
 ExpressionStatement::ExpressionStatement(Expression* expr)
     : mExpression(expr)
 {
-    assert(expr != NULL);
+    assert(expr != nullptr);
 }
 
 void* ExpressionStatement::visit(Visitor* v)

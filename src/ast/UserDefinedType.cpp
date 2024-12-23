@@ -6,9 +6,9 @@
  * See LICENSE.txt for details.
  */
 
-#include "UserDefinedType.hpp"
-#include "DeclarationStatement.hpp"
-#include "Visitor.hpp"
+#include "UserDefinedType.h"
+#include "DeclarationStatement.h"
+#include "Visitor.h"
 #include <cassert>
 
 namespace soyac {
@@ -18,7 +18,7 @@ UserDefinedType::UserDefinedType(const Name& name, DeclarationBlock* body)
     : Type(name)
     , mBody(body)
 {
-    assert(body != NULL);
+    assert(body != nullptr);
 
     body->declarationListChanged().connect([this](auto oldDecl, auto newDecl) {
         onBodyChanged(oldDecl, newDecl);
@@ -32,7 +32,7 @@ UserDefinedType::UserDefinedType(const Name& name, DeclarationBlock* body)
     for (DeclarationBlock::declarations_iterator it
         = body->declarations_begin();
         it != body->declarations_end(); it++) {
-        onBodyChanged(NULL, *it);
+        onBodyChanged(nullptr, *it);
     }
 }
 
@@ -47,11 +47,11 @@ void UserDefinedType::onBodyChanged(
      * (see NamedEntity::addChild()).
      */
 
-    if (oldDecl != NULL) {
+    if (oldDecl != nullptr) {
         removeChild(oldDecl->declaredEntity());
     }
 
-    if (newDecl != NULL) {
+    if (newDecl != nullptr) {
         addChild(newDecl->declaredEntity());
     }
 }

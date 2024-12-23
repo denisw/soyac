@@ -6,7 +6,7 @@
  * See LICENSE.txt for details.
  */
 
-#include "Statement.hpp"
+#include "Statement.h"
 
 namespace soyac {
 namespace ast {

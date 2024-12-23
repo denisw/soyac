@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "VariableExpression.hpp"
-#include "Visitor.hpp"
+#include "VariableExpression.h"
+#include "Visitor.h"
 #include <cassert>
 
 namespace soyac {
@@ -16,7 +16,7 @@ namespace ast {
 VariableExpression::VariableExpression(Variable* target)
     : mTarget(target)
 {
-    assert(target != NULL);
+    assert(target != nullptr);
 }
 
 void* VariableExpression::visit(Visitor* v)

@@ -6,9 +6,9 @@
  * See LICENSE.txt for details.
  */
 
-#include "IntegerLiteral.hpp"
-#include "IntegerType.hpp"
-#include "Visitor.hpp"
+#include "IntegerLiteral.h"
+#include "IntegerType.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {

@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "DeclarationBlock.hpp"
-#include "Visitor.hpp"
+#include "DeclarationBlock.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {

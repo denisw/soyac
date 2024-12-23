@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "LLValueExpression.hpp"
-#include "CodeGenerator.hpp"
+#include "LLValueExpression.h"
+#include "CodeGenerator.h"
 #include <cassert>
 
 namespace soyac {
@@ -17,8 +17,8 @@ LLValueExpression::LLValueExpression(Type* type, llvm::Value* value)
     : mType(type)
     , mValue(value)
 {
-    assert(type != NULL);
-    assert(value != NULL);
+    assert(type != nullptr);
+    assert(value != nullptr);
 }
 
 void* LLValueExpression::visit(Visitor* v)

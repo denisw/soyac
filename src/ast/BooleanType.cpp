@@ -6,15 +6,15 @@
  * See LICENSE.txt for details.
  */
 
-#include "BooleanType.hpp"
-#include "Function.hpp"
-#include "FunctionParameter.hpp"
-#include "Visitor.hpp"
+#include "BooleanType.h"
+#include "Function.h"
+#include "FunctionParameter.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {
 
-BooleanType* BooleanType::sInstance = NULL;
+BooleanType* BooleanType::sInstance = nullptr;
 
 BooleanType::BooleanType()
     : BuiltInType("bool")
@@ -27,7 +27,7 @@ BooleanType::BooleanType()
 
 BooleanType* BooleanType::get()
 {
-    if (sInstance == NULL) {
+    if (sInstance == nullptr) {
         sInstance = new BooleanType;
         sInstance->ref();
     }

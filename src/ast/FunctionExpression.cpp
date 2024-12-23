@@ -6,9 +6,9 @@
  * See LICENSE.txt for details.
  */
 
-#include "FunctionExpression.hpp"
-#include "FunctionType.hpp"
-#include "Visitor.hpp"
+#include "FunctionExpression.h"
+#include "FunctionType.h"
+#include "Visitor.h"
 #include <cassert>
 
 namespace soyac {
@@ -17,7 +17,7 @@ namespace ast {
 FunctionExpression::FunctionExpression(Function* target)
     : mTarget(target)
 {
-    assert(target != NULL);
+    assert(target != nullptr);
 }
 
 void* FunctionExpression::visit(Visitor* v)

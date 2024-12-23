@@ -6,22 +6,22 @@
  * See LICENSE.txt for details.
  */
 
-#include "FloatingPointType.hpp"
-#include "BooleanType.hpp"
-#include "Function.hpp"
-#include "FunctionParameter.hpp"
-#include "IntegerType.hpp"
-#include "Visitor.hpp"
+#include "FloatingPointType.h"
+#include "BooleanType.h"
+#include "Function.h"
+#include "FunctionParameter.h"
+#include "IntegerType.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {
 
-FloatingPointType* FloatingPointType::sFloat = NULL;
-FloatingPointType* FloatingPointType::sDouble = NULL;
+FloatingPointType* FloatingPointType::sFloat = nullptr;
+FloatingPointType* FloatingPointType::sDouble = nullptr;
 
 FloatingPointType* FloatingPointType::getFloat()
 {
-    if (sFloat == NULL) {
+    if (sFloat == nullptr) {
         sFloat = new FloatingPointType(false);
         sFloat->ref();
     }
@@ -31,7 +31,7 @@ FloatingPointType* FloatingPointType::getFloat()
 
 FloatingPointType* FloatingPointType::getDouble()
 {
-    if (sDouble == NULL) {
+    if (sDouble == nullptr) {
         sDouble = new FloatingPointType(true);
         sDouble->ref();
     }
@@ -91,7 +91,7 @@ void* FloatingPointType::visit(Visitor* v)
 bool FloatingPointType::isConvertableTo(Type* other) const
 {
     return (other == TYPE_FLOAT || other == TYPE_DOUBLE
-        || dynamic_cast<IntegerType*>(other) != NULL);
+        || dynamic_cast<IntegerType*>(other) != nullptr);
 }
 
 bool FloatingPointType::isImplicitlyConvertableTo(Type* other) const

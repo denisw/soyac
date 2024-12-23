@@ -6,7 +6,7 @@
  * See LICENSE.txt for details.
  */
 
-#include "ParserDriver.hpp"
+#include "ParserDriver.h"
 #include <cerrno>
 #include <cstring>
 #include <iostream>
@@ -16,7 +16,7 @@ namespace parser {
 
 ParserDriver::ParserDriver(const std::string& fileName)
     : mFileName(fileName)
-    , mLexer(NULL)
+    , mLexer(nullptr)
 {
 }
 
@@ -37,18 +37,18 @@ soyac::ast::Module* ParserDriver::parse(PassResult*& result)
      */
     try {
         if (parser.parse() == 1) {
-            mSyntaxTree = NULL;
+            mSyntaxTree = nullptr;
         }
     } catch (const std::ifstream::failure& exc) {
         delete mLexer;
-        mLexer = NULL;
+        mLexer = nullptr;
         delete mResultBuilder;
 
         throw exc;
     }
 
     delete mLexer;
-    mLexer = NULL;
+    mLexer = nullptr;
 
     result = mResultBuilder->result();
     delete mResultBuilder;

@@ -6,7 +6,7 @@
  * See LICENSE.txt for details.
  */
 
-#include "FloatingPointValue.hpp"
+#include "FloatingPointValue.h"
 
 namespace soyac {
 namespace ast {

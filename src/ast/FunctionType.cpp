@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "FunctionType.hpp"
-#include "Visitor.hpp"
+#include "FunctionType.h"
+#include "Visitor.h"
 #include <sstream>
 
 namespace soyac {
@@ -23,7 +23,7 @@ FunctionType* FunctionType::_get(
     std::pair<Type*, NodeList<Type>*> signature(returnType, parameterTypes);
     FunctionType* ret = sInstances[signature];
 
-    if (ret == NULL) {
+    if (ret == nullptr) {
         ret = new FunctionType(returnType, parameterTypes);
         ret->ref();
         sInstances[signature] = ret;
@@ -58,7 +58,7 @@ std::string FunctionType::str() const
 
     s << ")";
 
-    if (returnType() != NULL) {
+    if (returnType() != nullptr) {
         s << " => " << returnType();
     }
 
@@ -69,7 +69,7 @@ bool FunctionType::isSubtypeOf(Type* other) const
 {
     if (Type::isSubtypeOf(other)) {
         return true;
-    } else if (dynamic_cast<FunctionType*>(other) == NULL) {
+    } else if (dynamic_cast<FunctionType*>(other) == nullptr) {
         return false;
     }
 

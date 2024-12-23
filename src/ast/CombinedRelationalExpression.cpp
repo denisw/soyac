@@ -6,9 +6,9 @@
  * See LICENSE.txt for details.
  */
 
-#include "CombinedRelationalExpression.hpp"
-#include "BooleanType.hpp"
-#include "Visitor.hpp"
+#include "CombinedRelationalExpression.h"
+#include "BooleanType.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {
@@ -21,11 +21,11 @@ CombinedRelationalExpression::CombinedRelationalExpression(Expression* leftHand,
     , mEqualsCallee(equalsCallee)
     , mComparisonCallee(comparisonCallee)
 {
-    assert(leftHand != NULL);
-    assert(rightHand != NULL);
-    assert(equalsCallee != NULL);
+    assert(leftHand != nullptr);
+    assert(rightHand != nullptr);
+    assert(equalsCallee != nullptr);
     assert(equalsCallee->name() == Name("equals"));
-    assert(comparisonCallee != NULL);
+    assert(comparisonCallee != nullptr);
     assert(comparisonCallee->name() == Name("lessThan")
         || comparisonCallee->name() == Name("greaterThan"));
 }

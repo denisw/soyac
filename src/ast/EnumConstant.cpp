@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "EnumConstant.hpp"
-#include "Visitor.hpp"
+#include "EnumConstant.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {

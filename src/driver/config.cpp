@@ -6,7 +6,7 @@
  * See LICENSE.txt for details.
  */
 
-#include "config.hpp"
+#include "config.h"
 
 namespace soyac {
 namespace driver {

@@ -6,7 +6,7 @@
  * See LICENSE.txt for details.
  */
 
-#include "NamedEntity.hpp"
+#include "NamedEntity.h"
 #include <cassert>
 
 namespace soyac {
@@ -14,7 +14,7 @@ namespace ast {
 
 NamedEntity::NamedEntity(const Name& name)
     : mName(name)
-    , mParent(NULL)
+    , mParent(nullptr)
 {
     assert(name.isSimple());
 }
@@ -23,7 +23,7 @@ const Name& NamedEntity::name() const { return mName; }
 
 Name NamedEntity::qualifiedName() const
 {
-    if (mParent == NULL) {
+    if (mParent == nullptr) {
         return name();
     } else {
         return mParent->qualifiedName() + name();
@@ -42,14 +42,14 @@ std::ostream& operator<<(std::ostream& s, const NamedEntity* entity)
 
 void NamedEntity::addChild(NamedEntity* child)
 {
-    assert(child->mParent == this || child->mParent == NULL);
+    assert(child->mParent == this || child->mParent == nullptr);
     child->mParent = this;
 }
 
 void NamedEntity::removeChild(NamedEntity* child)
 {
-    assert(child->mParent == this || child->mParent == NULL);
-    child->mParent = NULL;
+    assert(child->mParent == this || child->mParent == nullptr);
+    child->mParent = nullptr;
 }
 
 } // namespace ast

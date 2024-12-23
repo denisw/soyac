@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "ModuleImport.hpp"
-#include "Visitor.hpp"
+#include "ModuleImport.h"
+#include "Visitor.h"
 #include <cassert>
 
 namespace soyac {
@@ -17,7 +17,7 @@ ModuleImport::ModuleImport(Module* imported, bool isDirect)
     : mImported(imported)
     , mIsDirect(isDirect)
 {
-    assert(imported != NULL);
+    assert(imported != nullptr);
 }
 
 void* ModuleImport::visit(Visitor* v) { return v->visitModuleImport(this); }

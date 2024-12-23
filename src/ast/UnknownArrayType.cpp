@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "UnknownArrayType.hpp"
-#include "Visitor.hpp"
+#include "UnknownArrayType.h"
+#include "Visitor.h"
 #include <cassert>
 
 namespace soyac {
@@ -17,7 +17,7 @@ UnknownArrayType::UnknownArrayType(UnknownType* elementType)
     : UnknownType(elementType->name().str() + "[]")
     , mElementType(elementType)
 {
-    assert(elementType != NULL);
+    assert(elementType != nullptr);
 }
 
 void* UnknownArrayType::visit(Visitor* v)

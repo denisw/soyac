@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "WhileStatement.hpp"
-#include "Visitor.hpp"
+#include "WhileStatement.h"
+#include "Visitor.h"
 #include <cassert>
 
 namespace soyac {
@@ -17,7 +17,7 @@ WhileStatement::WhileStatement(Expression* condition, Statement* body)
     : StatementWithBody(body)
     , mCondition(condition)
 {
-    assert(condition != NULL);
+    assert(condition != nullptr);
 }
 
 void* WhileStatement::visit(Visitor* v) { return v->visitWhileStatement(this); }

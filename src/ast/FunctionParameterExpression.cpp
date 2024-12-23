@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "FunctionParameterExpression.hpp"
-#include "Visitor.hpp"
+#include "FunctionParameterExpression.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {

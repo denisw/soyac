@@ -6,9 +6,9 @@
  * See LICENSE.txt for details.
  */
 
-#include "LogicalExpression.hpp"
-#include "BooleanType.hpp"
-#include "Visitor.hpp"
+#include "LogicalExpression.h"
+#include "BooleanType.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {
@@ -19,8 +19,8 @@ LogicalExpression::LogicalExpression(
     , mLeftHand(leftHand)
     , mRightHand(rightHand)
 {
-    assert(leftHand != NULL);
-    assert(rightHand != NULL);
+    assert(leftHand != nullptr);
+    assert(rightHand != nullptr);
 }
 
 void* LogicalExpression::visit(Visitor* v)

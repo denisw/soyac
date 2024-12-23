@@ -6,20 +6,20 @@
  * See LICENSE.txt for details.
  */
 
-#include "PassResultBuilder.hpp"
-#include "Problem.hpp"
+#include "PassResultBuilder.h"
+#include "Problem.h"
 
 namespace soyac {
 
 PassResultBuilder::PassResultBuilder()
-    : mPassResult(NULL)
+    : mPassResult(nullptr)
 {
 }
 
 void PassResultBuilder::addError(
     const soyac::ast::Location& location, const std::string& description)
 {
-    if (mPassResult == NULL) {
+    if (mPassResult == nullptr) {
         mPassResult = new PassResult;
     }
 
@@ -48,7 +48,7 @@ void PassResultBuilder::addError(
 void PassResultBuilder::addWarning(
     const soyac::ast::Node* source, const std::string& description)
 {
-    if (mPassResult == NULL) {
+    if (mPassResult == nullptr) {
         mPassResult = new PassResult;
     }
 

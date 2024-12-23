@@ -6,13 +6,13 @@
  * See LICENSE.txt for details.
  */
 
-#include "VoidType.hpp"
-#include "Visitor.hpp"
+#include "VoidType.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {
 
-VoidType* VoidType::sInstance = NULL;
+VoidType* VoidType::sInstance = nullptr;
 
 VoidType::VoidType()
     : BuiltInType("void")
@@ -21,7 +21,7 @@ VoidType::VoidType()
 
 VoidType* VoidType::get()
 {
-    if (sInstance == NULL) {
+    if (sInstance == nullptr) {
         sInstance = new VoidType;
         sInstance->ref();
     }

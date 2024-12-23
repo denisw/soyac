@@ -6,7 +6,7 @@
  * See LICENSE.txt for details.
  */
 
-#include "DeclaredEntity.hpp"
+#include "DeclaredEntity.h"
 #include <cassert>
 
 namespace soyac {

@@ -6,7 +6,7 @@
  * See LICENSE.txt for details.
  */
 
-#include "Location.hpp"
+#include "Location.h"
 
 namespace soyac {
 namespace ast {

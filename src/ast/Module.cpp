@@ -6,9 +6,9 @@
  * See LICENSE.txt for details.
  */
 
-#include "Module.hpp"
-#include "DeclarationStatement.hpp"
-#include "Visitor.hpp"
+#include "Module.h"
+#include "DeclarationStatement.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {
@@ -33,7 +33,7 @@ Module* Module::get(const Name& name, bool create)
 {
     Module* m = sInstances[name.str()];
 
-    if (m == NULL && create == true) {
+    if (m == nullptr && create == true) {
         m = sInstances[name.str()] = new Module(name);
         m->ref();
     }
@@ -70,14 +70,14 @@ void Module::onBodyChanged(Statement* oldStmt, Statement* newStmt)
     DeclarationStatement* oldDecl
         = dynamic_cast<DeclarationStatement*>(oldStmt);
 
-    if (oldDecl != NULL) {
+    if (oldDecl != nullptr) {
         removeChild(oldDecl->declaredEntity());
     }
 
     DeclarationStatement* newDecl
         = dynamic_cast<DeclarationStatement*>(newStmt);
 
-    if (newDecl != NULL) {
+    if (newDecl != nullptr) {
         addChild(newDecl->declaredEntity());
     }
 }

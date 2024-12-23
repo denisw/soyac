@@ -6,9 +6,9 @@
  * See LICENSE.txt for details.
  */
 
-#include "CharacterLiteral.hpp"
-#include "CharacterType.hpp"
-#include "Visitor.hpp"
+#include "CharacterLiteral.h"
+#include "CharacterType.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {

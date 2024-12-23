@@ -6,9 +6,9 @@
  * See LICENSE.txt for details.
  */
 
-#include "ConstructorInitializer.hpp"
-#include "Constructor.hpp"
-#include "Visitor.hpp"
+#include "ConstructorInitializer.h"
+#include "Constructor.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {

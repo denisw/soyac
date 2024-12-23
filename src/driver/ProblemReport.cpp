@@ -6,7 +6,7 @@
  * See LICENSE.txt for details.
  */
 
-#include "ProblemReport.hpp"
+#include "ProblemReport.h"
 #include <iostream>
 
 namespace soyac {

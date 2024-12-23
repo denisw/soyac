@@ -10,7 +10,7 @@
 
 #include <string>
 
-#include "ast/ast.hpp"
+#include "ast/ast.h"
 
 namespace soyac::codegen {
 

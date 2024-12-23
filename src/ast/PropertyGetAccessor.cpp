@@ -6,9 +6,9 @@
  * See LICENSE.txt for details.
  */
 
-#include "PropertyGetAccessor.hpp"
-#include "UnknownType.hpp"
-#include "Visitor.hpp"
+#include "PropertyGetAccessor.h"
+#include "UnknownType.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {

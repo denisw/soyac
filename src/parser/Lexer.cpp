@@ -17,10 +17,10 @@
 #include "utf8.h"
 #include <boost/format.hpp>
 
-#include "Lexer.hpp"
-#include "ParserDriver.hpp"
-#include <ast/IntegerType.hpp>
-#include <ast/Location.hpp>
+#include "Lexer.h"
+#include "ParserDriver.h"
+#include <ast/IntegerType.h>
+#include <ast/Location.h>
 
 using namespace yy;
 
@@ -42,9 +42,9 @@ Lexer::Lexer(std::istream* stream, const std::string& filename,
     , mResultBuilder(resultBuilder)
     , mCurrentLine(1)
     , mCurrentColumn(1)
-    , mLastChar(NULL)
+    , mLastChar(nullptr)
 {
-    assert(stream != NULL);
+    assert(stream != nullptr);
 
     if (!sInitRegexDone) {
         initRegex();
@@ -54,7 +54,7 @@ Lexer::Lexer(std::istream* stream, const std::string& filename,
 
 Lexer::~Lexer()
 {
-    if (mLastChar != NULL) {
+    if (mLastChar != nullptr) {
         delete[] mLastChar;
     }
 }
@@ -601,11 +601,11 @@ void Lexer::setSemanticValueFromIntegerLiteral(
     int64_t data;
     bool isSigned;
 
-    data = std::strtoll(literal.c_str(), NULL, base);
+    data = std::strtoll(literal.c_str(), nullptr, base);
 
     if (errno == ERANGE) {
         errno = 0;
-        data = (int64_t)std::strtoull(literal.c_str(), NULL, base);
+        data = (int64_t)std::strtoull(literal.c_str(), nullptr, base);
 
         if (errno == ERANGE) {
             addError(str(
@@ -613,7 +613,7 @@ void Lexer::setSemanticValueFromIntegerLiteral(
                               "the supported integer types.")
                 % literal));
 
-            yylval->intLiteral = NULL;
+            yylval->intLiteral = nullptr;
         } else {
             isSigned = false;
         }

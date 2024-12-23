@@ -20,7 +20,6 @@ cmake_install.cmake
 
 # Bison output
 /src/parser/location.hh
-/src/parser/parser.h
 /src/parser/parser.hpp
 /src/parser/parser.cpp
 /src/parser/position.hh

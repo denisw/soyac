@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "ForStatement.hpp"
-#include "Visitor.hpp"
+#include "ForStatement.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {

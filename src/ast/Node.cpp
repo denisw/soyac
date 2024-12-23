@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "Node.hpp"
-#include "Link.hpp"
+#include "Node.h"
+#include "Link.h"
 #include <algorithm>
 #include <cstdlib>
 #include <iostream>
@@ -26,7 +26,7 @@ Node::~Node()
 {
     if (mRefCount > 0) {
         mRefCount = -1;
-        _replaceWith(NULL);
+        _replaceWith(nullptr);
     }
 }
 

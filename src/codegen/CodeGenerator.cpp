@@ -23,8 +23,8 @@
 #include <llvm/Target/TargetMachine.h>
 #include <llvm/TargetParser/Host.h>
 
-#include "CodeGenerator.hpp"
-#include <ast/ast.hpp>
+#include "CodeGenerator.h"
+#include <ast/ast.h>
 
 #include "mangling.h"
 
@@ -150,7 +150,7 @@ llvm::Function* CodeGenerator::llfunction(Function* func)
 {
     llvm::Function* llfunc = mLLVMModule->getFunction(mangledName(func));
 
-    if (llfunc == NULL) {
+    if (llfunc == nullptr) {
         std::vector<llvm::Type*> params;
         Type* enclosingType;
 
@@ -160,7 +160,7 @@ llvm::Function* CodeGenerator::llfunction(Function* func)
          * is the property to which the accessor belongs. We need to
          * get that property's parent instead.
          */
-        if (dynamic_cast<Property*>(func->parent()) != NULL) {
+        if (dynamic_cast<Property*>(func->parent()) != nullptr) {
             enclosingType = dynamic_cast<Type*>(func->parent()->parent());
         } else {
             enclosingType = dynamic_cast<Type*>(func->parent());
@@ -171,7 +171,7 @@ llvm::Function* CodeGenerator::llfunction(Function* func)
          * instance property, it needs to accept a "this" pointer as the
          * first parameter.
          */
-        if (enclosingType != NULL) {
+        if (enclosingType != nullptr) {
             params.push_back(pointerType());
         }
 
@@ -195,7 +195,7 @@ llvm::Function* CodeGenerator::llfunction(Function* func)
         Function::parameters_iterator p = func->parameters_begin();
         llvm::Function::arg_iterator a = llfunc->arg_begin();
 
-        if (enclosingType != NULL) {
+        if (enclosingType != nullptr) {
             a->setName("this");
             a++;
         }
@@ -213,7 +213,7 @@ llvm::Function* CodeGenerator::llinitializer(UserDefinedType* type)
     llvm::Function* llfunc
         = mLLVMModule->getFunction(mangledName(type) + "_init");
 
-    if (llfunc == NULL) {
+    if (llfunc == nullptr) {
         std::vector<llvm::Type*> params;
 
         llvm::Type* thisType = pointerType();
@@ -236,7 +236,7 @@ llvm::Function* CodeGenerator::llallocator(ClassType* type)
     llvm::Function* llfunc
         = mLLVMModule->getFunction(mangledName(type) + "_new");
 
-    if (llfunc == NULL) {
+    if (llfunc == nullptr) {
         std::vector<llvm::Type*> params;
 
         llvm::FunctionType* llftype = llvm::FunctionType::get(
@@ -296,14 +296,14 @@ void CodeGenerator::createInitializer(UserDefinedType* type)
     for (DeclarationBlock::declarations_iterator it
         = type->body()->declarations_begin();
         it != type->body()->declarations_end(); it++) {
-        if (dynamic_cast<Variable*>((*it)->declaredEntity()) != NULL) {
+        if (dynamic_cast<Variable*>((*it)->declaredEntity()) != nullptr) {
             Variable* var = (Variable*)(*it)->declaredEntity();
 
             Expression* lh
                 = new InstanceVariableExpression(new ThisExpression(type), var);
             Expression* rh;
 
-            if (var->initializer() != NULL) {
+            if (var->initializer() != nullptr) {
                 rh = var->initializer();
             } else {
                 rh = new LLValueExpression(
@@ -328,18 +328,18 @@ llvm::Value* CodeGenerator::createBuiltInMethodCall(Expression* operand,
     llvm::Value* rh;
     llvm::Value* rh2;
 
-    if (argument != NULL) {
+    if (argument != nullptr) {
         rh = (llvm::Value*)argument->visit(this);
     }
 
-    if (argument2 != NULL) {
+    if (argument2 != nullptr) {
         rh2 = (llvm::Value*)argument2->visit(this);
     }
 
     /*
      * Integer Types
      */
-    if (dynamic_cast<IntegerType*>(operand->type()) != NULL) {
+    if (dynamic_cast<IntegerType*>(operand->type()) != nullptr) {
         /*
          * If the integer operand's type is not equal to the argument's
          * type, the operand must be cast first.
@@ -509,7 +509,7 @@ llvm::Value* CodeGenerator::createBuiltInMethodCall(Expression* operand,
     /*
      * Floating-Point Types
      */
-    else if (dynamic_cast<FloatingPointType*>(operand->type()) != NULL) {
+    else if (dynamic_cast<FloatingPointType*>(operand->type()) != nullptr) {
         /*
          * If the integer operand's type is not equal to the argument's
          * type, the operand must be cast first.
@@ -592,7 +592,7 @@ llvm::Value* CodeGenerator::createBuiltInMethodCall(Expression* operand,
     /*
      * Array Types
      */
-    else if (dynamic_cast<ArrayType*>(operand->type()) != NULL) {
+    else if (dynamic_cast<ArrayType*>(operand->type()) != nullptr) {
         auto llvmArrayType = mTypeMapper.objectType(operand->type());
         auto elementType
             = dynamic_cast<ArrayType*>(operand->type())->elementType();
@@ -630,7 +630,7 @@ llvm::Value* CodeGenerator::createBuiltInMethodCall(Expression* operand,
     /*
      * Enum Types
      */
-    else if (dynamic_cast<EnumType*>(operand->type()) != NULL) {
+    else if (dynamic_cast<EnumType*>(operand->type()) != nullptr) {
         /*
          * The only method that enums have is equals(), so we don't have to
          * check for the method name. (We check with an assertion to be
@@ -651,7 +651,7 @@ llvm::Value* CodeGenerator::createBuiltInPropertyCall(
     /*
      * Array Types
      */
-    if (dynamic_cast<ArrayType*>(operand->type()) != NULL) {
+    if (dynamic_cast<ArrayType*>(operand->type()) != nullptr) {
         auto arrayType = mTypeMapper.objectType(operand->type());
         if (propertyName == "length") {
             llvm::Value* lengthField
@@ -688,7 +688,7 @@ llvm::Value* CodeGenerator::createGCMalloc(llvm::Value* size)
 
     llvm::Function* gcMalloc = mLLVMModule->getFunction("GC_malloc");
 
-    if (gcMalloc == NULL) {
+    if (gcMalloc == nullptr) {
         std::vector<llvm::Type*> params;
         params.push_back(sizeType());
 
@@ -705,7 +705,7 @@ llvm::Value* CodeGenerator::createGCMalloc(llvm::Value* size)
 llvm::Value* CodeGenerator::createGCMalloc(llvm::Type* type, llvm::Value* n)
 {
     llvm::Value* size = createSizeof(type);
-    if (n != NULL) {
+    if (n != nullptr) {
         size = mBuilder.CreateMul(size, n);
     }
     return createGCMalloc(size);
@@ -762,13 +762,13 @@ void* CodeGenerator::visitBlock(Block* b)
         (*it)->visit(this);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* CodeGenerator::visitDeclarationStatement(DeclarationStatement* stmt)
 {
     stmt->declaredEntity()->visit(this);
-    return NULL;
+    return nullptr;
 }
 
 void* CodeGenerator::visitDoStatement(DoStatement* stmt)
@@ -788,13 +788,13 @@ void* CodeGenerator::visitDoStatement(DoStatement* stmt)
     mBuilder.CreateCondBr(cond, start, end);
     mBuilder.SetInsertPoint(end);
 
-    return NULL;
+    return nullptr;
 }
 
 void* CodeGenerator::visitExpressionStatement(ExpressionStatement* stmt)
 {
     stmt->expression()->visit(this);
-    return NULL;
+    return nullptr;
 }
 
 void* CodeGenerator::visitForStatement(ForStatement* stmt)
@@ -832,7 +832,7 @@ void* CodeGenerator::visitForStatement(ForStatement* stmt)
     mBuilder.CreateCondBr(cond, loop, end);
     mBuilder.SetInsertPoint(end);
 
-    return NULL;
+    return nullptr;
 }
 
 void* CodeGenerator::visitIfStatement(IfStatement* stmt)
@@ -849,7 +849,7 @@ void* CodeGenerator::visitIfStatement(IfStatement* stmt)
     mBuilder.SetInsertPoint(ifTrue);
     stmt->body()->visit(this);
 
-    if (stmt->elseBody() != NULL) {
+    if (stmt->elseBody() != nullptr) {
         llvm::BasicBlock* ifEnd
             = llvm::BasicBlock::Create(mContext, "", mFunction);
         mBuilder.CreateBr(ifEnd);
@@ -865,19 +865,19 @@ void* CodeGenerator::visitIfStatement(IfStatement* stmt)
         mBuilder.SetInsertPoint(ifFalse);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* CodeGenerator::visitReturnStatement(ReturnStatement* stmt)
 {
-    if (stmt->returnValue() != NULL) {
+    if (stmt->returnValue() != nullptr) {
         llvm::Value* retval = (llvm::Value*)stmt->returnValue()->visit(this);
         mBuilder.CreateRet(retval);
     } else {
         mBuilder.CreateRetVoid();
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* CodeGenerator::visitWhileStatement(WhileStatement* stmt)
@@ -903,7 +903,7 @@ void* CodeGenerator::visitWhileStatement(WhileStatement* stmt)
     mBuilder.CreateCondBr(cond, loop, end);
     mBuilder.SetInsertPoint(end);
 
-    return NULL;
+    return nullptr;
 }
 
 ///// Declared Entities
@@ -944,13 +944,13 @@ void* CodeGenerator::visitClassType(ClassType* type)
          * Don't visit member variables, their initialization code has
          * already been taken care of in createInitializer().
          */
-        if (dynamic_cast<Variable*>((*it)->declaredEntity()) == NULL) {
+        if (dynamic_cast<Variable*>((*it)->declaredEntity()) == nullptr) {
             (*it)->visit(this);
         }
     }
 
     mEnclosing = tmpEnclosing;
-    return NULL;
+    return nullptr;
 }
 
 void* CodeGenerator::visitConstructor(Constructor* cons)
@@ -969,7 +969,7 @@ void* CodeGenerator::visitConstructor(Constructor* cons)
     llvm::BasicBlock& first = *mFunction->begin();
     mBuilder.SetInsertPoint(&first, first.begin());
 
-    if (cons->initializer() != NULL) {
+    if (cons->initializer() != nullptr) {
         ConstructorInitializer* init = cons->initializer();
 
         Expression* instance = new ThisExpression((Type*)cons->parent());
@@ -990,7 +990,7 @@ void* CodeGenerator::visitConstructor(Constructor* cons)
         if (init->constructor()->parent() == cons->parent()) {
             mBuilder.SetInsertPoint(tmpBlock);
             mFunction = tmpFunction;
-            return NULL;
+            return nullptr;
         }
     }
 
@@ -1008,12 +1008,12 @@ void* CodeGenerator::visitConstructor(Constructor* cons)
     mBuilder.SetInsertPoint(tmpBlock);
     mFunction = tmpFunction;
 
-    return NULL;
+    return nullptr;
 }
 
 void* CodeGenerator::visitConstructorInitializer(ConstructorInitializer* init)
 {
-    return NULL;
+    return nullptr;
 }
 
 void* CodeGenerator::visitFunction(Function* func)
@@ -1021,7 +1021,7 @@ void* CodeGenerator::visitFunction(Function* func)
     llvm::Function* tmpFunction = mFunction;
     mFunction = llfunction(func);
 
-    if (func->body() != NULL) {
+    if (func->body() != nullptr) {
         llvm::BasicBlock* body
             = llvm::BasicBlock::Create(mContext, "", mFunction);
 
@@ -1044,20 +1044,20 @@ void* CodeGenerator::visitFunction(Function* func)
     }
 
     mFunction = tmpFunction;
-    return NULL;
+    return nullptr;
 }
 
 void* CodeGenerator::visitProperty(Property* prop)
 {
-    if (prop->getAccessor() != NULL) {
+    if (prop->getAccessor() != nullptr) {
         prop->getAccessor()->visit(this);
     }
 
-    if (prop->setAccessor() != NULL) {
+    if (prop->setAccessor() != nullptr) {
         prop->setAccessor()->visit(this);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* CodeGenerator::visitPropertyGetAccessor(PropertyGetAccessor* acc)
@@ -1084,13 +1084,13 @@ void* CodeGenerator::visitStructType(StructType* type)
          * Don't visit member variables, their initialization code has
          * already been taken care of in createInitializer().
          */
-        if (dynamic_cast<Variable*>((*it)->declaredEntity()) == NULL) {
+        if (dynamic_cast<Variable*>((*it)->declaredEntity()) == nullptr) {
             (*it)->visit(this);
         }
     }
 
     mEnclosing = tmpEnclosing;
-    return NULL;
+    return nullptr;
 }
 
 void* CodeGenerator::visitVariable(Variable* var)
@@ -1104,9 +1104,9 @@ void* CodeGenerator::visitVariable(Variable* var)
             mangledName(var));
     } else {
         v = mBuilder.CreateAlloca(
-            mTypeMapper.valueType(var->type()), NULL, mangledName(var).c_str());
+            mTypeMapper.valueType(var->type()), nullptr, mangledName(var).c_str());
 
-        if (var->initializer() == NULL) {
+        if (var->initializer() == nullptr) {
             Expression* rh
                 = new LLValueExpression(var->type(), defaultValue(var->type()));
 
@@ -1115,13 +1115,13 @@ void* CodeGenerator::visitVariable(Variable* var)
         }
     }
 
-    if (var->initializer() != NULL) {
+    if (var->initializer() != nullptr) {
         AssignmentExpression assign(
             new VariableExpression(var), var->initializer());
         assign.visit(this);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 ///// Expressions
@@ -1146,7 +1146,7 @@ void* CodeGenerator::visitArrayCreationExpression(ArrayCreationExpression* expr)
 
     llvm::Value* len;
 
-    if (expr->lengthExpression() != NULL) {
+    if (expr->lengthExpression() != nullptr) {
         len = (llvm::Value*)expr->lengthExpression()->visit(this);
     } else {
         len = llvm::ConstantInt::get(sizeType(), elems.size(), false);
@@ -1228,22 +1228,22 @@ void* CodeGenerator::visitCallExpression(CallExpression* expr)
      * create the corresponding code using createBuiltInMethodCall() or
      * createBuiltInPropertyCall(), respectively.
      */
-    if (dynamic_cast<InstanceFunctionExpression*>(expr->callee()) != NULL) {
+    if (dynamic_cast<InstanceFunctionExpression*>(expr->callee()) != nullptr) {
         InstanceFunctionExpression* funcExpr
             = (InstanceFunctionExpression*)expr->callee();
 
-        if (dynamic_cast<BuiltInType*>(funcExpr->instance()->type()) != NULL
-            || dynamic_cast<ArrayType*>(funcExpr->instance()->type()) != NULL
-            || dynamic_cast<EnumType*>(funcExpr->instance()->type()) != NULL) {
+        if (dynamic_cast<BuiltInType*>(funcExpr->instance()->type()) != nullptr
+            || dynamic_cast<ArrayType*>(funcExpr->instance()->type()) != nullptr
+            || dynamic_cast<EnumType*>(funcExpr->instance()->type()) != nullptr) {
             if (dynamic_cast<PropertyGetAccessor*>(funcExpr->target())
-                != NULL) {
+                != nullptr) {
                 return createBuiltInPropertyCall(
                     funcExpr->instance(), funcExpr->target()->parent()->name());
             } else {
                 Expression* arg1 = *expr->arguments_begin();
                 Expression* arg2 = (funcExpr->target()->name() == "setElement")
                     ? *(++expr->arguments_begin())
-                    : NULL;
+                    : nullptr;
 
                 return createBuiltInMethodCall(funcExpr->instance(),
                     funcExpr->target()->name(), arg1, arg2);
@@ -1318,11 +1318,11 @@ void* CodeGenerator::visitCallExpression(CallExpression* expr)
     else {
         llvm::Value* callee;
 
-        if (dynamic_cast<FunctionExpression*>(expr->callee()) != NULL) {
+        if (dynamic_cast<FunctionExpression*>(expr->callee()) != nullptr) {
             FunctionExpression* fexpr = (FunctionExpression*)expr->callee();
             callee = llfunction(fexpr->target());
         } else if (dynamic_cast<InstanceFunctionExpression*>(expr->callee())
-            != NULL) {
+            != nullptr) {
             InstanceFunctionExpression* instanceFunc
                 = (InstanceFunctionExpression*)expr->callee();
 
@@ -1331,7 +1331,7 @@ void* CodeGenerator::visitCallExpression(CallExpression* expr)
             llvm::Value* instanceVal;
 
             if (dynamic_cast<StructType*>(instanceFunc->instance()->type())
-                != NULL) {
+                != nullptr) {
                 bool tmp = mLValue;
                 mLValue = true;
 
@@ -1461,7 +1461,7 @@ void* CodeGenerator::visitCombinedRelationalExpression(
      * optimized code for the combined relational expression using
      * createBuiltInMethodCall().
      */
-    if (dynamic_cast<BuiltInType*>(expr->leftHand()->type()) != NULL) {
+    if (dynamic_cast<BuiltInType*>(expr->leftHand()->type()) != nullptr) {
         Name methodName = (expr->comparisonCallee()->name() == Name("lessThan"))
             ? Name("<=")
             : Name(">=");
@@ -1507,7 +1507,7 @@ void* CodeGenerator::visitCompoundAssignmentExpression(
     CompoundAssignmentExpression* expr)
 {
     // FIXME: Support for other callables
-    assert(dynamic_cast<Function*>(expr->callee()) != NULL);
+    assert(dynamic_cast<Function*>(expr->callee()) != nullptr);
 
     /*
      * Generate code for the left-hand expression and wrap the resulting
@@ -1527,7 +1527,7 @@ void* CodeGenerator::visitCompoundAssignmentExpression(
      */
     Expression* instance;
 
-    if (dynamic_cast<StructType*>(expr->leftHand()) != NULL) {
+    if (dynamic_cast<StructType*>(expr->leftHand()) != nullptr) {
         instance = lhExpr;
     } else {
         instance = new LLValueExpression(lhExpr->type(),
@@ -1612,7 +1612,7 @@ void* CodeGenerator::visitInstanceVariableExpression(
     UserDefinedType* utype
         = dynamic_cast<UserDefinedType*>(expr->instance()->type());
 
-    assert(utype != NULL);
+    assert(utype != nullptr);
 
     /*
      * If the instance's type is a class, we need to retrieve the correct
@@ -1702,15 +1702,15 @@ void* CodeGenerator::visitLogicalExpression(LogicalExpression* expr)
 
 void* CodeGenerator::visitLogicalNotExpression(LogicalNotExpression* expr)
 {
-    if (dynamic_cast<CallExpression*>(expr->operand()) != NULL) {
+    if (dynamic_cast<CallExpression*>(expr->operand()) != nullptr) {
         CallExpression* call = (CallExpression*)expr->operand();
 
         InstanceFunctionExpression* funcExpr
             = dynamic_cast<InstanceFunctionExpression*>(call->callee());
 
-        if (funcExpr != NULL && funcExpr->target()->name() == Name("equals")
+        if (funcExpr != nullptr && funcExpr->target()->name() == Name("equals")
             && dynamic_cast<BuiltInType*>(funcExpr->instance()->type())
-                != NULL) {
+                != nullptr) {
             return createBuiltInMethodCall(
                 funcExpr->instance(), Name("!="), *call->arguments_begin());
         }
@@ -1723,8 +1723,8 @@ void* CodeGenerator::visitLogicalNotExpression(LogicalNotExpression* expr)
 void* CodeGenerator::visitObjectCreationExpression(
     ObjectCreationExpression* expr)
 {
-    if (dynamic_cast<StructType*>(expr->type()) != NULL
-        || dynamic_cast<ClassType*>(expr->type()) != NULL) {
+    if (dynamic_cast<StructType*>(expr->type()) != nullptr
+        || dynamic_cast<ClassType*>(expr->type()) != nullptr) {
         llvm::Function* constructorFunc = llfunction(expr->constructor());
         std::vector<llvm::Value*> args;
         llvm::Value* instance;
@@ -1735,7 +1735,7 @@ void* CodeGenerator::visitObjectCreationExpression(
          * function (see llallocator()). For structs, we allocate the memory
          * on the heap using an LLVM "alloca" instruction.
          */
-        if (dynamic_cast<ClassType*>(expr->type()) != NULL) {
+        if (dynamic_cast<ClassType*>(expr->type()) != nullptr) {
             instance
                 = mBuilder.CreateCall(llallocator((ClassType*)expr->type()));
         } else {
@@ -1753,7 +1753,7 @@ void* CodeGenerator::visitObjectCreationExpression(
 
         mBuilder.CreateCall(constructorFunc, args);
 
-        if (dynamic_cast<StructType*>(expr->type()) != NULL && !mLValue) {
+        if (dynamic_cast<StructType*>(expr->type()) != nullptr && !mLValue) {
             auto instanceType = mTypeMapper.valueType(expr->type());
             instance = mBuilder.CreateLoad(instanceType, instance);
         }
@@ -1774,7 +1774,7 @@ void* CodeGenerator::visitVariableExpression(VariableExpression* expr)
     std::string name = mangledName(expr->target());
     llvm::Value* ret = mFunction->getValueSymbolTable()->lookup(name);
 
-    if (ret == NULL) {
+    if (ret == nullptr) {
         ret = mLLVMModule->getGlobalVariable(name);
     }
 
@@ -1783,7 +1783,7 @@ void* CodeGenerator::visitVariableExpression(VariableExpression* expr)
         ret = mBuilder.CreateLoad(type, ret);
     }
 
-    assert(ret != NULL);
+    assert(ret != nullptr);
     return ret;
 }
 

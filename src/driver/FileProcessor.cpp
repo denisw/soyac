@@ -13,14 +13,14 @@
 #include <iostream>
 #include <llvm/Target/TargetMachine.h>
 
-#include <analysis/BasicAnalyzer.hpp>
-#include <analysis/ControlFlowAnalyzer.hpp>
-#include <codegen/CodeGenerator.hpp>
-#include <parser/ParserDriver.hpp>
+#include <analysis/BasicAnalyzer.h>
+#include <analysis/ControlFlowAnalyzer.h>
+#include <codegen/CodeGenerator.h>
+#include <parser/ParserDriver.h>
 
-#include "FileProcessor.hpp"
-#include "ProblemReport.hpp"
-#include "config.hpp"
+#include "FileProcessor.h"
+#include "ProblemReport.h"
+#include "config.h"
 
 using std::filesystem::path;
 
@@ -54,10 +54,10 @@ std::string FileProcessor::process()
          * Parse the file.
          */
 
-        PassResult* result = NULL;
+        PassResult* result = nullptr;
         ast::Module* m = parser::ParserDriver(p.string()).parse(result);
 
-        if (result != NULL) {
+        if (result != nullptr) {
             ProblemReport::addPassResult(result);
         }
 
@@ -104,7 +104,7 @@ bool FileProcessor::analyze(ast::Module* m)
      * Basic Analysis
      */
     result = analysis::BasicAnalyzer().analyze(m);
-    if (result != NULL) {
+    if (result != nullptr) {
         ProblemReport::addPassResult(result);
         if (result->foundErrors()) {
             return false;
@@ -115,7 +115,7 @@ bool FileProcessor::analyze(ast::Module* m)
      * Control Flow Analysis
      */
     result = analysis::ControlFlowAnalyzer().analyze(m);
-    if (result != NULL) {
+    if (result != nullptr) {
         ProblemReport::addPassResult(result);
         if (result->foundErrors()) {
             return false;

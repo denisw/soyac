@@ -13,17 +13,17 @@
 #include <iostream>
 #include <list>
 
-#include "BasicAnalyzer.hpp"
-#include "FunctionGroup.hpp"
-#include "ModulesRequiredException.hpp"
-#include <ast/ast.hpp>
+#include "BasicAnalyzer.h"
+#include "FunctionGroup.h"
+#include "ModulesRequiredException.h"
+#include <ast/ast.h>
 
 namespace soyac {
 namespace analysis {
 
 BasicAnalyzer::BasicAnalyzer()
-    : mEnclosingFunc(NULL)
-    , mEnclosingType(NULL)
+    : mEnclosingFunc(nullptr)
+    , mEnclosingType(nullptr)
     , mLValue(false)
 {
 }
@@ -44,15 +44,15 @@ NamedEntity* BasicAnalyzer::resolveName(const Name& name)
      * If the symbol table lookup does not yield a result, we look in
      * the symbol tables of the imported modules.
      */
-    if (ret == NULL) {
+    if (ret == nullptr) {
         for (std::list<Module*>::iterator it = mImportedModules.begin();
             it != mImportedModules.end(); it++) {
             SymbolTable* table = SymbolTable::get(*it);
-            assert(table != NULL);
+            assert(table != nullptr);
 
             ret = table->lookup(name);
 
-            if (ret != NULL) {
+            if (ret != nullptr) {
                 break;
             }
         }
@@ -72,8 +72,8 @@ NamedEntity* BasicAnalyzer::resolveName(const Name& name, NamedEntity* entity)
      * first requested. If we are doing a lookup in a type with such
      * members, add those to the symbol table and try again.
      */
-    if (ret == NULL) {
-        if (dynamic_cast<BuiltInType*>(entity) != NULL) {
+    if (ret == nullptr) {
+        if (dynamic_cast<BuiltInType*>(entity) != nullptr) {
             BuiltInType* type = (BuiltInType*)entity;
             mSymbolTable->enterScope(entity);
 
@@ -84,7 +84,7 @@ NamedEntity* BasicAnalyzer::resolveName(const Name& name, NamedEntity* entity)
 
             mSymbolTable->leaveScope();
             ret = mSymbolTable->lookup(name, entity);
-        } else if (dynamic_cast<ArrayType*>(entity) != NULL) {
+        } else if (dynamic_cast<ArrayType*>(entity) != nullptr) {
             if (name == "getElement") {
                 mSymbolTable->enterScope(entity);
                 mSymbolTable->add(((ArrayType*)entity)->getElementMethod());
@@ -108,13 +108,13 @@ NamedEntity* BasicAnalyzer::resolveName(const Name& name, NamedEntity* entity)
              */
             NamedEntity* module = entity;
 
-            while (dynamic_cast<Module*>(module) == NULL) {
-                assert(module != NULL);
+            while (dynamic_cast<Module*>(module) == nullptr) {
+                assert(module != nullptr);
                 module = module->parent();
             }
 
             SymbolTable* table = SymbolTable::get((Module*)module);
-            assert(table != NULL);
+            assert(table != nullptr);
 
             if (entity == module) {
                 ret = table->lookup(name);
@@ -144,17 +144,17 @@ bool BasicAnalyzer::isVisible(DeclaredEntity* entity)
      * this method are recevied from resolveName() and thus are in the
      * current scope.)
      */
-    else if (entity->parent() == NULL || entity->parent() == mModule) {
+    else if (entity->parent() == nullptr || entity->parent() == mModule) {
         return true;
     }
     /*
      * Otherwise, the entity might be declared as a member of an
      * enclosing type, in which case it is visible, too.
      */
-    else if (mEnclosingType != NULL) {
+    else if (mEnclosingType != nullptr) {
         NamedEntity* parent = mEnclosingType;
 
-        while (parent != NULL) {
+        while (parent != nullptr) {
             if (parent == entity->parent()) {
                 return true;
             } else {
@@ -203,8 +203,8 @@ bool BasicAnalyzer::canConvert(Expression* expr, Type* type, bool _explicit)
      * special case of integer literals - provided that the literal value
      * is in the destination type's range.
      */
-    if (!convertable && dynamic_cast<IntegerLiteral*>(expr) != NULL
-        && dynamic_cast<IntegerType*>(type) != NULL) {
+    if (!convertable && dynamic_cast<IntegerLiteral*>(expr) != nullptr
+        && dynamic_cast<IntegerType*>(type) != nullptr) {
         IntegerLiteral* literal = (IntegerLiteral*)expr;
         IntegerType* itype = (IntegerType*)type;
 
@@ -225,22 +225,22 @@ bool BasicAnalyzer::convert(Expression* expr, Type* type, bool _explicit)
          * we just replace it with a FunctionExpression that denotes the
          * correct overload.
          */
-        if (dynamic_cast<UnresolvedFunctionExpression*>(expr) != NULL
+        if (dynamic_cast<UnresolvedFunctionExpression*>(expr) != nullptr
             || dynamic_cast<UnresolvedInstanceFunctionExpression*>(expr)
-                != NULL) {
+                != nullptr) {
             NodeList<Function>::const_iterator overloads_begin
-                = (dynamic_cast<UnresolvedFunctionExpression*>(expr) != NULL)
+                = (dynamic_cast<UnresolvedFunctionExpression*>(expr) != nullptr)
                 ? ((UnresolvedFunctionExpression*)expr)->overloads_begin()
                 : ((UnresolvedInstanceFunctionExpression*)expr)
                       ->overloads_begin();
 
             NodeList<Function>::const_iterator overloads_end
-                = (dynamic_cast<UnresolvedFunctionExpression*>(expr) != NULL)
+                = (dynamic_cast<UnresolvedFunctionExpression*>(expr) != nullptr)
                 ? ((UnresolvedFunctionExpression*)expr)->overloads_end()
                 : ((UnresolvedInstanceFunctionExpression*)expr)
                       ->overloads_end();
 
-            Function* match = NULL;
+            Function* match = nullptr;
 
             /*
              * First, look if we have an overload whose type is identical
@@ -260,7 +260,7 @@ bool BasicAnalyzer::convert(Expression* expr, Type* type, bool _explicit)
              * than just one matching overload, the conversion is ambiguous,
              * and we need to report an error.
              */
-            if (match == NULL) {
+            if (match == nullptr) {
                 for (NodeList<Function>::const_iterator it = overloads_begin;
                     it != overloads_end; it++) {
                     // TODO: Report error if multiple overloads match
@@ -274,7 +274,7 @@ bool BasicAnalyzer::convert(Expression* expr, Type* type, bool _explicit)
                     }
 
                     if (funcConvertable) {
-                        if (match != NULL) {
+                        if (match != nullptr) {
                             mRBuilder->addError(expr,
                                 boost::format(
                                     "Conversion of function group '%1%' to "
@@ -294,12 +294,12 @@ bool BasicAnalyzer::convert(Expression* expr, Type* type, bool _explicit)
             /*
              * At this point, 'match' should point to the correct overload.
              */
-            assert(match != NULL);
+            assert(match != nullptr);
 
             Expression* newExpr;
 
             if (dynamic_cast<UnresolvedInstanceFunctionExpression*>(expr)
-                != NULL) {
+                != nullptr) {
                 newExpr = new InstanceFunctionExpression(
                     ((UnresolvedInstanceFunctionExpression*)expr)->instance(),
                     match);
@@ -409,7 +409,7 @@ Function* BasicAnalyzer::bestMatch(FunctionGroup* overloads,
                     % (*overloads->overloads_begin())->name());
         }
 
-        return NULL;
+        return nullptr;
     }
 
     /*
@@ -426,15 +426,15 @@ Function* BasicAnalyzer::bestMatch(FunctionGroup* overloads,
             = betterMatch(*m, bestMatching, arguments_begin, arguments_end);
 
         /*
-         * If betterMatch() returns NULL, the argument list is ambiguous;
+         * If betterMatch() returns nullptr, the argument list is ambiguous;
          * we report this as error.
          */
-        if (better == NULL) {
+        if (better == nullptr) {
             mRBuilder->addError(errorLoc,
                 boost::format("The call to '%1%()' is ambiguous.\n"
                               "(There is no single best-fitting overload.)")
                     % (*overloads->overloads_begin())->name());
-            return NULL;
+            return nullptr;
         } else if (better != bestMatching) {
             bestMatching = better;
         }
@@ -502,7 +502,7 @@ Function* BasicAnalyzer::betterMatch(Function* func1, Function* func2,
         /*
          * Integer Arguments
          */
-        if (dynamic_cast<IntegerType*>((*a)->type()) != NULL) {
+        if (dynamic_cast<IntegerType*>((*a)->type()) != nullptr) {
             IntegerType* a_itype = dynamic_cast<IntegerType*>((*a)->type());
 
             /*
@@ -516,8 +516,8 @@ Function* BasicAnalyzer::betterMatch(Function* func1, Function* func2,
              * as the argument type are always considered to be "nearer"
              * than types where the signedness is different.
              */
-            if (dynamic_cast<IntegerType*>((*p1)->type()) != NULL
-                && dynamic_cast<IntegerType*>((*p2)->type()) != NULL) {
+            if (dynamic_cast<IntegerType*>((*p1)->type()) != nullptr
+                && dynamic_cast<IntegerType*>((*p2)->type()) != nullptr) {
                 IntegerType* p1_itype = (IntegerType*)(*p1)->type();
                 IntegerType* p2_itype = (IntegerType*)(*p2)->type();
 
@@ -550,11 +550,11 @@ Function* BasicAnalyzer::betterMatch(Function* func1, Function* func2,
              * and the other function's parameter is of a floating-point
              * type, the integer parameter is a better match.
              */
-            else if (dynamic_cast<IntegerType*>((*p1)->type()) != NULL
-                && dynamic_cast<FloatingPointType*>((*p2)->type()) != NULL) {
+            else if (dynamic_cast<IntegerType*>((*p1)->type()) != nullptr
+                && dynamic_cast<FloatingPointType*>((*p2)->type()) != nullptr) {
                 return func1;
-            } else if (dynamic_cast<IntegerType*>((*p2)->type()) != NULL
-                && dynamic_cast<FloatingPointType*>((*p1)->type()) != NULL) {
+            } else if (dynamic_cast<IntegerType*>((*p2)->type()) != nullptr
+                && dynamic_cast<FloatingPointType*>((*p1)->type()) != nullptr) {
                 return func2;
             }
 
@@ -572,7 +572,7 @@ Function* BasicAnalyzer::betterMatch(Function* func1, Function* func2,
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 Expression* BasicAnalyzer::createEntityExpression(NamedEntity* entity)
@@ -589,9 +589,9 @@ Expression* BasicAnalyzer::createEntityExpression(NamedEntity* entity)
     /*
      * Enum Constants
      */
-    if ((econs = dynamic_cast<EnumConstant*>(entity)) != NULL) {
+    if ((econs = dynamic_cast<EnumConstant*>(entity)) != nullptr) {
         EnumType* etype = dynamic_cast<EnumType*>(econs->parent());
-        assert(etype != NULL);
+        assert(etype != nullptr);
 
         expr = new EnumValueExpression(etype, econs);
     }
@@ -599,7 +599,7 @@ Expression* BasicAnalyzer::createEntityExpression(NamedEntity* entity)
     /*
      * Functions
      */
-    else if ((group = dynamic_cast<FunctionGroup*>(entity)) != NULL) {
+    else if ((group = dynamic_cast<FunctionGroup*>(entity)) != nullptr) {
         expr = new UnresolvedFunctionExpression(
             group->overloads_begin(), group->overloads_end());
     }
@@ -607,28 +607,28 @@ Expression* BasicAnalyzer::createEntityExpression(NamedEntity* entity)
     /*
      * Function Parameters
      */
-    else if ((param = dynamic_cast<FunctionParameter*>(entity)) != NULL) {
+    else if ((param = dynamic_cast<FunctionParameter*>(entity)) != nullptr) {
         expr = new FunctionParameterExpression(param);
     }
 
     /*
      * Modules
      */
-    else if ((mod = dynamic_cast<Module*>(entity)) != NULL) {
+    else if ((mod = dynamic_cast<Module*>(entity)) != nullptr) {
         expr = new ModuleExpression(mod);
     }
 
     /*
      * Types
      */
-    else if ((type = dynamic_cast<Type*>(entity)) != NULL) {
+    else if ((type = dynamic_cast<Type*>(entity)) != nullptr) {
         expr = new TypeExpression(type);
     }
 
     /*
      * Variables
      */
-    else if ((var = dynamic_cast<Variable*>(entity)) != NULL) {
+    else if ((var = dynamic_cast<Variable*>(entity)) != nullptr) {
         expr = new VariableExpression(var);
     }
 
@@ -654,7 +654,7 @@ Expression* BasicAnalyzer::createMemberExpression(
     /*
      * Instance Functions
      */
-    if ((group = dynamic_cast<FunctionGroup*>(member)) != NULL) {
+    if ((group = dynamic_cast<FunctionGroup*>(member)) != nullptr) {
         expr = new UnresolvedInstanceFunctionExpression(
             instance, group->overloads_begin(), group->overloads_end());
     }
@@ -662,14 +662,14 @@ Expression* BasicAnalyzer::createMemberExpression(
     /*
      * Instance Properties
      */
-    else if ((prop = dynamic_cast<Property*>(member)) != NULL) {
+    else if ((prop = dynamic_cast<Property*>(member)) != nullptr) {
         expr = new UnresolvedInstancePropertyExpression(instance, prop);
     }
 
     /*
      * Instance Variables
      */
-    else if ((var = dynamic_cast<Variable*>(member)) != NULL) {
+    else if ((var = dynamic_cast<Variable*>(member)) != nullptr) {
         expr = new InstanceVariableExpression(instance, var);
     }
 
@@ -712,7 +712,7 @@ void* BasicAnalyzer::visitModule(Module* m)
         it != m->imports_end(); it++) {
         std::string* required = (std::string*)(*it)->visit(this);
 
-        if (required != NULL) {
+        if (required != nullptr) {
             requiredModules.push_back(*required);
             delete required;
         }
@@ -742,19 +742,19 @@ void* BasicAnalyzer::visitEntityImport(EntityImport* imp)
     mSymbolTable->add(imp->imported());
 
     Module* m = Module::get(imp->imported()->qualifiedName().first());
-    assert(m != NULL);
+    assert(m != nullptr);
 
     mSymbolTable->enterScope(m);
     mSymbolTable->add(imp->imported());
     mSymbolTable->leaveScope();
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitFunctionGroupImport(FunctionGroupImport* imp)
 {
     Module* m = Module::get((*imp->overloads_begin())->qualifiedName().first());
-    assert(m != NULL);
+    assert(m != nullptr);
 
     for (FunctionGroupImport::overloads_iterator it = imp->overloads_begin();
         it != imp->overloads_end(); it++) {
@@ -765,7 +765,7 @@ void* BasicAnalyzer::visitFunctionGroupImport(FunctionGroupImport* imp)
         mSymbolTable->leaveScope();
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitModuleImport(ModuleImport* imp)
@@ -777,14 +777,14 @@ void* BasicAnalyzer::visitModuleImport(ModuleImport* imp)
         mImportedModules.push_back(m);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitUnresolvedEntityImport(UnresolvedEntityImport* imp)
 {
     Module* m = Module::get(imp->importedName().first());
 
-    if (m == NULL) {
+    if (m == nullptr) {
         return new std::string(imp->importedName().first());
     } else {
         std::string declName = imp->importedName().last();
@@ -812,8 +812,8 @@ void* BasicAnalyzer::visitUnresolvedEntityImport(UnresolvedEntityImport* imp)
         } else {
             for (NodeList<DeclaredEntity>::const_iterator it = entities.begin();
                 it != entities.end(); it++) {
-                if (dynamic_cast<Function*>(*it) == NULL) {
-                    return NULL;
+                if (dynamic_cast<Function*>(*it) == nullptr) {
+                    return nullptr;
                 }
             }
 
@@ -825,7 +825,7 @@ void* BasicAnalyzer::visitUnresolvedEntityImport(UnresolvedEntityImport* imp)
             realImp->visit(this);
         }
 
-        return NULL;
+        return nullptr;
     }
 }
 
@@ -833,7 +833,7 @@ void* BasicAnalyzer::visitUnresolvedModuleImport(UnresolvedModuleImport* imp)
 {
     Module* m = Module::get(imp->importedName());
 
-    if (m == NULL) {
+    if (m == nullptr) {
         return new std::string(imp->importedName().str());
     } else {
         Import* realImp = new ModuleImport(m, imp->isDirect());
@@ -841,7 +841,7 @@ void* BasicAnalyzer::visitUnresolvedModuleImport(UnresolvedModuleImport* imp)
         imp->replaceWith(realImp);
         realImp->visit(this);
 
-        return NULL;
+        return nullptr;
     }
 }
 
@@ -858,7 +858,7 @@ void* BasicAnalyzer::visitBlock(Block* b)
     }
 
     mSymbolTable->leaveScope();
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitDeclarationBlock(DeclarationBlock* b)
@@ -869,7 +869,7 @@ void* BasicAnalyzer::visitDeclarationBlock(DeclarationBlock* b)
         it != b->declarations_end(); it++) {
         (*it)->visit(this);
 
-        if (dynamic_cast<Constructor*>((*it)->declaredEntity()) != NULL) {
+        if (dynamic_cast<Constructor*>((*it)->declaredEntity()) != nullptr) {
             hasConstructor = true;
         }
     }
@@ -888,7 +888,7 @@ void* BasicAnalyzer::visitDeclarationBlock(DeclarationBlock* b)
         dstmt->visit(this);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitDeclarationStatement(DeclarationStatement* stmt)
@@ -896,7 +896,7 @@ void* BasicAnalyzer::visitDeclarationStatement(DeclarationStatement* stmt)
     DeclaredEntity* entity = stmt->declaredEntity();
     bool success;
 
-    if (dynamic_cast<Module*>(entity->parent()) != NULL) {
+    if (dynamic_cast<Module*>(entity->parent()) != nullptr) {
         success = mSymbolTable->addGlobal(entity);
     } else {
         success = mSymbolTable->add(entity);
@@ -922,7 +922,7 @@ void* BasicAnalyzer::visitDeclarationStatement(DeclarationStatement* stmt)
     }
 
     stmt->declaredEntity()->visit(this);
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitDoStatement(DoStatement* stmt)
@@ -934,7 +934,7 @@ void* BasicAnalyzer::visitDoStatement(DoStatement* stmt)
     mSymbolTable->leaveScope();
 
     if (stmt->condition()->type() != TYPE_BOOL
-        && dynamic_cast<UnknownType*>(stmt->condition()->type()) == NULL) {
+        && dynamic_cast<UnknownType*>(stmt->condition()->type()) == nullptr) {
         mRBuilder->addError(stmt->condition(),
             boost::format(
                 "The \"do\" loop condition must be an expression of type "
@@ -942,13 +942,13 @@ void* BasicAnalyzer::visitDoStatement(DoStatement* stmt)
                 % stmt->condition()->type());
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitExpressionStatement(ExpressionStatement* stmt)
 {
     stmt->expression()->visit(this);
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitForStatement(ForStatement* stmt)
@@ -963,7 +963,7 @@ void* BasicAnalyzer::visitForStatement(ForStatement* stmt)
     stmt->condition()->visit(this);
 
     if (stmt->condition()->type() != TYPE_BOOL
-        && dynamic_cast<UnknownType*>(stmt->condition()->type()) == NULL) {
+        && dynamic_cast<UnknownType*>(stmt->condition()->type()) == nullptr) {
         mRBuilder->addError(stmt->condition(),
             boost::format(
                 "The \"for\" loop condition must be an expression of type "
@@ -979,7 +979,7 @@ void* BasicAnalyzer::visitForStatement(ForStatement* stmt)
     stmt->body()->visit(this);
     mSymbolTable->leaveScope();
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitIfStatement(IfStatement* stmt)
@@ -997,7 +997,7 @@ void* BasicAnalyzer::visitIfStatement(IfStatement* stmt)
     }
 
     if (stmt->condition()->type() != TYPE_BOOL
-        && dynamic_cast<UnknownType*>(stmt->condition()->type()) == NULL) {
+        && dynamic_cast<UnknownType*>(stmt->condition()->type()) == nullptr) {
         mRBuilder->addError(stmt->condition(),
             boost::format("The \"if\" statement condition must be an "
                           "expression of type "
@@ -1005,23 +1005,23 @@ void* BasicAnalyzer::visitIfStatement(IfStatement* stmt)
                 % stmt->condition()->type());
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitReturnStatement(ReturnStatement* stmt)
 {
-    if (mEnclosingFunc == NULL) {
+    if (mEnclosingFunc == nullptr) {
         mRBuilder->addError(stmt,
             "\"return\" statements may not appear outside of a function.");
     }
 
-    if (stmt->returnValue() != NULL) {
+    if (stmt->returnValue() != nullptr) {
         stmt->returnValue()->visit(this);
 
         if (mEnclosingFunc->returnType() == TYPE_VOID) {
             mRBuilder->addError(stmt,
                 "Cannot return a value in a function without return type.");
-        } else if (mEnclosingFunc != NULL
+        } else if (mEnclosingFunc != nullptr
             && !convert(stmt->returnValue(), mEnclosingFunc->returnType())) {
             mRBuilder->addError(stmt->returnValue(),
                 boost::format("Cannot return a value of type '%1%' in a "
@@ -1032,7 +1032,7 @@ void* BasicAnalyzer::visitReturnStatement(ReturnStatement* stmt)
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitWhileStatement(WhileStatement* stmt)
@@ -1044,7 +1044,7 @@ void* BasicAnalyzer::visitWhileStatement(WhileStatement* stmt)
     mSymbolTable->leaveScope();
 
     if (stmt->condition()->type() != TYPE_BOOL
-        && dynamic_cast<UnknownType*>(stmt->condition()->type()) == NULL) {
+        && dynamic_cast<UnknownType*>(stmt->condition()->type()) == nullptr) {
         mRBuilder->addError(stmt->condition(),
             boost::format("The \"while\" loop condition must be an "
                           "expression of type "
@@ -1052,7 +1052,7 @@ void* BasicAnalyzer::visitWhileStatement(WhileStatement* stmt)
                 % stmt->condition()->type());
     }
 
-    return NULL;
+    return nullptr;
 }
 
 ///// Declared Entities
@@ -1060,7 +1060,7 @@ void* BasicAnalyzer::visitWhileStatement(WhileStatement* stmt)
 
 void* BasicAnalyzer::visitClassType(ClassType* type)
 {
-    if (dynamic_cast<UnknownType*>(type->baseClass()) != NULL) {
+    if (dynamic_cast<UnknownType*>(type->baseClass()) != nullptr) {
         /*
          * If this is the core Object class, it doesn't have a base class.
          */
@@ -1083,15 +1083,15 @@ void* BasicAnalyzer::visitClassType(ClassType* type)
 
     ClassType* base = dynamic_cast<ClassType*>(type->baseClass());
 
-    while (base != NULL) {
+    while (base != nullptr) {
         for (DeclarationBlock::declarations_iterator it
             = base->body()->declarations_begin();
             it != base->body()->declarations_end(); it++) {
             DeclaredEntity* member = (*it)->declaredEntity();
 
             if (!member->hasModifier(DeclaredEntity::PRIVATE)
-                && dynamic_cast<Constructor*>(member) == NULL
-                && dynamic_cast<Variable*>(member) == NULL) {
+                && dynamic_cast<Constructor*>(member) == nullptr
+                && dynamic_cast<Variable*>(member) == nullptr) {
                 mSymbolTable->add(member);
             }
         }
@@ -1116,7 +1116,7 @@ void* BasicAnalyzer::visitClassType(ClassType* type)
         it != type->body()->declarations_end(); it++) {
         Variable* var = dynamic_cast<Variable*>((*it)->declaredEntity());
 
-        if (var != NULL && !var->hasModifier(DeclaredEntity::PRIVATE)) {
+        if (var != nullptr && !var->hasModifier(DeclaredEntity::PRIVATE)) {
             mSymbolTable->remove(var);
 
             Expression* varExpr
@@ -1146,7 +1146,7 @@ void* BasicAnalyzer::visitClassType(ClassType* type)
     mSymbolTable->leaveScope();
     mEnclosingType = tmp;
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitConstructor(Constructor* cons)
@@ -1168,7 +1168,7 @@ void* BasicAnalyzer::visitConstructor(Constructor* cons)
     mSymbolTable->leaveScope();
     mEnclosingFunc = tmp;
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitUnresolvedBaseConstructorInitializer(
@@ -1182,26 +1182,26 @@ void* BasicAnalyzer::visitUnresolvedBaseConstructorInitializer(
 
     ClassType* type = dynamic_cast<ClassType*>(mEnclosingType);
 
-    if (type == NULL) {
+    if (type == nullptr) {
         mRBuilder->addError(init,
             "Cannot use \"super\" constructor initializer with a struct "
             "constructor.\n"
             "(Structs have no base type.)");
     }
 
-    assert(type->baseClass() != NULL);
+    assert(type->baseClass() != nullptr);
 
     FunctionGroup* constructors = dynamic_cast<FunctionGroup*>(
         resolveName(CONSTRUCTOR_NAME, type->baseClass()));
 
-    assert(constructors != NULL);
+    assert(constructors != nullptr);
 
     Function* match = bestMatch(constructors, init->arguments_begin(),
         init->arguments_end(), init->location());
 
-    if (match != NULL) {
+    if (match != nullptr) {
         Constructor* cons = dynamic_cast<Constructor*>(match);
-        assert(cons != NULL);
+        assert(cons != nullptr);
 
         ConstructorInitializer* newInit = new ConstructorInitializer(
             cons, init->arguments_begin(), init->arguments_end());
@@ -1210,7 +1210,7 @@ void* BasicAnalyzer::visitUnresolvedBaseConstructorInitializer(
         newInit->visit(this);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitUnresolvedConstructorInitializer(
@@ -1223,19 +1223,19 @@ void* BasicAnalyzer::visitUnresolvedConstructorInitializer(
     }
 
     UserDefinedType* type = dynamic_cast<UserDefinedType*>(mEnclosingType);
-    assert(type != NULL);
+    assert(type != nullptr);
 
     FunctionGroup* constructors
         = dynamic_cast<FunctionGroup*>(resolveName(CONSTRUCTOR_NAME, type));
 
-    assert(constructors != NULL);
+    assert(constructors != nullptr);
 
     Function* match = bestMatch(constructors, init->arguments_begin(),
         init->arguments_end(), init->location());
 
-    if (match != NULL) {
+    if (match != nullptr) {
         Constructor* cons = dynamic_cast<Constructor*>(match);
-        assert(cons != NULL);
+        assert(cons != nullptr);
 
         ConstructorInitializer* newInit = new ConstructorInitializer(
             cons, init->arguments_begin(), init->arguments_end());
@@ -1244,7 +1244,7 @@ void* BasicAnalyzer::visitUnresolvedConstructorInitializer(
         newInit->visit(this);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitUnresolvedDefaultConstructorInitializer(
@@ -1257,7 +1257,7 @@ void* BasicAnalyzer::visitUnresolvedDefaultConstructorInitializer(
      * its base class. An exception is the core Object class, which has
      * no base class.
      */
-    if (cls != NULL && cls->baseClass() != NULL) {
+    if (cls != nullptr && cls->baseClass() != nullptr) {
         ConstructorInitializer* newInit
             = new UnresolvedBaseConstructorInitializer;
 
@@ -1271,7 +1271,7 @@ void* BasicAnalyzer::visitUnresolvedDefaultConstructorInitializer(
         delete init;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitEnumType(EnumType* type)
@@ -1286,12 +1286,12 @@ void* BasicAnalyzer::visitEnumType(EnumType* type)
     mSymbolTable->add(type->equalsMethod());
     mSymbolTable->leaveScope();
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitFunction(Function* func)
 {
-    if (dynamic_cast<UnknownType*>(func->returnType()) != NULL) {
+    if (dynamic_cast<UnknownType*>(func->returnType()) != nullptr) {
         func->returnType()->visit(this);
     }
 
@@ -1300,7 +1300,7 @@ void* BasicAnalyzer::visitFunction(Function* func)
         (*it)->visit(this);
     }
 
-    if (func->body() != NULL) {
+    if (func->body() != nullptr) {
         if (func->hasModifier(DeclaredEntity::EXTERN)) {
             mRBuilder->addError(func,
                 boost::format(
@@ -1323,7 +1323,7 @@ void* BasicAnalyzer::visitFunction(Function* func)
         mSymbolTable->leaveScope();
 
         mEnclosingFunc = tmp;
-    } else if (func->body() == NULL
+    } else if (func->body() == nullptr
         && !func->hasModifier(DeclaredEntity::EXTERN)) {
         mRBuilder->addError(func,
             boost::format(
@@ -1332,40 +1332,40 @@ void* BasicAnalyzer::visitFunction(Function* func)
                 % func);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitFunctionParameter(FunctionParameter* param)
 {
-    if (dynamic_cast<UnknownType*>(param->type()) != NULL) {
+    if (dynamic_cast<UnknownType*>(param->type()) != nullptr) {
         param->type()->visit(this);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitProperty(Property* prop)
 {
-    if (dynamic_cast<UnknownType*>(prop->type()) != NULL) {
+    if (dynamic_cast<UnknownType*>(prop->type()) != nullptr) {
         prop->type()->visit(this);
     }
 
-    if (prop->getAccessor() != NULL) {
+    if (prop->getAccessor() != nullptr) {
         prop->getAccessor()->visit(this);
     }
 
-    if (prop->setAccessor() != NULL) {
+    if (prop->setAccessor() != nullptr) {
         prop->setAccessor()->visit(this);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitPropertyGetAccessor(PropertyGetAccessor* acc)
 {
-    assert(acc->parent() != NULL);
+    assert(acc->parent() != nullptr);
 
-    if (acc->body() != NULL) {
+    if (acc->body() != nullptr) {
         if (acc->hasModifier(DeclaredEntity::EXTERN)) {
             mRBuilder->addError(acc,
                 boost::format("Get accessor of property '%1%' has a body "
@@ -1382,14 +1382,14 @@ void* BasicAnalyzer::visitPropertyGetAccessor(PropertyGetAccessor* acc)
         mEnclosingFunc = tmp;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitPropertySetAccessor(PropertySetAccessor* acc)
 {
-    assert(acc->parent() != NULL);
+    assert(acc->parent() != nullptr);
 
-    if (acc->body() != NULL) {
+    if (acc->body() != nullptr) {
         if (acc->hasModifier(DeclaredEntity::EXTERN)) {
             mRBuilder->addError(acc,
                 boost::format("Set accessor of property '%1%' has a body "
@@ -1410,7 +1410,7 @@ void* BasicAnalyzer::visitPropertySetAccessor(PropertySetAccessor* acc)
         mEnclosingFunc = tmp;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitStructType(StructType* type)
@@ -1424,18 +1424,18 @@ void* BasicAnalyzer::visitStructType(StructType* type)
     mSymbolTable->leaveScope();
 
     mEnclosingType = tmp;
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitUnknownArrayType(UnknownArrayType* type)
 {
     type->elementType()->visit(this);
 
-    if (dynamic_cast<UnknownType*>(type->elementType()) == NULL) {
+    if (dynamic_cast<UnknownType*>(type->elementType()) == nullptr) {
         type->replaceWith(ArrayType::get(type->elementType()));
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitUnknownFunctionType(UnknownFunctionType* type)
@@ -1458,15 +1458,15 @@ void* BasicAnalyzer::visitUnknownFunctionType(UnknownFunctionType* type)
      * FunctionType instance. Return in this case.
      */
 
-    if (dynamic_cast<UnknownType*>(type->returnType()) != NULL) {
-        return NULL;
+    if (dynamic_cast<UnknownType*>(type->returnType()) != nullptr) {
+        return nullptr;
     }
 
     for (UnknownFunctionType::parameterTypes_iterator it
         = type->parameterTypes_begin();
         it != type->parameterTypes_end(); it++) {
-        if (dynamic_cast<UnknownType*>(*it) != NULL) {
-            return NULL;
+        if (dynamic_cast<UnknownType*>(*it) != nullptr) {
+            return nullptr;
         }
     }
 
@@ -1477,7 +1477,7 @@ void* BasicAnalyzer::visitUnknownFunctionType(UnknownFunctionType* type)
     type->replaceWith(FunctionType::get(type->returnType(),
         type->parameterTypes_begin(), type->parameterTypes_end()));
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitUnknownType(UnknownType* type)
@@ -1486,7 +1486,7 @@ void* BasicAnalyzer::visitUnknownType(UnknownType* type)
      * The UknownType singleton TYPE_UNKNOWN cannot be resolved.
      */
     if (type == TYPE_UNKNOWN) {
-        return NULL;
+        return nullptr;
     }
 
     NamedEntity* lookupResult;
@@ -1501,7 +1501,7 @@ void* BasicAnalyzer::visitUnknownType(UnknownType* type)
         it++;
 
         for (; it != qname.identifiers_end(); it++) {
-            if (lookupResult == NULL) {
+            if (lookupResult == nullptr) {
                 break;
             }
 
@@ -1509,13 +1509,13 @@ void* BasicAnalyzer::visitUnknownType(UnknownType* type)
         }
     }
 
-    if (lookupResult == NULL) {
+    if (lookupResult == nullptr) {
         mRBuilder->addError(
             type, boost::format("Unknown type '%1%'.") % type->qualifiedName());
     } else {
         Type* newType = dynamic_cast<Type*>(lookupResult);
 
-        if (newType == NULL) {
+        if (newType == nullptr) {
             mRBuilder->addError(type,
                 boost::format("'%1%' is not a type.") % type->qualifiedName());
         } else {
@@ -1523,22 +1523,22 @@ void* BasicAnalyzer::visitUnknownType(UnknownType* type)
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitVariable(Variable* var)
 {
-    if (dynamic_cast<UnknownType*>(var->type()) != NULL) {
+    if (dynamic_cast<UnknownType*>(var->type()) != nullptr) {
         var->type()->visit(this);
     }
 
     if (var->type() == TYPE_VOID) {
         mRBuilder->addError(var, "'void' is no valid variable type.");
 
-        return NULL;
+        return nullptr;
     }
 
-    if (var->initializer() != NULL) {
+    if (var->initializer() != nullptr) {
         var->initializer()->visit(this);
 
         if (!convert(var->initializer(), var->type())) {
@@ -1562,7 +1562,7 @@ void* BasicAnalyzer::visitVariable(Variable* var)
                 % var);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 ///// Expressions
@@ -1570,11 +1570,11 @@ void* BasicAnalyzer::visitVariable(Variable* var)
 
 void* BasicAnalyzer::visitArrayCreationExpression(ArrayCreationExpression* expr)
 {
-    if (dynamic_cast<UnknownType*>(expr->type()) != NULL) {
+    if (dynamic_cast<UnknownType*>(expr->type()) != nullptr) {
         expr->type()->visit(this);
     }
 
-    if (expr->lengthExpression() != NULL) {
+    if (expr->lengthExpression() != nullptr) {
         expr->lengthExpression()->visit(this);
 
         if (!convert(expr->lengthExpression(), TYPE_INT)) {
@@ -1592,7 +1592,7 @@ void* BasicAnalyzer::visitArrayCreationExpression(ArrayCreationExpression* expr)
     }
 
     // TODO: Check for non-matching length / number of passed elements
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitAssignmentExpression(AssignmentExpression* expr)
@@ -1603,7 +1603,7 @@ void* BasicAnalyzer::visitAssignmentExpression(AssignmentExpression* expr)
      * node representing the corresponding setElement() method.
      */
     if (dynamic_cast<UnresolvedElementAccessExpression*>(expr->leftHand())
-        != NULL) {
+        != nullptr) {
         UnresolvedElementAccessExpression* eacc
             = (UnresolvedElementAccessExpression*)expr->leftHand();
 
@@ -1631,9 +1631,9 @@ void* BasicAnalyzer::visitAssignmentExpression(AssignmentExpression* expr)
          * accessor.
          */
         if (dynamic_cast<UnresolvedSimpleNameExpression*>(expr->leftHand())
-                != NULL
+                != nullptr
             || dynamic_cast<UnresolvedMemberAccessExpression*>(expr->leftHand())
-                != NULL) {
+                != nullptr) {
             /*
              * With setting the 'mLValue' member to true, we tell the
              * called visit method to not resolve a property-denoting
@@ -1646,13 +1646,13 @@ void* BasicAnalyzer::visitAssignmentExpression(AssignmentExpression* expr)
 
             if (dynamic_cast<UnresolvedInstancePropertyExpression*>(
                     expr->leftHand())
-                != NULL) {
+                != nullptr) {
                 UnresolvedInstancePropertyExpression* pexpr
                     = (UnresolvedInstancePropertyExpression*)expr->leftHand();
 
                 expr->rightHand()->visit(this);
 
-                if (pexpr->target()->setAccessor() == NULL) {
+                if (pexpr->target()->setAccessor() == nullptr) {
                     mRBuilder->addError(pexpr,
                         boost::format("Property '%1%' is read-only.")
                             % pexpr->target());
@@ -1678,7 +1678,7 @@ void* BasicAnalyzer::visitAssignmentExpression(AssignmentExpression* expr)
                         new CallExpression(callee, &arg, &arg + 1));
                 }
 
-                return NULL;
+                return nullptr;
             }
         }
         /*
@@ -1698,7 +1698,7 @@ void* BasicAnalyzer::visitAssignmentExpression(AssignmentExpression* expr)
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitCallExpression(CallExpression* expr)
@@ -1714,8 +1714,8 @@ void* BasicAnalyzer::visitCallExpression(CallExpression* expr)
          * doesn't make any sense to continue; overload resolution would
          * lead to bogus error messages.
          */
-        if (dynamic_cast<UnknownType*>((*it)->type()) != NULL) {
-            return NULL;
+        if (dynamic_cast<UnknownType*>((*it)->type()) != nullptr) {
+            return nullptr;
         }
     }
 
@@ -1725,7 +1725,7 @@ void* BasicAnalyzer::visitCallExpression(CallExpression* expr)
      * best (if any) and set the callee to the corresponing
      * FunctionExpression.
      */
-    if (dynamic_cast<UnresolvedFunctionExpression*>(expr->callee()) != NULL) {
+    if (dynamic_cast<UnresolvedFunctionExpression*>(expr->callee()) != nullptr) {
         UnresolvedFunctionExpression* unresolved
             = (UnresolvedFunctionExpression*)expr->callee();
 
@@ -1735,10 +1735,10 @@ void* BasicAnalyzer::visitCallExpression(CallExpression* expr)
         Function* bestMatching = bestMatch(&group, expr->arguments_begin(),
             expr->arguments_end(), expr->location());
 
-        if (bestMatching != NULL) {
+        if (bestMatching != nullptr) {
             unresolved->replaceWith(new FunctionExpression(bestMatching));
         } else {
-            return NULL;
+            return nullptr;
         }
     }
     /*
@@ -1748,7 +1748,7 @@ void* BasicAnalyzer::visitCallExpression(CallExpression* expr)
      * FunctionExpression.
      */
     else if (dynamic_cast<UnresolvedInstanceFunctionExpression*>(expr->callee())
-        != NULL) {
+        != nullptr) {
         UnresolvedInstanceFunctionExpression* unresolved
             = (UnresolvedInstanceFunctionExpression*)expr->callee();
 
@@ -1758,11 +1758,11 @@ void* BasicAnalyzer::visitCallExpression(CallExpression* expr)
         Function* bestMatching = bestMatch(&group, expr->arguments_begin(),
             expr->arguments_end(), expr->location());
 
-        if (bestMatching != NULL) {
+        if (bestMatching != nullptr) {
             unresolved->replaceWith(new InstanceFunctionExpression(
                 unresolved->instance(), bestMatching));
         } else {
-            return NULL;
+            return nullptr;
         }
     }
     /*
@@ -1770,7 +1770,7 @@ void* BasicAnalyzer::visitCallExpression(CallExpression* expr)
      * check if the passed arguments match the referenced functions's
      * signature.
      */
-    else if (dynamic_cast<FunctionType*>(expr->callee()->type()) != NULL) {
+    else if (dynamic_cast<FunctionType*>(expr->callee()->type()) != nullptr) {
         FunctionType* ftype = (FunctionType*)expr->callee()->type();
 
         FunctionType::parameterTypes_iterator p_it
@@ -1803,14 +1803,14 @@ void* BasicAnalyzer::visitCallExpression(CallExpression* expr)
     /*
      * Otherwise, the callee expression does not denote a callable object.
      */
-    else if (dynamic_cast<UnknownType*>(expr->callee()->type()) == NULL
-        || dynamic_cast<TypeExpression*>(expr->callee()) != NULL) {
+    else if (dynamic_cast<UnknownType*>(expr->callee()->type()) == nullptr
+        || dynamic_cast<TypeExpression*>(expr->callee()) != nullptr) {
         mRBuilder->addError(expr,
             boost::format("Expression of type '%1%' is not callable.")
                 % expr->callee()->type());
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitCastExpression(CastExpression* expr)
@@ -1823,14 +1823,14 @@ void* BasicAnalyzer::visitCastExpression(CastExpression* expr)
                 % expr->operand()->type() % expr->type());
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitInstanceVariableExpression(
     InstanceVariableExpression* expr)
 {
     checkVisible(expr->target(), expr->location());
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitLogicalExpression(LogicalExpression* expr)
@@ -1859,7 +1859,7 @@ void* BasicAnalyzer::visitLogicalExpression(LogicalExpression* expr)
          * right-hand expression could have the wrong type too; one error
          * per logical expression is enough.
          */
-        return NULL;
+        return nullptr;
     }
 
     if (!convert(expr->rightHand(), TYPE_BOOL)) {
@@ -1879,7 +1879,7 @@ void* BasicAnalyzer::visitLogicalExpression(LogicalExpression* expr)
                 % expr->rightHand()->type() % op);
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitLogicalNotExpression(LogicalNotExpression* expr)
@@ -1894,17 +1894,17 @@ void* BasicAnalyzer::visitLogicalNotExpression(LogicalNotExpression* expr)
                 % expr->operand()->type());
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitTypeExpression(TypeExpression* expr)
 {
-    if (dynamic_cast<UnknownType*>(expr->target()) != NULL) {
+    if (dynamic_cast<UnknownType*>(expr->target()) != nullptr) {
         expr->target()->visit(this);
     }
 
     checkVisible(expr->target(), expr->location());
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitUnresolvedBinaryExpression(
@@ -1925,8 +1925,8 @@ void* BasicAnalyzer::visitUnresolvedBinaryExpression(
      * If the left-hand operand's type is unknown, we cannot determine the
      * operator method to be called; just return in this case.
      */
-    if (dynamic_cast<UnknownType*>(expr->leftHand()->type()) != NULL) {
-        return NULL;
+    if (dynamic_cast<UnknownType*>(expr->leftHand()->type()) != nullptr) {
+        return nullptr;
     }
 
     /*
@@ -1945,7 +1945,7 @@ void* BasicAnalyzer::visitUnresolvedBinaryExpression(
         expr->replaceWith(newExpr);
         newExpr->visit(this);
 
-        return NULL;
+        return nullptr;
     }
     /*
      * If the UnresolvedBinaryExpression represents an "<=" or ">=" operator
@@ -1983,7 +1983,7 @@ void* BasicAnalyzer::visitUnresolvedBinaryExpression(
             equalsCallee
                 = ((InstanceFunctionExpression*)equalsCall->callee())->target();
         } else if (equalsCall->callee()->type() == TYPE_UNKNOWN) {
-            return NULL;
+            return nullptr;
         } else {
             assert(false);
         }
@@ -1994,7 +1994,7 @@ void* BasicAnalyzer::visitUnresolvedBinaryExpression(
                 = ((InstanceFunctionExpression*)comparisonCall->callee())
                       ->target();
         } else if (comparisonCall->callee()->type() == TYPE_UNKNOWN) {
-            return NULL;
+            return nullptr;
         } else {
             assert(false);
         }
@@ -2005,7 +2005,7 @@ void* BasicAnalyzer::visitUnresolvedBinaryExpression(
         expr->replaceWith(newExpr);
         newExpr->visit(this);
 
-        return NULL;
+        return nullptr;
     }
     /*
      * Otherwise, just find the correct operator method, create a
@@ -2076,15 +2076,15 @@ void* BasicAnalyzer::visitUnresolvedBinaryExpression(
             DeclaredEntity* callee;
             FunctionGroup* group;
 
-            if ((group = dynamic_cast<FunctionGroup*>(lookupResult)) != NULL) {
+            if ((group = dynamic_cast<FunctionGroup*>(lookupResult)) != nullptr) {
                 NodeList<Expression> args;
                 args.push_back(expr->rightHand());
 
                 callee = bestMatch(
                     group, args.begin(), args.end(), expr->location());
 
-                if (callee == NULL) {
-                    return NULL;
+                if (callee == nullptr) {
+                    return nullptr;
                 }
             } else {
                 mRBuilder->addError(expr,
@@ -2093,10 +2093,10 @@ void* BasicAnalyzer::visitUnresolvedBinaryExpression(
                                   "for compound assignment.")
                         % memberName % expr->leftHand()->type());
 
-                return NULL;
+                return nullptr;
             }
 
-            assert(callee != NULL);
+            assert(callee != nullptr);
 
             Expression* newExpr = new CompoundAssignmentExpression(
                 expr->leftHand(), expr->rightHand(), callee);
@@ -2118,7 +2118,7 @@ void* BasicAnalyzer::visitUnresolvedBinaryExpression(
             newExpr->visit(this);
         }
 
-        return NULL;
+        return nullptr;
     }
 }
 
@@ -2142,7 +2142,7 @@ void* BasicAnalyzer::visitUnresolvedElementAccessExpression(
     expr->replaceWith(newExpr);
     newExpr->visit(this);
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitUnresolvedInstancePropertyExpression(
@@ -2155,10 +2155,10 @@ void* BasicAnalyzer::visitUnresolvedInstancePropertyExpression(
      * case here.
      */
     if (mLValue) {
-        return NULL;
+        return nullptr;
     }
 
-    if (expr->target()->getAccessor() == NULL) {
+    if (expr->target()->getAccessor() == nullptr) {
         mRBuilder->addError(expr,
             boost::format("Property '%1%' is write-only.") % expr->target());
     } else {
@@ -2172,7 +2172,7 @@ void* BasicAnalyzer::visitUnresolvedInstancePropertyExpression(
         expr->replaceWith(new CallExpression(callee));
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitUnresolvedMemberAccessExpression(
@@ -2187,11 +2187,11 @@ void* BasicAnalyzer::visitUnresolvedMemberAccessExpression(
      * If the member access' operand denotes a type, look up the denoted
      * entity in that type.
      */
-    if ((texpr = dynamic_cast<TypeExpression*>(expr->operand())) != NULL) {
+    if ((texpr = dynamic_cast<TypeExpression*>(expr->operand())) != nullptr) {
         NamedEntity* lookupResult
             = resolveName(expr->memberName(), texpr->target());
 
-        if (lookupResult == NULL) {
+        if (lookupResult == nullptr) {
             mRBuilder->addError(expr,
                 boost::format("Type '%1%' has no member called '%2%'.")
                     % texpr->target() % expr->memberName());
@@ -2206,11 +2206,11 @@ void* BasicAnalyzer::visitUnresolvedMemberAccessExpression(
      * entity in that module.
      */
     else if ((mexpr = dynamic_cast<ModuleExpression*>(expr->operand()))
-        != NULL) {
+        != nullptr) {
         NamedEntity* lookupResult
             = resolveName(expr->memberName(), mexpr->target());
 
-        if (lookupResult == NULL) {
+        if (lookupResult == nullptr) {
             mRBuilder->addError(expr,
                 boost::format("Module '%1%' has no member called '%2%'.")
                     % mexpr->target() % expr->memberName());
@@ -2226,11 +2226,11 @@ void* BasicAnalyzer::visitUnresolvedMemberAccessExpression(
      * can only do this if we know the exact type of the operand, so we
      * check if the operand's type is known first.)
      */
-    else if (dynamic_cast<UnknownType*>(expr->operand()->type()) == NULL) {
+    else if (dynamic_cast<UnknownType*>(expr->operand()->type()) == nullptr) {
         NamedEntity* lookupResult
             = resolveName(expr->memberName(), expr->operand()->type());
 
-        if (lookupResult == NULL) {
+        if (lookupResult == nullptr) {
             mRBuilder->addError(expr,
                 boost::format("Type '%1%' has no member called '%2%'.")
                     % expr->operand()->type() % expr->memberName());
@@ -2243,7 +2243,7 @@ void* BasicAnalyzer::visitUnresolvedMemberAccessExpression(
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitUnresolvedObjectCreationExpression(
@@ -2253,16 +2253,16 @@ void* BasicAnalyzer::visitUnresolvedObjectCreationExpression(
         it != expr->arguments_end(); it++) {
         (*it)->visit(this);
 
-        if (dynamic_cast<UnknownType*>((*it)->type()) != NULL) {
-            return NULL;
+        if (dynamic_cast<UnknownType*>((*it)->type()) != nullptr) {
+            return nullptr;
         }
     }
 
-    if (dynamic_cast<UnknownType*>(expr->type()) != NULL) {
+    if (dynamic_cast<UnknownType*>(expr->type()) != nullptr) {
         expr->type()->visit(this);
 
-        if (dynamic_cast<UnknownType*>(expr->type()) != NULL) {
-            return NULL;
+        if (dynamic_cast<UnknownType*>(expr->type()) != nullptr) {
+            return nullptr;
         }
     }
 
@@ -2271,25 +2271,25 @@ void* BasicAnalyzer::visitUnresolvedObjectCreationExpression(
      * creation with the separate ArrayCreationExpression class.
      * (See visitArrayCreationExpression().)
      */
-    assert(dynamic_cast<ArrayType*>(expr->type()) == NULL);
+    assert(dynamic_cast<ArrayType*>(expr->type()) == nullptr);
 
     FunctionGroup* constructors = dynamic_cast<FunctionGroup*>(
         resolveName(CONSTRUCTOR_NAME, expr->type()));
 
-    assert(constructors != NULL);
+    assert(constructors != nullptr);
 
     Function* bestMatching = bestMatch(constructors, expr->arguments_begin(),
         expr->arguments_end(), expr->location());
 
-    if (bestMatching != NULL) {
-        assert(dynamic_cast<Constructor*>(bestMatching) != NULL);
+    if (bestMatching != nullptr) {
+        assert(dynamic_cast<Constructor*>(bestMatching) != nullptr);
 
         expr->replaceWith(new ObjectCreationExpression(expr->type(),
             (Constructor*)bestMatching, expr->arguments_begin(),
             expr->arguments_end()));
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitUnresolvedSimpleNameExpression(
@@ -2297,7 +2297,7 @@ void* BasicAnalyzer::visitUnresolvedSimpleNameExpression(
 {
     NamedEntity* lookupResult = resolveName(expr->name());
 
-    if (lookupResult != NULL) {
+    if (lookupResult != nullptr) {
         DeclaredEntity* entity = dynamic_cast<DeclaredEntity*>(lookupResult);
 
         Expression* newExpr;
@@ -2309,8 +2309,8 @@ void* BasicAnalyzer::visitUnresolvedSimpleNameExpression(
          * "this" as operand (that is, "memberName" was written for
          * "this.memberName").
          */
-        if (entity != NULL && mEnclosingType != NULL
-            && dynamic_cast<UserDefinedType*>(entity->parent()) != NULL
+        if (entity != nullptr && mEnclosingType != nullptr
+            && dynamic_cast<UserDefinedType*>(entity->parent()) != nullptr
             && !entity->hasModifier(DeclaredEntity::STATIC)) {
             Expression* thisExpr = new ThisExpression(mEnclosingType);
             thisExpr->setLocation(expr->location());
@@ -2327,13 +2327,13 @@ void* BasicAnalyzer::visitUnresolvedSimpleNameExpression(
             boost::format("'%1%' is not known in this scope.") % expr->name());
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitUnresolvedThisExpression(
     UnresolvedThisExpression* expr)
 {
-    if (mEnclosingType == NULL) {
+    if (mEnclosingType == nullptr) {
         mRBuilder->addError(expr,
             "A \"this\" expression may not appear outside of a type "
             "declaration.");
@@ -2341,13 +2341,13 @@ void* BasicAnalyzer::visitUnresolvedThisExpression(
         expr->replaceWith(new ThisExpression(mEnclosingType));
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* BasicAnalyzer::visitVariableExpression(VariableExpression* expr)
 {
     checkVisible(expr->target(), expr->location());
-    return NULL;
+    return nullptr;
 }
 
 } // namespace analysis

@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "EntityImport.hpp"
-#include "Visitor.hpp"
+#include "EntityImport.h"
+#include "Visitor.h"
 #include <cassert>
 
 namespace soyac {
@@ -16,7 +16,7 @@ namespace ast {
 EntityImport::EntityImport(DeclaredEntity* imported)
     : mImported(imported)
 {
-    assert(imported != NULL);
+    assert(imported != nullptr);
 }
 
 void* EntityImport::visit(Visitor* v) { return v->visitEntityImport(this); }

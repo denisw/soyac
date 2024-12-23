@@ -6,14 +6,14 @@
  * See LICENSE.txt for details.
  */
 
-#include "UnresolvedConstructorInitializer.hpp"
-#include "Visitor.hpp"
+#include "UnresolvedConstructorInitializer.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {
 
 UnresolvedConstructorInitializer::UnresolvedConstructorInitializer()
-    : ConstructorInitializer((Expression**)NULL, (Expression**)NULL)
+    : ConstructorInitializer((Expression**)nullptr, (Expression**)nullptr)
 {
 }
 

@@ -6,9 +6,9 @@
  * See LICENSE.txt for details.
  */
 
-#include "FloatingPointLiteral.hpp"
-#include "FloatingPointType.hpp"
-#include "Visitor.hpp"
+#include "FloatingPointLiteral.h"
+#include "FloatingPointType.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {

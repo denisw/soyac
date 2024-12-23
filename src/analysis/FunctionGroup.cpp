@@ -6,7 +6,7 @@
  * See LICENSE.txt for details.
  */
 
-#include "FunctionGroup.hpp"
+#include "FunctionGroup.h"
 
 namespace soyac {
 namespace analysis {

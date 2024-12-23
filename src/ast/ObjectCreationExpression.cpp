@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "ObjectCreationExpression.hpp"
-#include "Visitor.hpp"
+#include "ObjectCreationExpression.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {

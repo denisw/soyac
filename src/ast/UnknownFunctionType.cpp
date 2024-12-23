@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "UnknownFunctionType.hpp"
-#include "Visitor.hpp"
+#include "UnknownFunctionType.h"
+#include "Visitor.h"
 #include <cassert>
 
 namespace soyac {

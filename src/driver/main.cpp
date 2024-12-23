@@ -18,11 +18,11 @@
 #include <boost/program_options.hpp>
 #include <llvm/Support/TargetSelect.h>
 
-#include "FileProcessor.hpp"
-#include "ProblemReport.hpp"
-#include "config.hpp"
-#include "link.hpp"
-#include <analysis/ModulesRequiredException.hpp>
+#include "FileProcessor.h"
+#include "ProblemReport.h"
+#include "config.h"
+#include "link.h"
+#include <analysis/ModulesRequiredException.h>
 
 #define SOYAC_VERSION "0.1"
 
@@ -271,7 +271,7 @@ static void process_files(std::vector<std::string>& files)
          * of the files passed to this function. If this is the case, remove
          * it from the list of required modules.
          */
-        if (soyac::ast::Module::get(soyac::ast::Name(*it)) != NULL) {
+        if (soyac::ast::Module::get(soyac::ast::Name(*it)) != nullptr) {
             it = required.erase(it);
         } else {
             std::string path = find_module(*it);

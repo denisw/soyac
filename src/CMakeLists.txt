@@ -5,216 +5,216 @@ BISON_TARGET(SoyaParser
 set(COMPILER_SOURCES
   ${BISON_SoyaParser_OUTPUTS}
   analysis/BasicAnalyzer.cpp
-  analysis/BasicAnalyzer.hpp
+  analysis/BasicAnalyzer.h
   analysis/ControlFlowAnalyzer.cpp
-  analysis/ControlFlowAnalyzer.hpp
+  analysis/ControlFlowAnalyzer.h
   analysis/FunctionGroup.cpp
-  analysis/FunctionGroup.hpp
-  analysis/ModulesRequiredException.hpp
+  analysis/FunctionGroup.h
+  analysis/ModulesRequiredException.h
   analysis/NavigatingVisitor.cpp
-  analysis/NavigatingVisitor.hpp
+  analysis/NavigatingVisitor.h
   analysis/SymbolTable.cpp
-  analysis/SymbolTable.hpp
+  analysis/SymbolTable.h
   ast/ArrayCreationExpression.cpp
-  ast/ArrayCreationExpression.hpp
+  ast/ArrayCreationExpression.h
   ast/ArrayType.cpp
-  ast/ArrayType.hpp
+  ast/ArrayType.h
   ast/AssignmentExpression.cpp
-  ast/AssignmentExpression.hpp
+  ast/AssignmentExpression.h
   ast/Block.cpp
-  ast/Block.hpp
+  ast/Block.h
   ast/BooleanLiteral.cpp
-  ast/BooleanLiteral.hpp
+  ast/BooleanLiteral.h
   ast/BooleanType.cpp
-  ast/BooleanType.hpp
+  ast/BooleanType.h
   ast/BuiltInType.cpp
-  ast/BuiltInType.hpp
+  ast/BuiltInType.h
   ast/CallExpression.cpp
-  ast/CallExpression.hpp
+  ast/CallExpression.h
   ast/CastExpression.cpp
-  ast/CastExpression.hpp
+  ast/CastExpression.h
   ast/CharacterLiteral.cpp
-  ast/CharacterLiteral.hpp
+  ast/CharacterLiteral.h
   ast/CharacterType.cpp
-  ast/CharacterType.hpp
+  ast/CharacterType.h
   ast/ClassType.cpp
-  ast/ClassType.hpp
+  ast/ClassType.h
   ast/CombinedRelationalExpression.cpp
-  ast/CombinedRelationalExpression.hpp
+  ast/CombinedRelationalExpression.h
   ast/CompoundAssignmentExpression.cpp
-  ast/CompoundAssignmentExpression.hpp
+  ast/CompoundAssignmentExpression.h
   ast/Constructor.cpp
-  ast/Constructor.hpp
+  ast/Constructor.h
   ast/ConstructorInitializer.cpp
-  ast/ConstructorInitializer.hpp
+  ast/ConstructorInitializer.h
   ast/DeclarationBlock.cpp
-  ast/DeclarationBlock.hpp
+  ast/DeclarationBlock.h
   ast/DeclarationStatement.cpp
-  ast/DeclarationStatement.hpp
+  ast/DeclarationStatement.h
   ast/DeclaredEntity.cpp
-  ast/DeclaredEntity.hpp
+  ast/DeclaredEntity.h
   ast/DoStatement.cpp
-  ast/DoStatement.hpp
+  ast/DoStatement.h
   ast/EntityImport.cpp
-  ast/EntityImport.hpp
+  ast/EntityImport.h
   ast/EnumConstant.cpp
-  ast/EnumConstant.hpp
+  ast/EnumConstant.h
   ast/EnumType.cpp
-  ast/EnumType.hpp
+  ast/EnumType.h
   ast/EnumValueExpression.cpp
-  ast/EnumValueExpression.hpp
+  ast/EnumValueExpression.h
   ast/Expression.cpp
-  ast/Expression.hpp
+  ast/Expression.h
   ast/ExpressionStatement.cpp
-  ast/ExpressionStatement.hpp
+  ast/ExpressionStatement.h
   ast/FloatingPointLiteral.cpp
-  ast/FloatingPointLiteral.hpp
+  ast/FloatingPointLiteral.h
   ast/FloatingPointType.cpp
-  ast/FloatingPointType.hpp
+  ast/FloatingPointType.h
   ast/FloatingPointValue.cpp
-  ast/FloatingPointValue.hpp
+  ast/FloatingPointValue.h
   ast/ForStatement.cpp
-  ast/ForStatement.hpp
+  ast/ForStatement.h
   ast/Function.cpp
-  ast/Function.hpp
+  ast/Function.h
   ast/FunctionExpression.cpp
-  ast/FunctionExpression.hpp
+  ast/FunctionExpression.h
   ast/FunctionGroupImport.cpp
-  ast/FunctionGroupImport.hpp
+  ast/FunctionGroupImport.h
   ast/FunctionParameter.cpp
-  ast/FunctionParameter.hpp
+  ast/FunctionParameter.h
   ast/FunctionParameterExpression.cpp
-  ast/FunctionParameterExpression.hpp
+  ast/FunctionParameterExpression.h
   ast/FunctionType.cpp
-  ast/FunctionType.hpp
+  ast/FunctionType.h
   ast/IfStatement.cpp
-  ast/IfStatement.hpp
+  ast/IfStatement.h
   ast/Import.cpp
-  ast/Import.hpp
+  ast/Import.h
   ast/InstanceFunctionExpression.cpp
-  ast/InstanceFunctionExpression.hpp
+  ast/InstanceFunctionExpression.h
   ast/InstanceVariableExpression.cpp
-  ast/InstanceVariableExpression.hpp
+  ast/InstanceVariableExpression.h
   ast/IntegerLiteral.cpp
-  ast/IntegerLiteral.hpp
+  ast/IntegerLiteral.h
   ast/IntegerType.cpp
-  ast/IntegerType.hpp
+  ast/IntegerType.h
   ast/IntegerValue.cpp
-  ast/IntegerValue.hpp
-  ast/Link.hpp
+  ast/IntegerValue.h
+  ast/Link.h
   ast/Location.cpp
-  ast/Location.hpp
+  ast/Location.h
   ast/LogicalExpression.cpp
-  ast/LogicalExpression.hpp
+  ast/LogicalExpression.h
   ast/LogicalNotExpression.cpp
-  ast/LogicalNotExpression.hpp
+  ast/LogicalNotExpression.h
   ast/Module.cpp
-  ast/Module.hpp
+  ast/Module.h
   ast/ModuleExpression.cpp
-  ast/ModuleExpression.hpp
+  ast/ModuleExpression.h
   ast/ModuleImport.cpp
-  ast/ModuleImport.hpp
+  ast/ModuleImport.h
   ast/Name.cpp
-  ast/Name.hpp
+  ast/Name.h
   ast/NamedEntity.cpp
-  ast/NamedEntity.hpp
+  ast/NamedEntity.h
   ast/Node.cpp
-  ast/Node.hpp
-  ast/NodeList.hpp
+  ast/Node.h
+  ast/NodeList.h
   ast/ObjectCreationExpression.cpp
-  ast/ObjectCreationExpression.hpp
+  ast/ObjectCreationExpression.h
   ast/Property.cpp
-  ast/Property.hpp
+  ast/Property.h
   ast/PropertyGetAccessor.cpp
-  ast/PropertyGetAccessor.hpp
+  ast/PropertyGetAccessor.h
   ast/PropertySetAccessor.cpp
-  ast/PropertySetAccessor.hpp
+  ast/PropertySetAccessor.h
   ast/ReturnStatement.cpp
-  ast/ReturnStatement.hpp
+  ast/ReturnStatement.h
   ast/Statement.cpp
-  ast/Statement.hpp
+  ast/Statement.h
   ast/StatementWithBody.cpp
-  ast/StatementWithBody.hpp
+  ast/StatementWithBody.h
   ast/StructType.cpp
-  ast/StructType.hpp
+  ast/StructType.h
   ast/ThisExpression.cpp
-  ast/ThisExpression.hpp
+  ast/ThisExpression.h
   ast/Type.cpp
-  ast/Type.hpp
+  ast/Type.h
   ast/TypeExpression.cpp
-  ast/TypeExpression.hpp
+  ast/TypeExpression.h
   ast/UnknownArrayType.cpp
-  ast/UnknownArrayType.hpp
+  ast/UnknownArrayType.h
   ast/UnknownFunctionType.cpp
-  ast/UnknownFunctionType.hpp
+  ast/UnknownFunctionType.h
   ast/UnknownType.cpp
-  ast/UnknownType.hpp
+  ast/UnknownType.h
   ast/UnresolvedBaseConstructorInitializer.cpp
-  ast/UnresolvedBaseConstructorInitializer.hpp
+  ast/UnresolvedBaseConstructorInitializer.h
   ast/UnresolvedBinaryExpression.cpp
-  ast/UnresolvedBinaryExpression.hpp
+  ast/UnresolvedBinaryExpression.h
   ast/UnresolvedConstructorInitializer.cpp
-  ast/UnresolvedConstructorInitializer.hpp
+  ast/UnresolvedConstructorInitializer.h
   ast/UnresolvedDefaultConstructorInitializer.cpp
-  ast/UnresolvedDefaultConstructorInitializer.hpp
+  ast/UnresolvedDefaultConstructorInitializer.h
   ast/UnresolvedElementAccessExpression.cpp
-  ast/UnresolvedElementAccessExpression.hpp
+  ast/UnresolvedElementAccessExpression.h
   ast/UnresolvedEntityImport.cpp
-  ast/UnresolvedEntityImport.hpp
+  ast/UnresolvedEntityImport.h
   ast/UnresolvedFunctionExpression.cpp
-  ast/UnresolvedFunctionExpression.hpp
+  ast/UnresolvedFunctionExpression.h
   ast/UnresolvedInstanceFunctionExpression.cpp
-  ast/UnresolvedInstanceFunctionExpression.hpp
+  ast/UnresolvedInstanceFunctionExpression.h
   ast/UnresolvedInstancePropertyExpression.cpp
-  ast/UnresolvedInstancePropertyExpression.hpp
+  ast/UnresolvedInstancePropertyExpression.h
   ast/UnresolvedMemberAccessExpression.cpp
-  ast/UnresolvedMemberAccessExpression.hpp
+  ast/UnresolvedMemberAccessExpression.h
   ast/UnresolvedModuleImport.cpp
-  ast/UnresolvedModuleImport.hpp
+  ast/UnresolvedModuleImport.h
   ast/UnresolvedObjectCreationExpression.cpp
-  ast/UnresolvedObjectCreationExpression.hpp
+  ast/UnresolvedObjectCreationExpression.h
   ast/UnresolvedSimpleNameExpression.cpp
-  ast/UnresolvedSimpleNameExpression.hpp
+  ast/UnresolvedSimpleNameExpression.h
   ast/UnresolvedThisExpression.cpp
-  ast/UnresolvedThisExpression.hpp
+  ast/UnresolvedThisExpression.h
   ast/UserDefinedType.cpp
-  ast/UserDefinedType.hpp
+  ast/UserDefinedType.h
   ast/Variable.cpp
-  ast/Variable.hpp
+  ast/Variable.h
   ast/VariableExpression.cpp
-  ast/VariableExpression.hpp
-  ast/Visitor.hpp
+  ast/VariableExpression.h
+  ast/Visitor.h
   ast/VoidType.cpp
-  ast/VoidType.hpp
+  ast/VoidType.h
   ast/WhileStatement.cpp
-  ast/WhileStatement.hpp
-  ast/ast.hpp
+  ast/WhileStatement.h
+  ast/ast.h
   codegen/CodeGenerator.cpp
-  codegen/CodeGenerator.hpp
+  codegen/CodeGenerator.h
   codegen/LLVMTypeMapper.cpp
-  codegen/LLVMTypeMapper.hpp
+  codegen/LLVMTypeMapper.h
   codegen/LLValueExpression.cpp
-  codegen/LLValueExpression.hpp
+  codegen/LLValueExpression.h
   codegen/mangling.cpp
   codegen/mangling.h
   common/PassResult.cpp
-  common/PassResult.hpp
+  common/PassResult.h
   common/PassResultBuilder.cpp
-  common/PassResultBuilder.hpp
+  common/PassResultBuilder.h
   common/Problem.cpp
-  common/Problem.hpp
+  common/Problem.h
   driver/FileProcessor.cpp
-  driver/FileProcessor.hpp
+  driver/FileProcessor.h
   driver/ProblemReport.cpp
-  driver/ProblemReport.hpp
+  driver/ProblemReport.h
   driver/config.cpp
-  driver/config.hpp
+  driver/config.h
   driver/link.cpp
-  driver/link.hpp
+  driver/link.h
   parser/Lexer.cpp
-  parser/Lexer.hpp
+  parser/Lexer.h
   parser/ParserDriver.cpp
-  parser/ParserDriver.hpp
+  parser/ParserDriver.h
 )
 
 source_group("Analysis" REGULAR_EXPRESSION "analysis/.*\\.[ch]pp")

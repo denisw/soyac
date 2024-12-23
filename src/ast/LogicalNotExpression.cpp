@@ -6,9 +6,9 @@
  * See LICENSE.txt for details.
  */
 
-#include "LogicalNotExpression.hpp"
-#include "BooleanType.hpp"
-#include "Visitor.hpp"
+#include "LogicalNotExpression.h"
+#include "BooleanType.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {
@@ -16,7 +16,7 @@ namespace ast {
 LogicalNotExpression::LogicalNotExpression(Expression* operand)
     : mOperand(operand)
 {
-    assert(operand != NULL);
+    assert(operand != nullptr);
 }
 
 void* LogicalNotExpression::visit(Visitor* v)

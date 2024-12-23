@@ -6,14 +6,14 @@
  * See LICENSE.txt for details.
  */
 
-#include "ArrayType.hpp"
-#include "Function.hpp"
-#include "FunctionParameter.hpp"
-#include "IntegerType.hpp"
-#include "Property.hpp"
-#include "PropertyGetAccessor.hpp"
-#include "Visitor.hpp"
-#include "VoidType.hpp"
+#include "ArrayType.h"
+#include "Function.h"
+#include "FunctionParameter.h"
+#include "IntegerType.h"
+#include "Property.h"
+#include "PropertyGetAccessor.h"
+#include "Visitor.h"
+#include "VoidType.h"
 #include <cassert>
 
 namespace soyac {
@@ -25,7 +25,7 @@ ArrayType* ArrayType::get(Type* elementType)
 {
     ArrayType* ret = mInstances[elementType];
 
-    if (ret == NULL) {
+    if (ret == nullptr) {
         ret = new ArrayType(elementType);
         ret->ref();
         mInstances[elementType] = ret;
@@ -38,7 +38,7 @@ ArrayType::ArrayType(Type* elementType)
     : Type(elementType->name().str() + "[]")
     , mElementType(elementType)
 {
-    assert(elementType != NULL);
+    assert(elementType != nullptr);
 
     FunctionParameter* params[2] = { new FunctionParameter("index", TYPE_LONG),
         new FunctionParameter("x", elementType) };
@@ -52,7 +52,7 @@ ArrayType::ArrayType(Type* elementType)
     mSetElementMethod->ref();
 
     mLengthProperty = new Property(
-        "length", TYPE_LONG, new PropertyGetAccessor(NULL), NULL);
+        "length", TYPE_LONG, new PropertyGetAccessor(nullptr), nullptr);
     mLengthProperty->ref();
 }
 

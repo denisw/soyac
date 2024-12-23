@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "ReturnStatement.hpp"
-#include "Visitor.hpp"
+#include "ReturnStatement.h"
+#include "Visitor.h"
 #include <cassert>
 
 namespace soyac {
@@ -16,7 +16,7 @@ namespace ast {
 ReturnStatement::ReturnStatement(Expression* returnValue)
     : mReturnValue(returnValue)
 {
-    assert(returnValue != NULL);
+    assert(returnValue != nullptr);
 }
 
 void* ReturnStatement::visit(Visitor* v)

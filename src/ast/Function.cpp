@@ -6,9 +6,9 @@
  * See LICENSE.txt for details.
  */
 
-#include "Function.hpp"
-#include "FunctionType.hpp"
-#include "Visitor.hpp"
+#include "Function.h"
+#include "FunctionType.h"
+#include "Visitor.h"
 #include <cassert>
 #include <list>
 #include <sstream>
@@ -21,7 +21,7 @@ Function::Function(const Name& name, Type* returnType, Block* body)
     , mReturnType(returnType)
     , mBody(body)
 {
-    assert(returnType != NULL);
+    assert(returnType != nullptr);
 }
 
 Function::Function(
@@ -30,8 +30,8 @@ Function::Function(
     , mReturnType(returnType)
     , mBody(body)
 {
-    assert(returnType != NULL);
-    assert(param != NULL);
+    assert(returnType != nullptr);
+    assert(param != nullptr);
     mParameters.push_back(param);
 }
 

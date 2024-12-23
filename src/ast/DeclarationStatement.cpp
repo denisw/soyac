@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "DeclarationStatement.hpp"
-#include "Visitor.hpp"
+#include "DeclarationStatement.h"
+#include "Visitor.h"
 #include <cassert>
 
 namespace soyac {
@@ -16,7 +16,7 @@ namespace ast {
 DeclarationStatement::DeclarationStatement(DeclaredEntity* decl)
     : mDeclaredEntity(decl)
 {
-    assert(decl != NULL);
+    assert(decl != nullptr);
 }
 
 void* DeclarationStatement::visit(Visitor* v)

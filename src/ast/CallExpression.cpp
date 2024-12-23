@@ -6,13 +6,13 @@
  * See LICENSE.txt for details.
  */
 
-#include "CallExpression.hpp"
-#include "Function.hpp"
-#include "FunctionExpression.hpp"
-#include "FunctionType.hpp"
-#include "InstanceFunctionExpression.hpp"
-#include "UnknownType.hpp"
-#include "Visitor.hpp"
+#include "CallExpression.h"
+#include "Function.h"
+#include "FunctionExpression.h"
+#include "FunctionType.h"
+#include "InstanceFunctionExpression.h"
+#include "UnknownType.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {
@@ -20,14 +20,14 @@ namespace ast {
 CallExpression::CallExpression(Expression* callee)
     : mCallee(callee)
 {
-    assert(callee != NULL);
+    assert(callee != nullptr);
 }
 
 void* CallExpression::visit(Visitor* v) { return v->visitCallExpression(this); }
 
 Type* CallExpression::type() const
 {
-    if (dynamic_cast<FunctionType*>(callee()->type()) != NULL) {
+    if (dynamic_cast<FunctionType*>(callee()->type()) != nullptr) {
         return ((FunctionType*)callee()->type())->returnType();
     } else {
         return TYPE_UNKNOWN;

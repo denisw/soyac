@@ -6,7 +6,7 @@
  * See LICENSE.txt for details.
  */
 
-#include "IntegerValue.hpp"
+#include "IntegerValue.h"
 
 namespace soyac {
 namespace ast {

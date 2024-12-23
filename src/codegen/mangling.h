@@ -6,10 +6,10 @@
  * See LICENSE.txt for details.
  */
 
-#ifndef SOYA_MANGLING_H
-#define SOYA_MANGLING_H
+#ifndef SOYA_MANGLING_H_
+#define SOYA_MANGLING_H_
 
-#include "ast/ast.hpp"
+#include "ast/ast.h"
 #include <string>
 
 namespace soyac::codegen

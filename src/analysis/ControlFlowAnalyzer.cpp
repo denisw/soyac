@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "ControlFlowAnalyzer.hpp"
-#include <ast/ast.hpp>
+#include "ControlFlowAnalyzer.h"
+#include <ast/ast.h>
 #include <boost/format.hpp>
 #include <cassert>
 
@@ -38,7 +38,7 @@ void ControlFlowAnalyzer::reportUnused()
         /*
          * Variables
          */
-        if (dynamic_cast<Variable*>(*it) != NULL) {
+        if (dynamic_cast<Variable*>(*it) != nullptr) {
             mRBuilder->addWarning(
                 *it, boost::format("Unused variable '%1%'.") % *it);
         }
@@ -46,7 +46,7 @@ void ControlFlowAnalyzer::reportUnused()
         /*
          * Function Parameters
          */
-        else if (dynamic_cast<FunctionParameter*>(*it) != NULL) {
+        else if (dynamic_cast<FunctionParameter*>(*it) != nullptr) {
             mRBuilder->addWarning(
                 *it, boost::format("Unused function parameter '%1%'.") % *it);
         }
@@ -90,7 +90,7 @@ void* ControlFlowAnalyzer::visitBlock(Block* b)
 
 void* ControlFlowAnalyzer::visitDeclarationStatement(DeclarationStatement* stmt)
 {
-    if (dynamic_cast<Variable*>(stmt->declaredEntity()) != NULL
+    if (dynamic_cast<Variable*>(stmt->declaredEntity()) != nullptr
         && stmt->declaredEntity()->qualifiedName().isSimple()) {
         mUnused.push_back(stmt->declaredEntity());
     }
@@ -105,7 +105,7 @@ void* ControlFlowAnalyzer::visitIfStatement(IfStatement* stmt)
 
     bool alwaysReturns = (bool)stmt->body()->visit(this);
 
-    if (stmt->elseBody() != NULL) {
+    if (stmt->elseBody() != nullptr) {
         alwaysReturns = ((bool)stmt->elseBody()->visit(this)) && alwaysReturns;
     }
 
@@ -114,7 +114,7 @@ void* ControlFlowAnalyzer::visitIfStatement(IfStatement* stmt)
 
 void* ControlFlowAnalyzer::visitReturnStatement(ReturnStatement* stmt)
 {
-    if (stmt->returnValue() != NULL) {
+    if (stmt->returnValue() != nullptr) {
         stmt->returnValue()->visit(this);
     }
 
@@ -126,13 +126,13 @@ void* ControlFlowAnalyzer::visitReturnStatement(ReturnStatement* stmt)
 
 void* ControlFlowAnalyzer::visitConstructor(Constructor* cons)
 {
-    if (cons->body() != NULL) {
+    if (cons->body() != nullptr) {
         for (Function::parameters_iterator it = cons->parameters_begin();
             it != cons->parameters_end(); it++) {
             mUnused.push_back(*it);
         }
 
-        if (cons->initializer() != NULL) {
+        if (cons->initializer() != nullptr) {
             cons->initializer()->visit(this);
         }
 
@@ -140,12 +140,12 @@ void* ControlFlowAnalyzer::visitConstructor(Constructor* cons)
         reportUnused();
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* ControlFlowAnalyzer::visitFunction(Function* func)
 {
-    if (func->body() != NULL) {
+    if (func->body() != nullptr) {
         for (Function::parameters_iterator it = func->parameters_begin();
             it != func->parameters_end(); it++) {
             mUnused.push_back(*it);
@@ -163,12 +163,12 @@ void* ControlFlowAnalyzer::visitFunction(Function* func)
         reportUnused();
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* ControlFlowAnalyzer::visitPropertyGetAccessor(PropertyGetAccessor* acc)
 {
-    if (acc->body() != NULL) {
+    if (acc->body() != nullptr) {
         for (Function::parameters_iterator it = acc->parameters_begin();
             it != acc->parameters_end(); it++) {
             mUnused.push_back(*it);
@@ -187,17 +187,17 @@ void* ControlFlowAnalyzer::visitPropertyGetAccessor(PropertyGetAccessor* acc)
         reportUnused();
     }
 
-    return NULL;
+    return nullptr;
 }
 
 void* ControlFlowAnalyzer::visitPropertySetAccessor(PropertySetAccessor* acc)
 {
-    if (acc->body() != NULL) {
+    if (acc->body() != nullptr) {
         acc->body()->visit(this);
         reportUnused();
     }
 
-    return NULL;
+    return nullptr;
 }
 
 ///// Expressions
@@ -207,13 +207,13 @@ void* ControlFlowAnalyzer::visitFunctionParameterExpression(
     FunctionParameterExpression* expr)
 {
     mUnused.remove(expr->target());
-    return NULL;
+    return nullptr;
 }
 
 void* ControlFlowAnalyzer::visitVariableExpression(VariableExpression* expr)
 {
     mUnused.remove(expr->target());
-    return NULL;
+    return nullptr;
 }
 
 } // namespace analysis

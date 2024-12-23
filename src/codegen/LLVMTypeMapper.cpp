@@ -6,9 +6,9 @@
  * See LICENSE.txt for details.
  */
 
-#include "LLVMTypeMapper.hpp"
+#include "LLVMTypeMapper.h"
 
-#include "ast/ast.hpp"
+#include "ast/ast.h"
 #include "mangling.h"
 
 #include <llvm/IR/DerivedTypes.h>
@@ -95,11 +95,11 @@ llvm::Type* LLVMTypeMapper::valueType(Type* type)
     /*
      * Class Types
      */
-    else if (dynamic_cast<ClassType*>(type) != NULL) {
+    else if (dynamic_cast<ClassType*>(type) != nullptr) {
         llvm::Type* llvmType
             = llvm::StructType::getTypeByName(mContext, mangledName(type));
 
-        if (llvmType == NULL) {
+        if (llvmType == nullptr) {
             /*
              * A class instance is represented by a pointer to an array,
              * where each element in return points to the instance data
@@ -111,7 +111,7 @@ llvm::Type* LLVMTypeMapper::valueType(Type* type)
 
             ClassType* ctype = (ClassType*)type;
 
-            while (ctype->baseClass() != NULL) {
+            while (ctype->baseClass() != nullptr) {
                 numClasses++;
                 ctype = (ClassType*)ctype->baseClass();
             }
@@ -164,11 +164,11 @@ llvm::Type* LLVMTypeMapper::objectType(Type* type)
         return getStructOrClassLayoutType(structType);
     }
 
-    if (dynamic_cast<ClassType*>(type) != NULL) {
+    if (dynamic_cast<ClassType*>(type) != nullptr) {
         llvm::Type* llvmType
             = llvm::StructType::getTypeByName(mContext, mangledName(type));
 
-        if (llvmType == NULL) {
+        if (llvmType == nullptr) {
             /*
              * A class instance is represented by a pointer to an array,
              * where each element in return points to the instance data
@@ -180,7 +180,7 @@ llvm::Type* LLVMTypeMapper::objectType(Type* type)
 
             ClassType* ctype = (ClassType*)type;
 
-            while (ctype->baseClass() != NULL) {
+            while (ctype->baseClass() != nullptr) {
                 numClasses++;
                 ctype = (ClassType*)ctype->baseClass();
             }

@@ -6,9 +6,9 @@
  * See LICENSE.txt for details.
  */
 
-#include "SymbolTable.hpp"
-#include "FunctionGroup.hpp"
-#include <ast/Function.hpp>
+#include "SymbolTable.h"
+#include "FunctionGroup.h"
+#include <ast/Function.h>
 
 namespace soyac {
 namespace analysis {
@@ -62,7 +62,7 @@ public:
             = mMembers.find(name);
 
         if (it == mMembers.end()) {
-            return NULL;
+            return nullptr;
         } else {
             return it->second->target();
         }
@@ -77,7 +77,7 @@ public:
     {
         NamedEntity* lookupResult = lookup(entity->name().str());
 
-        if (lookupResult != NULL) {
+        if (lookupResult != nullptr) {
             FunctionGroup* group;
             Function* func;
 
@@ -89,8 +89,8 @@ public:
              * otherwise, both functions may coexist in the same scope if
              * they have non-identical signatures.
              */
-            if ((group = dynamic_cast<FunctionGroup*>(lookupResult)) != NULL
-                && (func = dynamic_cast<Function*>(entity)) != NULL) {
+            if ((group = dynamic_cast<FunctionGroup*>(lookupResult)) != nullptr
+                && (func = dynamic_cast<Function*>(entity)) != nullptr) {
                 for (FunctionGroup::overloads_iterator it
                     = group->overloads_begin();
                     it != group->overloads_end(); it++) {
@@ -108,7 +108,7 @@ public:
             Link<NamedEntity>* link = new Link<NamedEntity>;
             Function* func;
 
-            if ((func = dynamic_cast<Function*>(entity)) != NULL) {
+            if ((func = dynamic_cast<Function*>(entity)) != nullptr) {
                 link->setTarget(new FunctionGroup(&func, &func + 1));
             } else {
                 link->setTarget(entity);
@@ -168,7 +168,7 @@ SymbolTable::~SymbolTable()
     for (std::map<Module*, SymbolTable*>::iterator it = sInstances.begin();
         it != sInstances.end(); it++) {
         if (it->second == this) {
-            it->second = NULL;
+            it->second = nullptr;
         }
     }
 }
@@ -177,7 +177,7 @@ SymbolTable* SymbolTable::get(Module* module, bool create)
 {
     SymbolTable* table = sInstances[module];
 
-    if (table == NULL && create) {
+    if (table == nullptr && create) {
         table = new SymbolTable;
         sInstances[module] = table;
     }
@@ -191,7 +191,7 @@ void SymbolTable::enterScope(NamedEntity* entity)
 {
     Scope* s = mEntityScopes[entity];
 
-    if (s == NULL) {
+    if (s == nullptr) {
         s = mEntityScopes[entity] = new Scope(false);
     }
 
@@ -234,12 +234,12 @@ NamedEntity* SymbolTable::lookup(const Name& identifier) const
         it != mScopeStack.rend(); it++) {
         NamedEntity* lookupResult = (*it)->lookup(identifier.str());
 
-        if (lookupResult != NULL) {
+        if (lookupResult != nullptr) {
             return lookupResult;
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 NamedEntity* SymbolTable::lookup(
@@ -251,7 +251,7 @@ NamedEntity* SymbolTable::lookup(
         = mEntityScopes.find(scope);
 
     if (it == mEntityScopes.end()) {
-        return NULL;
+        return nullptr;
     } else {
         return it->second->lookup(identifier.str());
     }

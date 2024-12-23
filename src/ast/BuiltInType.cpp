@@ -6,7 +6,7 @@
  * See LICENSE.txt for details.
  */
 
-#include "BuiltInType.hpp"
+#include "BuiltInType.h"
 
 namespace soyac {
 namespace ast {

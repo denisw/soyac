@@ -21,7 +21,7 @@
 #include <sstream>
 #include <stdint.h>
 
-#include <ast/ast.hpp>
+#include <ast/ast.h>
 
 using namespace soyac::ast;
 
@@ -79,7 +79,7 @@ class ParserDriver;
 #include <cassert>
 #include <list>
 #include <boost/format.hpp>
-#include <parser/ParserDriver.hpp>
+#include <parser/ParserDriver.h>
 
 using namespace soyac::parser;
 
@@ -134,7 +134,7 @@ void set_location(Node* node,
 %token LONG         "long"
 %token MODULE       "module"
 %token NEW          "new"
-%token NULL_        "null"
+%token nullptr_        "null"
 %token OVERRIDE     "override"
 %token PRIVATE      "private"
 %token PROPERTY     "property"
@@ -491,7 +491,7 @@ type
 array_type
     : type "[" "]"
     {
-        if (dynamic_cast<UnknownType*>($1) != NULL)
+        if (dynamic_cast<UnknownType*>($1) != nullptr)
             $$ = new UnknownArrayType((UnknownType*) $1);
         else
             $$ = ArrayType::get($1);
@@ -528,7 +528,7 @@ parameter_types
     ;
 
 function_type_return_type_opt
-    :            { $$ = NULL; }
+    :            { $$ = nullptr; }
     | "=>" type  { $$ = $2; }
     ;
 
@@ -550,7 +550,7 @@ module
     {
         Module* m;
 
-        if ($1 != NULL)
+        if ($1 != nullptr)
         {
             m = Module::get(*$1);
 
@@ -558,10 +558,10 @@ module
              * If the Module to parse already exists, set the returned Module
              * to that module.
              */
-            if (m != NULL)
+            if (m != nullptr)
             {
                 driver->setSyntaxTree(m);
-                m = NULL;
+                m = nullptr;
             }
             else
                 m = Module::get(*$1, true);
@@ -572,18 +572,18 @@ module
         {
             m = Module::getProgram();
 
-            if (m != NULL)
+            if (m != nullptr)
             {
                 driver->setSyntaxTree(m);
-                m = NULL;
+                m = nullptr;
             }
             else
                 m = Module::getProgram(true);
         }
 
-        if (m != NULL)
+        if (m != nullptr)
         {
-            if ($2 != NULL)
+            if ($2 != nullptr)
             {
                 for (std::list<Import*>::iterator it = $2->begin();
                      it != $2->end(); it++)
@@ -594,7 +594,7 @@ module
                 delete $2;
             }
 
-            if ($3 != NULL)
+            if ($3 != nullptr)
             {
                 for (std::list<Statement*>::iterator it = $3->begin();
                      it != $3->end(); it++)
@@ -611,14 +611,14 @@ module
     ;
 
 module_declaration_opt
-    :                           { $$ = NULL; }
+    :                           { $$ = nullptr; }
     | "module" module_name ";"  { $$ = $2; }
     ;
 
 /***** Import Statements () ***************************************************/
 
 import_statements_opt
-    :                    { $$ = NULL; }
+    :                    { $$ = nullptr; }
     | import_statements  { $$ = $1; }
     ;
 
@@ -669,7 +669,7 @@ statement
 block
     : "{" statements_opt "}"
     {
-        if ($2 != NULL)
+        if ($2 != nullptr)
         {
             $$ = new Block($2->begin(), $2->end());
             delete $2;
@@ -683,7 +683,7 @@ block
 
 statements_opt
     : statements  { $$ = $1; }
-    |             { $$ = NULL; }
+    |             { $$ = nullptr; }
     ;
 
 statements
@@ -705,7 +705,7 @@ declaration_statement
         $$ = new DeclarationStatement($2);
         set_location($$, @1, @2);
 
-        if ($1 != NULL)
+        if ($1 != nullptr)
         {
             for (std::list<DeclaredEntity::Modifier>::iterator it = $1->begin();
                  it != $1->end(); it++)
@@ -728,7 +728,7 @@ declaration_statement
 
 modifiers_opt
     : modifiers  { $$ = $1; }
-    |            { $$ = NULL; }
+    |            { $$ = nullptr; }
     ;
 
 modifiers
@@ -775,7 +775,7 @@ if_statement
     ;
 
 else_statement_opt
-    :                   { $$ = NULL; }
+    :                   { $$ = nullptr; }
     | "else" statement  { $$ = $2; }
     ;
 
@@ -836,7 +836,7 @@ expression_statement_list
     ;
 
 for_condition_opt
-    : ";"             { $$ = NULL; }
+    : ";"             { $$ = nullptr; }
     | expression ";"  { $$ = $1; }
     ;
 
@@ -854,7 +854,7 @@ return_statement
     ;
 
 return_value_opt
-    :             { $$ = NULL; }
+    :             { $$ = nullptr; }
     | expression  { $$ = $1; }
     ;
 
@@ -900,7 +900,7 @@ variable_type_opt
 
 initializer_opt
     : "=" expression  { $$ = $2; }
-    |                 { $$ = NULL; }
+    |                 { $$ = nullptr; }
     ;
 
 function_declaration
@@ -949,7 +949,7 @@ return_type_opt
 
 function_body_opt
     : block  { $$ = $1; }
-    | ";"    { $$ = NULL; }
+    | ";"    { $$ = nullptr; }
     ;
 
 struct_declaration
@@ -964,7 +964,7 @@ struct_declaration
 declaration_block
     : "{" declaration_block_statements_opt "}"
     {
-        if ($2 != NULL)
+        if ($2 != nullptr)
         {
             $$ = new DeclarationBlock($2->begin(), $2->end());
             delete $2;
@@ -978,7 +978,7 @@ declaration_block
 
 declaration_block_statements_opt
     : declaration_block_statements  { $$ = $1; }
-    |                               { $$ = NULL; }
+    |                               { $$ = nullptr; }
     ;
 
 declaration_block_statements
@@ -1007,7 +1007,7 @@ declaration_block_statement
         $$ = new DeclarationStatement($2);
         set_location($$, @1, @2);
 
-        if ($1 != NULL)
+        if ($1 != nullptr)
         {
             for (std::list<DeclaredEntity::Modifier>::iterator it = $1->begin();
                 it != $1->end();
@@ -1027,7 +1027,7 @@ declaration_block_statement
         $$ = new DeclarationStatement($2);
         set_location($$, @1, @2);
 
-        if ($1 != NULL)
+        if ($1 != nullptr)
         {
             for (std::list<DeclaredEntity::Modifier>::iterator it = $1->begin();
                 it != $1->end();
@@ -1102,7 +1102,7 @@ property_accessors
     ;
 
 get_accessor_opt
-    :               { $$ = NULL; }
+    :               { $$ = nullptr; }
     | get_accessor  { $$ = $1; }
     ;
 
@@ -1115,7 +1115,7 @@ get_accessor
     ;
 
 set_accessor_opt
-    :               { $$ = NULL; }
+    :               { $$ = nullptr; }
     | set_accessor  { $$ = $1; }
     ;
 
@@ -1172,7 +1172,7 @@ enum_constants
     {
         EnumConstant* c;
 
-        if ($2 != NULL)
+        if ($2 != nullptr)
         {
             c = new EnumConstant(*$1, *$2);
             delete $2;
@@ -1190,7 +1190,7 @@ enum_constants
     {
         EnumConstant* c;
 
-        if ($4 != NULL)
+        if ($4 != nullptr)
         {
             c = new EnumConstant(*$3, *$4);
             delete $4;
@@ -1211,7 +1211,7 @@ enum_constants
     ;
 
 enum_value_opt
-    :                  { $$ = NULL; }
+    :                  { $$ = nullptr; }
     | "=" INT_LITERAL  { $$ = $2; }
     ;
 
@@ -1456,10 +1456,10 @@ primary_expression
     }
     | "new" type "(" function_arguments_opt ")"
     {
-        if (dynamic_cast<ArrayType*>($2) != NULL ||
-            dynamic_cast<UnknownArrayType*>($2) != NULL)
+        if (dynamic_cast<ArrayType*>($2) != nullptr ||
+            dynamic_cast<UnknownArrayType*>($2) != nullptr)
         {
-            $$ = new ArrayCreationExpression($2, NULL, $4->begin(), $4->end());
+            $$ = new ArrayCreationExpression($2, nullptr, $4->begin(), $4->end());
         }
         else
         {
@@ -1475,7 +1475,7 @@ primary_expression
     {
         Type* t;
 
-        if (dynamic_cast<UnknownType*>($2) != NULL)
+        if (dynamic_cast<UnknownType*>($2) != nullptr)
             t = new UnknownArrayType((UnknownType*) $2);
         else
             t = ArrayType::get($2);

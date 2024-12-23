@@ -6,7 +6,7 @@
  * See LICENSE.txt for details.
  */
 
-#include "Import.hpp"
+#include "Import.h"
 
 namespace soyac {
 namespace ast {

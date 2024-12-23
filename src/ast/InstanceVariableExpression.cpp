@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "InstanceVariableExpression.hpp"
-#include "Visitor.hpp"
+#include "InstanceVariableExpression.h"
+#include "Visitor.h"
 #include <cassert>
 
 namespace soyac {
@@ -18,8 +18,8 @@ InstanceVariableExpression::InstanceVariableExpression(
     : mInstance(instance)
     , mTarget(target)
 {
-    assert(instance != NULL);
-    assert(target != NULL);
+    assert(instance != nullptr);
+    assert(target != nullptr);
 }
 
 void* InstanceVariableExpression::visit(Visitor* v)

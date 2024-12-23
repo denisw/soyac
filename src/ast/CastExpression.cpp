@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "CastExpression.hpp"
-#include "Visitor.hpp"
+#include "CastExpression.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {

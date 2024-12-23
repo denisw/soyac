@@ -6,9 +6,9 @@
  * See LICENSE.txt for details.
  */
 
-#include "UnresolvedFunctionExpression.hpp"
-#include "UnknownType.hpp"
-#include "Visitor.hpp"
+#include "UnresolvedFunctionExpression.h"
+#include "UnknownType.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {

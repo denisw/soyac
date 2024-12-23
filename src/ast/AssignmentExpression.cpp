@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-#include "AssignmentExpression.hpp"
-#include "Visitor.hpp"
+#include "AssignmentExpression.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {
@@ -17,8 +17,8 @@ AssignmentExpression::AssignmentExpression(
     : mLeftHand(leftHand)
     , mRightHand(rightHand)
 {
-    assert(leftHand != NULL);
-    assert(rightHand != NULL);
+    assert(leftHand != nullptr);
+    assert(rightHand != nullptr);
 }
 
 void* AssignmentExpression::visit(Visitor* v)

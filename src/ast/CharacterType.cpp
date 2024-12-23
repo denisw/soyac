@@ -6,17 +6,17 @@
  * See LICENSE.txt for details.
  */
 
-#include "CharacterType.hpp"
-#include "BooleanType.hpp"
-#include "Function.hpp"
-#include "FunctionParameter.hpp"
-#include "IntegerType.hpp"
-#include "Visitor.hpp"
+#include "CharacterType.h"
+#include "BooleanType.h"
+#include "Function.h"
+#include "FunctionParameter.h"
+#include "IntegerType.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {
 
-CharacterType* CharacterType::sInstance = NULL;
+CharacterType* CharacterType::sInstance = nullptr;
 
 CharacterType::CharacterType()
     : BuiltInType("char")
@@ -29,7 +29,7 @@ CharacterType::CharacterType()
 
 CharacterType* CharacterType::get()
 {
-    if (sInstance == NULL) {
+    if (sInstance == nullptr) {
         sInstance = new CharacterType;
         sInstance->ref();
     }
@@ -41,7 +41,7 @@ void* CharacterType::visit(Visitor* v) { return v->visitCharacterType(this); }
 
 bool CharacterType::isConvertableTo(Type* other) const
 {
-    return (this == other || dynamic_cast<IntegerType*>(other) != NULL);
+    return (this == other || dynamic_cast<IntegerType*>(other) != nullptr);
 }
 
 } // namespace ast

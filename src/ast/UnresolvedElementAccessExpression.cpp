@@ -6,9 +6,9 @@
  * See LICENSE.txt for details.
  */
 
-#include "UnresolvedElementAccessExpression.hpp"
-#include "UnknownType.hpp"
-#include "Visitor.hpp"
+#include "UnresolvedElementAccessExpression.h"
+#include "UnknownType.h"
+#include "Visitor.h"
 
 namespace soyac {
 namespace ast {
@@ -18,8 +18,8 @@ UnresolvedElementAccessExpression::UnresolvedElementAccessExpression(
     : mOperand(operand)
     , mIndex(index)
 {
-    assert(operand != NULL);
-    assert(index != NULL);
+    assert(operand != nullptr);
+    assert(index != nullptr);
 }
 
 void* UnresolvedElementAccessExpression::visit(Visitor* v)
