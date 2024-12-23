@@ -46,6 +46,11 @@ extern bool emitLLVM;
 extern std::vector<std::string> interfacePaths;
 
 /**
+ * The paths in which to search for library files.
+ */
+extern std::vector<std::string> libraryPaths;
+
+/**
  * Where to put the generated binary file when linking.
  */
 extern std::string outputPath;

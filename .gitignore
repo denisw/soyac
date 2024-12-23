@@ -1,3 +1,6 @@
+# IDEs
+.idea
+
 # Binaries
 *.cmake
 *.a
@@ -12,6 +15,7 @@ a.out
 .scons*
 CMakeFiles
 Makefile
+cmake-build-*
 cmake_install.cmake
 
 # Bison output

@@ -17,6 +17,7 @@ bool compileOnly = false;
 bool emitAssembly = false;
 bool emitLLVM = false;
 std::vector<std::string> interfacePaths{};
+std::vector<std::string> libraryPaths{};
 std::string outputPath("./a.out");
 std::string programName("soyac");
 std::vector<std::string> sourcePaths{};

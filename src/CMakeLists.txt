@@ -2,7 +2,7 @@ BISON_TARGET(SoyaParser
   parser/soya.yy
   ${CMAKE_CURRENT_SOURCE_DIR}/parser/parser.cpp)
 
-set(SOYAC_SOURCES
+set(COMPILER_SOURCES
   ${BISON_SoyaParser_OUTPUTS}
   analysis/BasicAnalyzer.cpp
   analysis/BasicAnalyzer.hpp
@@ -191,8 +191,12 @@ set(SOYAC_SOURCES
   ast/ast.hpp
   codegen/CodeGenerator.cpp
   codegen/CodeGenerator.hpp
+  codegen/LLVMTypeMapper.cpp
+  codegen/LLVMTypeMapper.hpp
   codegen/LLValueExpression.cpp
   codegen/LLValueExpression.hpp
+  codegen/mangling.cpp
+  codegen/mangling.h
   common/PassResult.cpp
   common/PassResult.hpp
   common/PassResultBuilder.cpp
@@ -207,14 +211,11 @@ set(SOYAC_SOURCES
   driver/config.hpp
   driver/link.cpp
   driver/link.hpp
-  driver/main.cpp
   parser/Lexer.cpp
   parser/Lexer.hpp
   parser/ParserDriver.cpp
   parser/ParserDriver.hpp
 )
-
-add_executable(soyac ${SOYAC_SOURCES})
 
 source_group("Analysis" REGULAR_EXPRESSION "analysis/.*\\.[ch]pp")
 source_group("AST" REGULAR_EXPRESSION "ast/.*\\.[ch]pp")
@@ -223,19 +224,29 @@ source_group("Common" REGULAR_EXPRESSION "common/.*\\.[ch]pp")
 source_group("Driver" REGULAR_EXPRESSION "driver/.*\\.[ch]pp")
 source_group("Parser" REGULAR_EXPRESSION "parser.*\\.[ch]pp")
 
-target_include_directories(soyac PRIVATE
+add_library(soya-compiler ${COMPILER_SOURCES})
+
+target_include_directories(soya-compiler PUBLIC
   ${LLVM_INCLUDE_DIRS}
   ${CMAKE_BINARY_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR})
 
+separate_arguments(LLVM_DEFINITIONS_LIST NATIVE_COMMAND ${LLVM_DEFINITIONS})
+target_compile_definitions(soya-compiler PUBLIC ${LLVM_DEFINITIONS_LIST})
+
 llvm_map_components_to_libnames(SOYAC_LLVM_LIBS
   core
+  mc
   support
-  nativecodegen)
+  nativecodegen
+  target)
 
-target_link_libraries(soyac
+target_link_libraries(soya-compiler
   ${SOYAC_LLVM_LIBS}
   Boost::headers
   Boost::program_options
   Boost::regex)
+
+add_executable(soyac driver/main.cpp)
+target_link_libraries(soyac soya-compiler)
 

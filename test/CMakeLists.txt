@@ -1,0 +1,148 @@
+find_package(PkgConfig)
+pkg_check_modules(CppUnit REQUIRED IMPORTED_TARGET cppunit)
+
+set(TEST_SOURCES
+        test-soyac.cpp
+        unittest/analysis/SymbolTableTest.hpp
+        unittest/ModulesRequiredExceptionTest.hpp
+        unittest/common/ProblemTest.hpp
+        unittest/ast/IntegerLiteralTest.hpp
+        unittest/ast/LinkTest.hpp
+        unittest/ast/ThisExpressionTest.hpp
+        unittest/ast/FloatingPointTypeTest.hpp
+        unittest/ast/StatementWithBodyTest.hpp
+        unittest/ast/StatementTest.hpp
+        unittest/ast/DoStatementTest.hpp
+        unittest/ast/FunctionTest.hpp
+        unittest/ast/DeclarationStatementTest.hpp
+        unittest/ast/PropertyGetAccessorTest.hpp
+        unittest/ast/ExpressionStatementTest.hpp
+        unittest/ast/FloatingPointLiteralTest.hpp
+        unittest/ast/InstanceFunctionExpressionTest.hpp
+        unittest/ast/FunctionParameterExpressionTest.hpp
+        unittest/ast/UnresolvedEntityImportTest.hpp
+        unittest/ast/BooleanTypeTest.hpp
+        unittest/ast/UnresolvedInstanceFunctionExpressionTest.hpp
+        unittest/ast/LogicalExpressionTest.hpp
+        unittest/ast/CharacterTypeTest.hpp
+        unittest/ast/NamedEntityTest.hpp
+        unittest/ast/UnresolvedElementAccessExpressionTest.hpp
+        unittest/ast/CompoundAssignmentExpressionTest.hpp
+        unittest/ast/EntityImportTest.hpp
+        unittest/ast/VoidTypeTest.hpp
+        unittest/ast/VariableExpressionTest.hpp
+        unittest/ast/LocationTest.hpp
+        unittest/ast/PropertyAccessorTest.hpp
+        unittest/ast/ClassTypeTest.hpp
+        unittest/ast/CharacterLiteralTest.hpp
+        unittest/ast/EnumConstantTest.hpp
+        unittest/ast/BlockTest.hpp
+        unittest/ast/IfStatementTest.hpp
+        unittest/ast/ConstructorInitializerTest.hpp
+        unittest/ast/UnresolvedConstructorInitializerTest.hpp
+        unittest/ast/FunctionTypeTest.hpp
+        unittest/ast/NodeListTest.hpp
+        unittest/ast/UnresolvedDefaultConstructorInitializerTest.hpp
+        unittest/ast/TypeTest.hpp
+        unittest/ast/BuiltInTypeTest.hpp
+        unittest/ast/FunctionExpressionTest.hpp
+        unittest/ast/ArrayCreationExpressionTest.hpp
+        unittest/ast/AssignmentExpressionTest.hpp
+        unittest/ast/NameTest.hpp
+        unittest/ast/UnresolvedBaseConstructorInitializerTest.hpp
+        unittest/ast/UnknownFunctionTypeTest.hpp
+        unittest/ast/PropertyTest.hpp
+        unittest/ast/EnumTypeTest.hpp
+        unittest/ast/WhileStatementTest.hpp
+        unittest/ast/UnresolvedSimpleNameExpressionTest.hpp
+        unittest/ast/FloatingPointValueTest.hpp
+        unittest/ast/DeclarationBlockTest.hpp
+        unittest/ast/EnumValueExpressionTest.hpp
+        unittest/ast/BooleanLiteralTest.hpp
+        unittest/ast/StructTypeTest.hpp
+        unittest/ast/ModuleTest.hpp
+        unittest/ast/FunctionGroupImportTest.hpp
+        unittest/ast/FunctionParameterTest.hpp
+        unittest/ast/ReturnStatementTest.hpp
+        unittest/ast/UnresolvedInstancePropertyExpressionTest.hpp
+        unittest/ast/DeclaredEntityTest.hpp
+        unittest/ast/ModuleExpressionTest.hpp
+        unittest/ast/ModuleImportTest.hpp
+        unittest/ast/UnknownTypeTest.hpp
+        unittest/ast/PropertySetAccessorTest.hpp
+        unittest/ast/UnresolvedFunctionExpressionTest.hpp
+        unittest/ast/UnresolvedThisExpressionTest.hpp
+        unittest/ast/CombinedRelationalExpressionTest.hpp
+        unittest/ast/ExpressionTest.hpp
+        unittest/ast/LogicalNotExpressionTest.hpp
+        unittest/ast/UnresolvedMemberAccessExpressionTest.hpp
+        unittest/ast/UnknownArrayTypeTest.hpp
+        unittest/ast/IntegerValueTest.hpp
+        unittest/ast/ConstructorTest.hpp
+        unittest/ast/CastExpressionTest.hpp
+        unittest/ast/UnresolvedModuleImportTest.hpp
+        unittest/ast/TypeExpressionTest.hpp
+        unittest/ast/UnresolvedObjectCreationExpressionTest.hpp
+        unittest/ast/ObjectCreationExpressionTest.hpp
+        unittest/ast/ForStatementTest.hpp
+        unittest/ast/IntegerTypeTest.hpp
+        unittest/ast/ArrayTypeTest.hpp
+        unittest/ast/CallExpressionTest.hpp
+        unittest/ast/InstanceVariableExpressionTest.hpp
+        unittest/ast/UnresolvedBinaryExpressionTest.hpp
+        unittest/ast/UserDefinedTypeTest.hpp
+        unittest/ast/NodeTest.hpp
+        unittest/ast/VariableTest.hpp
+)
+
+set(TORTURE_TESTS
+        torture/basic/types/enums/relational_ops.soya
+        torture/basic/types/enums/values.soya
+        torture/basic/types/function/call.soya
+        torture/basic/types/function/call_with_instance.soya
+        torture/basic/types/structs/instance_variable_init.soya
+        torture/basic/types/structs/constructors.soya
+        torture/basic/types/structs/member_assignment.soya
+        torture/basic/types/structs/instance_functions.soya
+        torture/basic/types/arrays/init.soya
+        torture/basic/types/arrays/element_assignment.soya
+        torture/basic/types/arrays/length.soya
+        torture/basic/types/class/inheritance.soya
+        torture/basic/types/class/instance_variable_init.soya
+        torture/basic/types/class/constructors.soya
+        torture/basic/types/class/member_assignment.soya
+        torture/basic/types/class/instance_functions.soya
+        torture/basic/types/ints/relational_ops.soya
+        torture/basic/conversions/int_to_float.soya
+        torture/basic/conversions/int_to_int.soya
+        torture/basic/conversions/float_to_float.soya
+        torture/basic/conversions/float_to_int.soya
+        torture/basic/empty.soya
+        torture/basic/statements/do.soya
+        torture/basic/statements/for.soya
+        torture/basic/statements/while.soya
+        torture/basic/statements/if_dangling_else.soya
+        torture/basic/properties/struct_instance_properties.soya
+        torture/basic/expressions/assignment.soya
+        torture/basic/expressions/compound_assignment.soya
+        torture/basic/expressions/logical_ops.soya
+        torture/basic/functions/arguments.soya
+        torture/basic/functions/struct_return_values.soya
+        torture/basic/functions/global_var_access.soya
+        torture/basic/functions/return_values.soya
+        torture/basic/functions/struct_arguments.soya
+        torture/basic/block_scope.soya
+        torture/basic/modules/static_module_imports.soya
+        torture/basic/modules/entity_imports.soya
+        torture/basic/modules/module_imports.soya
+        torture/basic/modules/samples/foo.soya
+        torture/basic/modules/samples/bar.soya
+)
+
+foreach(FILE IN LISTS TORTURE_TESTS)
+    configure_file(${FILE} ${FILE} COPYONLY)
+endforeach()
+
+add_executable(test-soyac ${TEST_SOURCES})
+target_link_libraries(test-soyac PRIVATE soya-compiler Boost::filesystem PkgConfig::CppUnit)
+add_dependencies(test-soyac soyac sr)

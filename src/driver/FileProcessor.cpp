@@ -12,13 +12,6 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <vector>
-#include <llvm/IR/LegacyPassManager.h>
-#include <llvm/MC/SubtargetFeature.h>
-#include <llvm/Support/Program.h>
-#include <llvm/Support/raw_ostream.h>
-#include <llvm/Support/TargetRegistry.h>
-#include <llvm/Support/TargetSelect.h>
 #include <llvm/Target/TargetMachine.h>
 
 #include <parser/ParserDriver.hpp>
@@ -153,9 +146,9 @@ FileProcessor::generateLLVMAssemblyFile(ast::Module* m)
     path outputPath(mFilePath);
     outputPath.replace_extension(".ll");
 
-    codegen::CodeGenerator generator;
+    codegen::CodeGenerator generator(m);
     std::error_code error;
-    generator.toLLVMAssembly(m, outputPath, error);
+    generator.toLLVMAssembly(outputPath, error);
     
     if (error) {
         std::cerr << error.message() << "\n";
@@ -171,9 +164,9 @@ FileProcessor::generateObjectFile(soyac::ast::Module *m)
     path outputPath(mFilePath);
     outputPath.replace_extension(".o");
 
-    codegen::CodeGenerator generator;
+    codegen::CodeGenerator generator(m);
     std::error_code error;
-    generator.toObjectCode(m, outputPath, error);
+    generator.toObjectCode(outputPath, error);
     
     if (error) {
         std::cerr << error.message() << "\n";

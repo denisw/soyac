@@ -11,11 +11,11 @@
 #include <cstring>
 #include <filesystem>
 #include <iostream>
+#include <regex>
 #include <string>
 #include <vector>
 
 #include <boost/program_options.hpp>
-#include <llvm/Support/TargetRegistry.h>
 #include <llvm/Support/TargetSelect.h>
 
 #include <analysis/ModulesRequiredException.hpp>
@@ -62,15 +62,19 @@ parse_command_line(int argc, const char** argv)
         "compile-only,c",
         "Compile and assemble only, do not link"
     )(
-        "include,I",
+        "include-path,I",
         po::value<std::vector<std::string>>(),
          "Add <directory> to the interface file search path"
     )(
+        "library-path,L",
+        po::value<std::vector<std::string>>(),
+         "Add <directory> to the library path"
+    )(
         "o",
-        po::value<std::string>(),
+        po::value<std::string>()->default_value("a.out"),
          "Output the linked binary to <file>"
     )(
-        "s",
+        "source-path,s",
         po::value<std::vector<std::string>>(),
         "Add <directory> to the source file search path"
     )(
@@ -90,21 +94,32 @@ parse_command_line(int argc, const char** argv)
     po::store(parser.options(desc).positional(p).run(), vars);
     po::notify(vars);
 
-    if (vars.count("help")) {
+    if (vars.count("help"))
+    {
         std::cout << desc << "\n";
         return {};
     }
 
-    if (vars.count("emit-llvm")) {
+    if (vars.count("emit-llvm"))
         config::emitLLVM = true;
-    }
 
-    // config::emitLLVM = vars["emit-llvm"].as<bool>();
-    // config::compileOnly = vars["compile-only"].as<bool>();
-    // config::interfacePaths = vars["include"].as<std::vector<std::string>>();
-    // config::outputPath = vars["o"].as<std::string>();
-    // config::sourcePaths = vars["s"].as<std::vector<std::string>>();
-    // config::emitAssembly = vars["S"].as<bool>();
+    if (vars.count("compile-only"))
+        config::compileOnly = true;
+
+    if (vars.count("include-path"))
+        config::interfacePaths = vars["include-path"].as<std::vector<std::string>>();
+
+    if (vars.count("library-path"))
+        config::libraryPaths = vars["library-path"].as<std::vector<std::string>>();
+
+    if (vars.count("o"))
+        config::outputPath = vars["o"].as<std::string>();
+
+    if (vars.count("source-path"))
+        config::sourcePaths = vars["source-path"].as<std::vector<std::string>>();
+
+    if (vars.count("S"))
+        config::emitAssembly = true;
 
     if (vars.count("input-file"))
         return vars["input-file"].as<std::vector<std::string>>();
@@ -127,12 +142,9 @@ find_module(const std::string& moduleName)
      * Translate the module name to a file path we can search for (without
      * the .soya or .soyi extension). We do so by replacing all occurrences
      * of "::" with a path separator. So, for instance, "foo::bar::baz" becomes
-     * "foo/bar/baz". (Actually, it is 'foo//bar//baz' in the current code,
-     * but as empty path components don't alter the path's meaning, this is
-     * no problem.)
+     * "foo/bar/baz".
      */
-    std::string modulePath = moduleName;
-    std::replace(modulePath.begin(), modulePath.end(), ':', '/');
+    std::string modulePath = std::regex_replace(moduleName, std::regex("::"), "/");
 
     /*
      * First, search for the module in the current working directory. We

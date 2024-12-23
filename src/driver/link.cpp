@@ -30,13 +30,16 @@ linkFiles(const std::list<std::string>& objectFiles)
     }
 
     std::vector<llvm::StringRef> args;
-    args.push_back("cc");
+    args.push_back("ld");
 
     for (std::list<std::string>::const_iterator it = objectFiles.begin();
          it != objectFiles.end(); it++)
     {
         args.push_back(it->c_str());
     }
+
+    for (auto lp : config::libraryPaths)
+        args.push_back("-L" + lp);
 
     args.push_back("-lsr");
     args.push_back("-lgc");

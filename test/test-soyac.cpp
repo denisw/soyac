@@ -6,13 +6,11 @@
  * See LICENSE.txt for details.
  */
 
-#include <cstdlib>
-#include <iostream>
-#include <boost/filesystem.hpp>
-#include <boost/regex.hpp>
 #include <cppunit/ui/text/TestRunner.h>
-
-#include <llvm/System/Program.h>
+#include <cstdlib>
+#include <filesystem>
+#include <iostream>
+#include <string>
 
 #include "unittest/analysis/SymbolTableTest.hpp"
 #include "unittest/ast/ArrayCreationExpressionTest.hpp"
@@ -29,8 +27,8 @@
 #include "unittest/ast/ClassTypeTest.hpp"
 #include "unittest/ast/CombinedRelationalExpressionTest.hpp"
 #include "unittest/ast/CompoundAssignmentExpressionTest.hpp"
-#include "unittest/ast/ConstructorTest.hpp"
 #include "unittest/ast/ConstructorInitializerTest.hpp"
+#include "unittest/ast/ConstructorTest.hpp"
 #include "unittest/ast/DeclarationBlockTest.hpp"
 #include "unittest/ast/DeclarationStatementTest.hpp"
 #include "unittest/ast/DeclaredEntityTest.hpp"
@@ -46,9 +44,9 @@
 #include "unittest/ast/FloatingPointValueTest.hpp"
 #include "unittest/ast/ForStatementTest.hpp"
 #include "unittest/ast/FunctionExpressionTest.hpp"
+#include "unittest/ast/FunctionGroupImportTest.hpp"
 #include "unittest/ast/FunctionParameterExpressionTest.hpp"
 #include "unittest/ast/FunctionParameterTest.hpp"
-#include "unittest/ast/FunctionGroupImportTest.hpp"
 #include "unittest/ast/FunctionTest.hpp"
 #include "unittest/ast/FunctionTypeTest.hpp"
 #include "unittest/ast/IfStatementTest.hpp"
@@ -64,8 +62,8 @@
 #include "unittest/ast/ModuleExpressionTest.hpp"
 #include "unittest/ast/ModuleImportTest.hpp"
 #include "unittest/ast/ModuleTest.hpp"
-#include "unittest/ast/NamedEntityTest.hpp"
 #include "unittest/ast/NameTest.hpp"
+#include "unittest/ast/NamedEntityTest.hpp"
 #include "unittest/ast/NodeListTest.hpp"
 #include "unittest/ast/NodeTest.hpp"
 #include "unittest/ast/ObjectCreationExpressionTest.hpp"
@@ -102,8 +100,7 @@
 #include "unittest/ast/WhileStatementTest.hpp"
 #include "unittest/common/ProblemTest.hpp"
 
-using namespace boost::filesystem;
-
+namespace fs = std::filesystem;
 
 void
 unitTest()
@@ -204,84 +201,36 @@ unitTest()
 void
 tortureTest()
 {
-    const boost::regex sourceFile(".*\\.soya");
+    std::cout << "Torture Test" << std::endl << "============" << std::endl;
 
-    path paths[] = {
-      path("test/torture/basic"),
-      path("test/torture/basic/conversions"),
-      path("test/torture/basic/expressions"),
-      path("test/torture/basic/functions"),
-      path("test/torture/basic/modules"),
-      path("test/torture/basic/properties"),
-      path("test/torture/basic/scope"),
-      path("test/torture/basic/statements"),
-      path("test/torture/basic/types/arrays"),
-      path("test/torture/basic/types/class"),
-      path("test/torture/basic/types/enums"),
-      path("test/torture/basic/types/function"),
-      path("test/torture/basic/types/ints"),
-      path("test/torture/basic/types/structs"),
-      path("")
-    };
-
-    std::cout << "Torture Test" << std::endl <<
-                 "============" << std::endl;
-
-    for (path* p = paths; p->string() != ""; p++)
+    for (auto& entry : fs::recursive_directory_iterator("torture"))
     {
-        directory_iterator it(*p);
-        directory_iterator end;
+        if (!entry.is_regular_file() || entry.path().extension() != ".soya")
+            continue;
 
-        for (; it != end; it++)
+        auto pathString = entry.path().string();
+        std::cout << "Processing: " << pathString << "...\n";
+
+        std::string compileCommandPrefix{"../src/soyac -I ../runtime -L ../runtime -s torture/basic/modules --emit-llvm "};
+        auto compileCommand = compileCommandPrefix + pathString;
+        auto returnCode = std::system(compileCommand.c_str());
+
+        if (returnCode != 0)
         {
-            if (!regex_match(it->path().string(), sourceFile))
-                continue;
+            std::cout << ">>> ERROR: soyac exited with error code " << returnCode
+                      << "! <<<" << std::endl;
 
-            std::cout <<
-              "Processing torture test file " <<
-              it->path().string().c_str() + 13 << "..." <<
-              std::endl;
+            std::exit(1);
+        }
 
-            llvm::sys::Path soyac("./soyac");
+        returnCode = std::system("./a.out");
 
-            if (!soyac.exists())
-            {
-                std::cerr << "cannot find soyac build" << std::endl;
-                std::exit(1);
-            }
+        if (returnCode != 0)
+        {
+            std::cout << "*** ERROR: test exited with error code " << returnCode
+                      << "! ***" << std::endl;
 
-            const char* argv[] = {
-                "soyac",
-                "-I", "./runtime",
-                "-s", p->string().c_str(),
-                it->path().string().c_str(),
-                NULL
-            };
-
-            int code = llvm::sys::Program::ExecuteAndWait(soyac, argv);
-
-            if (code != 0)
-            {
-                std::cout <<
-                  ">>> ERROR: soyac exited with error code " << code <<
-                  "! <<<" << std::endl;
-
-                std::exit(1);
-            }
-
-            llvm::sys::Path test("./a.out");
-            const char* argv2[] = {"a.out", NULL};
-
-            code = llvm::sys::Program::ExecuteAndWait(test, argv2);
-
-            if (code != 0)
-            {
-                std::cout <<
-                  "*** ERROR: test exited with error code " << code <<
-                  "! ***" << std::endl;
-
-                std::exit(1);
-            }
+            std::exit(1);
         }
     }
 
@@ -290,10 +239,9 @@ tortureTest()
 
 
 int
-main(int argc, char **argv)
+main(int argc, char** argv)
 {
     unitTest();
     tortureTest();
-
     return 0;
 }

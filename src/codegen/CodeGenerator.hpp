@@ -9,6 +9,8 @@
 #ifndef _CODE_GENERATOR_HPP
 #define _CODE_GENERATOR_HPP
 
+#include "LLVMTypeMapper.hpp"
+
 #include <filesystem>
 #include <stdint.h>
 
@@ -38,23 +40,12 @@ public:
     /**
      * Creates a CodeGenerator.
      */
-    CodeGenerator();
-
-    /**
-     * Generates LLVM IR tree matching the passed Soya module and returns the
-     * resulting @c llvm::Module.
-     *
-     * @param m  The module to generate code from.
-     * @return   The LLVM IR representation.
-     */
-    llvm::Module* generateCode(Module* m);
+    CodeGenerator(Module* module);
     
-    void toLLVMAssembly(Module *module,
-                        path destination,
+    void toLLVMAssembly(path destination,
                         std::error_code& error);
     
-    void toObjectCode(Module *module,
-                      path destination,
+    void toObjectCode(path destination,
                       std::error_code& error);
 
 protected:
@@ -365,12 +356,15 @@ protected:
 private:
     friend class LLValueExpression;
 
+    Module* mModule;
+
     llvm::LLVMContext mContext;
     llvm::IRBuilder<> mBuilder;
-    llvm::Module* mModule;
+    llvm::Module* mLLVMModule;
+    LLVMTypeMapper mTypeMapper;
+
     llvm::Function* mFunction;
     llvm::Function* mInitFunction;
-
     DeclaredEntity* mEnclosing;
     bool mLValue;
 
@@ -383,38 +377,9 @@ private:
     void* visitLLValueExpression(LLValueExpression* expr);
 
     /**
-     * Returns the mangled symbol name of the passed entity.
-     *
-     * @param entity  The named entity.
-     * @return        The mangled name.
+     * Returns the default pointer type.
      */
-    std::string mangledName(NamedEntity* entity);
-
-    /**
-     * Returns the mangled version of a simple name.
-     * Used to implement mangledName().
-     *
-     * @param name  The simple name.
-     * @return      The mangled simple name.
-     */
-    std::string mangledSimpleName(const std::string& name);
-
-    /**
-     * Returns the LLVM type matching the passed Soya type.
-     *
-     * @param type  The Soya type.
-     * @return      The matching LLVM type.
-     */
-    llvm::Type* lltype(Type* type);
-
-    /**
-     * Returns an LLVM struct type which mirrors the passed class' or
-     * struct's internal data layout.
-     *
-     * @param type  The type.
-     * @return      The corresponding LLVM struct type.
-     */
-    llvm::Type* llstructtype(UserDefinedType* type);
+    llvm::PointerType* pointerType();
 
     /**
      * Returns the LLVM "size type", that is, the LLVM integer type whose
@@ -481,9 +446,9 @@ private:
      * @return          An LLVM pointer value which points to the
      *                  class-specific data of the instance.
      */
-    llvm::Value* classPrivate(llvm::Value* instance,
-                              ClassType* type,
-                              bool lvalue = false);
+    llvm::Value* createGetInstanceData(llvm::Value* instance,
+                                      ClassType* type,
+                                      bool lvalue = false);
 
     /**
      * Generates the initializer function (see llinitializer()) for the
