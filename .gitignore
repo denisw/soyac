@@ -14,6 +14,7 @@ a.out
 # Build system files
 .scons*
 CMakeFiles
+CMakeUserPresets.json
 Makefile
 cmake-build-*
 cmake_install.cmake

@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.17)
-cmake_policy(VERSION 3.17)
+cmake_minimum_required(VERSION 3.25)
+cmake_policy(VERSION 3.25)
 
 project(Soya VERSION 0.1 LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 17)
@@ -13,4 +13,8 @@ find_package(LLVM 19.1 CONFIG REQUIRED)
 
 add_subdirectory(runtime)
 add_subdirectory(src)
-add_subdirectory(test)
+
+include(CTest)
+if(BUILD_TESTING)
+  add_subdirectory(test)
+endif()
