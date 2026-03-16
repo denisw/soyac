@@ -49,19 +49,18 @@ static std::vector<std::string> parse_command_line(int argc, const char** argv)
     po::options_description desc(
         "Compiler for the Soya toy programming language");
 
-    desc.add_options()("help", "Show this help message and exit")(
-        "emit-llvm", "Compile to LLVM assembly only, do not assemble or link")(
-        "compile-only,c", "Compile and assemble only, do not link")(
-        "include-path,I", po::value<std::vector<std::string>>(),
-        "Add <directory> to the interface file search path")("library-path,L",
-        po::value<std::vector<std::string>>(),
-        "Add <directory> to the library path")("o",
-        po::value<std::string>()->default_value("a.out"),
-        "Output the linked binary to <file>")("source-path,s",
-        po::value<std::vector<std::string>>(),
-        "Add <directory> to the source file search path")(
-        "S", "Compile to native assembly only, do not assemble or link")(
-        "input-file", po::value<std::vector<std::string>>(), "Input files");
+    // clang-format off
+    desc.add_options()
+        ("help", "Show this help message and exit")
+        ("emit-llvm", "Compile to LLVM assembly only, do not assemble or link")
+        ("compile-only,c", "Compile and assemble only, do not link")
+        ("include-path,I", po::value<std::vector<std::string>>(), "Add <directory> to the interface file search path")
+        ("library-path,L", po::value<std::vector<std::string>>(), "Add <directory> to the library path")
+        ("o", po::value<std::string>()->default_value("a.out"), "Output the linked binary to <file>")
+        ("source-path,s", po::value<std::vector<std::string>>(), "Add <directory> to the source file search path")
+        ("S", "Compile to native assembly only, do not assemble or link")
+        ("input-file", po::value<std::vector<std::string>>(), "Input files");
+    // clang-format on
 
     po::positional_options_description p;
     p.add("input-file", -1);
