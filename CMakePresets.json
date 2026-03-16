@@ -2,30 +2,40 @@
   "version": 10,
   "cmakeMinimumRequired": {
     "major": 3,
-    "minor": 25,
+    "minor": 31,
     "patch": 0
   },
   "configurePresets": [
     {
       "name": "default",
       "displayName": "Default",
-      "generator": "Ninja",
+      "generator": "Ninja Multi-Config",
       "binaryDir": "${sourceDir}/build",
+      "installDir": "${sourceDir}/build/dist",
       "cacheVariables": {
+        "CMAKE_CONFIGURATION_TYPES": "Debug;Release",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
       }
     }
   ],
   "buildPresets": [
     {
-      "name": "default",
-      "configurePreset": "default"
+      "name": "debug",
+      "configurePreset": "default",
+      "configuration": "Debug"
+    },
+    {
+      "name": "release",
+      "configurePreset": "default",
+      "configuration": "Release"
     }
   ],
   "testPresets": [
     {
       "name": "default",
-      "configurePreset": "default"
+      "configurePreset": "default",
+      "configuration": "Debug",
+      "output": { "outputOnFailure": true }
     }
   ],
   "workflowPresets": [
@@ -38,7 +48,7 @@
         },
         {
           "type": "build",
-          "name": "default"
+          "name": "debug"
         },
         {
           "type": "test",

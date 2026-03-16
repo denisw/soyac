@@ -250,3 +250,4 @@ target_link_libraries(soya-compiler
 add_executable(soyac driver/main.cpp)
 target_link_libraries(soyac soya-compiler)
 
+install(TARGETS soyac DESTINATION bin)

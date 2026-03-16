@@ -146,3 +146,11 @@ endforeach()
 add_executable(test-soyac ${TEST_SOURCES})
 target_link_libraries(test-soyac PRIVATE soya-compiler Boost::filesystem PkgConfig::CppUnit)
 add_dependencies(test-soyac soyac sr)
+
+add_test(NAME tests COMMAND test-soyac)
+
+set_tests_properties(
+    tests PROPERTIES
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    ENVIRONMENT "SOYAC=$<TARGET_FILE:soyac>;SOYAC_FLAGS=-L$<TARGET_FILE_DIR:BDWgc::gc>;SOYA_RUNTIME_DIR=$<TARGET_FILE_DIR:sr>"
+)
