@@ -7,9 +7,12 @@
  */
 
 #include <cppunit/ui/text/TestRunner.h>
+
+#include <algorithm>
 #include <cstdlib>
 #include <filesystem>
 #include <iostream>
+#include <sstream>
 #include <string>
 
 #include "unittest/analysis/SymbolTableTest.h"
@@ -102,8 +105,7 @@
 
 namespace fs = std::filesystem;
 
-void
-unitTest()
+void unitTest()
 {
     CppUnit::TextUi::TestRunner runner;
 
@@ -198,35 +200,69 @@ unitTest()
     runner.run();
 }
 
-void
-tortureTest()
+void tortureTest()
 {
     std::cout << "Torture Test" << std::endl << "============" << std::endl;
 
-    for (auto& entry : fs::recursive_directory_iterator("torture"))
-    {
-        if (!entry.is_regular_file() || entry.path().extension() != ".soya")
-            continue;
+    std::vector<fs::path> inputPaths;
 
-        auto pathString = entry.path().string();
-        std::cout << "Processing: " << pathString << "...\n";
+    for (auto& entry : fs::recursive_directory_iterator("test/torture")) {
+        if (entry.is_regular_file() & entry.path().extension() == ".soya"
+            && entry.path().filename().string().at(0) != '_') {
+            inputPaths.push_back(entry.path());
+        }
+    }
 
-        std::string compileCommandPrefix{"../src/soyac -I ../runtime -L ../runtime -s torture/basic/modules --emit-llvm "};
-        auto compileCommand = compileCommandPrefix + pathString;
+    // Ensure that the input path order is consistent across operating systems.
+    std::sort(inputPaths.begin(), inputPaths.end());
+
+    for (auto& path : inputPaths) {
+        std::cout << "Processing: " << path.string() << "..." << std::endl;
+
+        const char* compilerBinary = std::getenv("SOYAC");
+        if (!compilerBinary) {
+            std::cerr << "ERROR: SOYAC environment variable is not set <<<"
+                      << std::endl;
+            std::exit(1);
+        }
+
+        const char* compilerFlags = std::getenv("SOYAC_FLAGS");
+        if (!compilerFlags) {
+            compilerFlags = "";
+        }
+
+        const char* runtimeDir = std::getenv("SOYA_RUNTIME_DIR");
+        if (!runtimeDir) {
+            std::cerr
+                << "ERROR: SOYA_RUNTIME_DIR environment variable is not set <<<"
+                << std::endl;
+            std::exit(1);
+        }
+
+        std::stringstream compileCommandStream;
+        compileCommandStream << compilerBinary;
+        compileCommandStream << " " << path.string();
+        compileCommandStream << " " << "-I" << runtimeDir;
+        compileCommandStream << " " << "-L" << runtimeDir;
+        compileCommandStream << " -s test/torture/basic/modules";
+        if (compilerFlags) {
+            compileCommandStream << " " << compilerFlags;
+        }
+
+        auto compileCommand = compileCommandStream.str();
+        std::cout << compileCommand << std::endl;
         auto returnCode = std::system(compileCommand.c_str());
 
-        if (returnCode != 0)
-        {
-            std::cout << ">>> ERROR: soyac exited with error code " << returnCode
-                      << "! <<<" << std::endl;
+        if (returnCode != 0) {
+            std::cout << ">>> ERROR: soyac exited with error code "
+                      << returnCode << "! <<<" << std::endl;
 
             std::exit(1);
         }
 
         returnCode = std::system("./a.out");
 
-        if (returnCode != 0)
-        {
+        if (returnCode != 0) {
             std::cout << "*** ERROR: test exited with error code " << returnCode
                       << "! ***" << std::endl;
 
@@ -237,9 +273,7 @@ tortureTest()
     std::cout << "=== All tests passed successfully. === " << std::endl;
 }
 
-
-int
-main(int argc, char** argv)
+int main(int argc, char** argv)
 {
     unitTest();
     tortureTest();

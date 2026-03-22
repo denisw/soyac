@@ -6,12 +6,12 @@
  * See LICENSE.txt for details.
  */
 
-static import samples::foo;
-static import samples::bar;
+static import samples::_foo;
+static import samples::_bar;
 
 extern function exit(code : int);
 
-if (samples::foo.func() != 218) exit(1);
+if (samples::_foo.func() != 218) exit(1);
 
-var s = new samples::bar.Struct(33);
+var s = new samples::_bar.Struct(33);
 if (s.value != 33) exit(2);

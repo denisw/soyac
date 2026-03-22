@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-import samples::foo;
-import samples::bar;
+import samples::_foo;
+import samples::_bar;
 
 extern function exit(code : int);
 

@@ -6,8 +6,8 @@
  * See LICENSE.txt for details.
  */
 
-import samples::foo.func;
-import samples::bar.Struct;
+import samples::_foo.func;
+import samples::_bar.Struct;
 
 extern function exit(code : int);
 

@@ -6,7 +6,7 @@
  * See LICENSE.txt for details.
  */
 
-module samples::foo;
+module samples::_foo;
 
 function func() : int
 {

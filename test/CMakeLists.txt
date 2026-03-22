@@ -135,8 +135,8 @@ set(TORTURE_TESTS
         torture/basic/modules/static_module_imports.soya
         torture/basic/modules/entity_imports.soya
         torture/basic/modules/module_imports.soya
-        torture/basic/modules/samples/foo.soya
-        torture/basic/modules/samples/bar.soya
+        torture/basic/modules/samples/_foo.soya
+        torture/basic/modules/samples/_bar.soya
 )
 
 foreach(FILE IN LISTS TORTURE_TESTS)
