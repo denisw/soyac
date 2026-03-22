@@ -1,13 +1,11 @@
 # soyac - Compiler for a Java/C#-like toy language
 
-`soyac` is a compiler I wrote between 2007 and 2009 with the goal to
-create my very own programming language. It is written in C++ and uses
-a now ancient version of LLVM (early 2.x) as its backend. The
-implemented programming language (called *Soya*) is very basic, but
-has support for variables, integer types and arithmetic, control flow
-statements (`if`, `while`, `for`), functions (including function
-pointers) and primitive object orientation. Here is a working example
-source file:
+`soyac` is a compiler I wrote between 2007 and 2009 with the goal to create my
+very own programming language. implemented programming language (called *Soya*)
+is very basic, but has support for variables, integer types and arithmetic,
+control flow statements (`if`, `while`, `for`), functions (including function
+pointers) and primitive object orientation. Here is a working example source
+file:
 
 ```javascript
 struct Point
@@ -44,27 +42,114 @@ doubles as regression test suite. I also tried to write a language
 specification in DocBook at that time, which can be found at
 `doc/langref`.
 
-## Trying it out
+The compiler is written in C++ and originally used [LLVM](https://llvm.org/)
+2.x as its backend. Recently I rebased it on LLVM 19.x, switched the build
+system from SCons to CMake and made it compile on macOS in addition to Linux,
+on which it was originally implemented.
 
-`soyac` has been written on - and probably only works on -
-Linux. Because the required versions of LLVM are so old, it is not
-trivial to build it on a recent Linux distribution, though. For this
-reason, I have written a [Vagrant](http://vagrantup.com/)
-configuration that makes it possible to test the compiler in a
-virtualized Ubuntu 10.04 system. To do so, install VirtualBox and
-Vagrant, change to the project root and run
+## Trying it Out
 
-    vagrant up
+### Dev Containers (Recommended)
 
-After this is done, log into the VM with `vagrant ssh` and change to
-the `/soyac` directory, which is synced with the project direcory on
-your host system. To compile and install `soyac`, run
+The repository includes a [Dev Container](https://containers.dev/)
+configuration, which allows you to set up a container-based development
+environment with all dependencies pre-installed. You can set it up in one of the
+following ways: 
 
-    scons
-    sudo scons install
+- Open the project in Visual Studio Code, CLion, Zed or another editor with Dev 
+  Containers support and follow the prompt to reopen it in the Dev Container.
 
-You can now run the compiler with `soyac <source file>`. Just try it
-on one of the example files on `test/torture`. Some files not not work
-because I had to use a slightly newer version of LLVM that seems to
-have broken a few things (the originally used version didn't compile on
-10.04).
+- Use the [Dev Container CLI](https://github.com/devcontainers/cli) to build
+  and run the container with:
+
+  ```sh
+  devcontainer up
+  ```
+
+  Once the container has started, you can then run the commands described in
+  the next section by prefixing them with `devcontainer exec`, e.g. 
+  `devcontainer exec just build`. 
+
+### Manual Environment Setup
+
+Install the following prerequisites:
+
+* [CMake](https://cmake.org/) >= 3.31
+* [Ninja](https://ninja-build.org/)
+* [Just](https://just.systems/) (optional)
+* [LLVM](https://llvm.org/) 19.x
+* [Bison](https://www.gnu.org/software/bison/) >= 3.8
+* [Boehm-Demers-Weiser GC](https://www.hboehm.info/gc/) 
+* [Boost](https://www.boost.org/doc/libs/1_83_0/doc/html/signals2.html)
+* [CppUnit](https://sourceforge.net/projects/cppunit/) (test suite only)
+
+**Debian / Ubuntu:**
+
+```sh
+sudo apt-get install \
+      build-essential \
+      bison \
+      cmake \
+      libboost-dev \
+      libboost-filesystem-dev \
+      libboost-program-options-dev \
+      libboost-regex-dev \
+      libcppunit-dev \
+      libgc-dev \
+      llvm-19-dev \
+      ninja-build \
+      just 
+```
+
+**macOS (Homebrew):**
+
+```sh
+brew install bison boost cmake cppunit just llvm 
+```
+
+### Configuring the Build
+
+Run CMake to configure the build with the `default` preset (defined in
+`CMakePresets.json`). This will set up a `build` directory within the
+project root.
+
+
+```sh
+just configure
+# cmake --preset default
+```
+
+> [!IMPORTANT]
+> The Homebrew packages for Bison and LLVM are [keg-only] to avoid conflicts
+> with the copies that ship with macOS / Xcode. To point CMake to the Homebrew
+> versions, pass their locations via the corresponding `_ROOT` variables:
+> 
+> ```sh
+> cmake --preset default \
+>     -DBISON_ROOT=$(brew --prefix bison) \
+>     -DLLVM_ROOT=$(brew --prefix llvm)
+> ```
+
+[keg-only]: https://docs.brew.sh/FAQ.html#what-does-keg-only-mean
+
+### Building
+
+You can build the Soya compiler, runtime and tests with:
+
+```sh
+just build
+# cmake --build --preset debug
+```
+
+### Running the Tests
+
+The Soya compiler comes with both unit and end-to-end tests. Both can be run
+with:
+
+
+```sh
+just test
+# ctest --preset default
+```
+
+`just test` automatically rebuilds before the tests are run.
