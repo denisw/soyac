@@ -9,8 +9,8 @@
 #ifndef SOYA_LINK__H_
 #define SOYA_LINK__H_
 
-#include <list>
 #include <string>
+#include <vector>
 
 namespace soyac {
 namespace driver {
@@ -23,7 +23,7 @@ namespace driver {
  *
  * @param objectFiles  The object files to link.
  */
-void linkFiles(const std::list<std::string>& objectFiles);
+void linkFiles(const std::vector<std::string>& objectFiles);
 
 } // namespace driver
 } // namespace soyac

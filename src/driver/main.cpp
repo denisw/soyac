@@ -6,13 +6,14 @@
  * See LICENSE.txt for details.
  */
 
-#include <algorithm>
 #include <cerrno>
 #include <cstring>
+#include <deque>
 #include <filesystem>
 #include <iostream>
 #include <regex>
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 #include <boost/program_options.hpp>
@@ -32,7 +33,8 @@ using namespace soyac;
 using namespace soyac::driver;
 using soyac::analysis::ModulesRequiredException;
 
-static std::list<std::string> sObjectFiles;
+static std::set<std::string> sProcessedSourceFiles;
+static std::vector<std::string> sObjectFiles;
 
 /**
  * Parses the passed command-line argument vector and stores all option
@@ -71,7 +73,6 @@ static std::vector<std::string> parse_command_line(int argc, const char** argv)
     po::notify(vars);
 
     if (vars.count("help")) {
-        std::cout << desc << "\n";
         return {};
     }
 
@@ -209,95 +210,59 @@ std::string find_module(const std::string& moduleName)
 static void process_files(std::vector<std::string>& files)
 {
     std::vector<std::string> required;
+    std::deque<std::string> queue { files.begin(), files.end() };
 
-    /*
-     * Try to process the passed files.
-     */
-    for (std::vector<std::string>::iterator it = files.begin();
-        it != files.end();) {
+    while (!queue.empty()) {
+        auto file = queue.front();
+
+        if (sProcessedSourceFiles.find(file) != sProcessedSourceFiles.end()) {
+            // The file has already been processed.
+            queue.pop_front();
+            continue;
+        }
+
+        FileProcessor processor(file);
+        std::string outputFile;
+
         try {
-            FileProcessor proc(*it);
-            std::string outputFile;
-
-            try {
-                outputFile = proc.process();
-            } catch (const std::ifstream::failure& exc) {
-                std::cerr << config::programName
-                          << ": "
-                             "cannot read `"
-                          << *it << "': " << std::strerror(errno) << std::endl;
-
-                std::exit(1);
-            }
-
-            /*
-             * If the output file is an object file, add it to the object
-             * file list for linking.
-             */
-            if (config::linkingRequested() && outputFile != ""
-                && outputFile.substr(outputFile.length() - 2) == ".o") {
-                sObjectFiles.push_back(outputFile);
-            }
-
-            /*
-             * If a file has been processed, we can remove it from the
-             * file list. This leaves us with a list with only those
-             * source files which depend on the required modules.
-             */
-            it = files.erase(it);
+            outputFile = processor.process();
+        } catch (const std::ifstream::failure& exc) {
+            std::cerr << config::programName
+                      << ": "
+                         "cannot read `"
+                      << file << "': " << std::strerror(errno) << std::endl;
+            std::exit(1);
         } catch (const ModulesRequiredException& e) {
-            /*
-             * If further modules must be loaded to compile a file,
-             * we add those modules to a list.
-             */
-            for (ModulesRequiredException::const_modules_iterator m_it
+            for (ModulesRequiredException::const_modules_iterator it
                 = e.modules_begin();
-                m_it != e.modules_end(); m_it++) {
-                required.push_back(*m_it);
+                it != e.modules_end(); it++) {
+
+                std::string path = find_module(*it);
+
+                if (path == "") {
+                    std::cerr << config::programName
+                              << ": cannot find required module '" << *it << "'"
+                              << std::endl;
+                    std::exit(1);
+                }
+
+                queue.push_front(path);
             }
 
-            it++;
+            continue;
         }
-    }
 
-    /*
-     * In the list of required modules, replace all module names with
-     * paths to corresponding source files using find_module().
-     */
-    for (auto it = required.begin(); it != required.end();) {
         /*
-         * It could be that the required module was already provided by one
-         * of the files passed to this function. If this is the case, remove
-         * it from the list of required modules.
+         * If the output file is an object file, add it to the object
+         * file list for linking.
          */
-        if (soyac::ast::Module::get(soyac::ast::Name(*it)) != nullptr) {
-            it = required.erase(it);
-        } else {
-            std::string path = find_module(*it);
-
-            if (path == "") {
-                std::cerr << config::programName
-                          << ": cannot find required module '" << *it << "'"
-                          << std::endl;
-                std::exit(1);
-            } else {
-                *it = path;
-                it++;
-            }
+        if (config::linkingRequested() && outputFile != ""
+            && outputFile.substr(outputFile.length() - 2) == ".o") {
+            sObjectFiles.push_back(outputFile);
         }
-    }
 
-    /*
-     * Process the required files. After that, we can go on to process
-     * the files which required them.
-     */
-
-    if (!required.empty()) {
-        process_files(required);
-    }
-
-    if (!files.empty()) {
-        process_files(files);
+        sProcessedSourceFiles.insert(file);
+        queue.pop_front();
     }
 }
 
