@@ -1,8 +1,8 @@
-# IDEs
+# IDEs & Language Servers
+.cache
 .idea
 
 # Binaries
-*.cmake
 *.a
 *.o
 *.so
