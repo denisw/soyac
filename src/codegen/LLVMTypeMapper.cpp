@@ -11,6 +11,7 @@
 #include "ast/ast.h"
 #include "mangling.h"
 
+#include <algorithm>
 #include <llvm/IR/DerivedTypes.h>
 #include <llvm/IR/Type.h>
 
@@ -60,26 +61,7 @@ llvm::Type* LLVMTypeMapper::valueType(Type* type)
     }
 
     if (auto structType = dynamic_cast<StructType*>(type)) {
-        auto name = mangledName(structType);
-        auto llvmType = llvm::StructType::getTypeByName(mContext, name);
-
-        if (!llvmType) {
-            UserDefinedType* utype = (UserDefinedType*)type;
-            std::vector<llvm::Type*> memberTypes;
-
-            for (DeclarationBlock::declarations_iterator it
-                = utype->body()->declarations_begin();
-                it != utype->body()->declarations_end(); ++it) {
-                if (auto var
-                    = dynamic_cast<Variable*>((*it)->declaredEntity())) {
-                    memberTypes.push_back(valueType(var->type()));
-                }
-            }
-
-            llvmType = llvm::StructType::create(memberTypes);
-        }
-
-        return llvmType;
+        return getStructOrClassInstanceDataType(structType);
     }
 
     if (dynamic_cast<FunctionType*>(type)) {
@@ -95,56 +77,24 @@ llvm::Type* LLVMTypeMapper::valueType(Type* type)
     /*
      * Class Types
      */
-    else if (dynamic_cast<ClassType*>(type) != nullptr) {
-        llvm::Type* llvmType
-            = llvm::StructType::getTypeByName(mContext, mangledName(type));
-
-        if (llvmType == nullptr) {
-            /*
-             * A class instance is represented by a pointer to an array,
-             * where each element in return points to the instance data
-             * of each class the instance is composed of (that is, the
-             * instance's class and all base classes).
-             */
-
-            int numClasses = 1;
-
-            ClassType* ctype = (ClassType*)type;
-
-            while (ctype->baseClass() != nullptr) {
-                numClasses++;
-                ctype = (ClassType*)ctype->baseClass();
-            }
-
-            llvm::Type* i8 = llvm::Type::getInt8Ty(mContext);
-            llvm::Type* i8p = llvm::PointerType::getUnqual(i8);
-
-            llvm::Type* refType = llvm::PointerType::getUnqual(
-                llvm::ArrayType::get(i8p, numClasses));
-
-            llvm::StructType* wrapperStruct = llvm::StructType::get(refType);
-
-            wrapperStruct->setName(mangledName(type));
-            llvmType = wrapperStruct;
-        }
-
-        return llvmType;
+    if (dynamic_cast<ClassType*>(type) != nullptr) {
+        return llvm::PointerType::getUnqual(mContext);
     }
 
     /*
      * Unknown Type
      */
-    else {
-        throw std::runtime_error("Unknown type");
-    }
+    throw std::runtime_error("Unknown type");
 }
 
 llvm::Type* LLVMTypeMapper::objectType(Type* type)
 {
     if (auto arrayType = dynamic_cast<ArrayType*>(type)) {
-        return llvm::StructType::get(mContext,
-            { mDataLayout.getIntPtrType(mContext),
-                llvm::ArrayType::get(valueType(arrayType->elementType()), 0) });
+        auto llvmSizeType = mDataLayout.getIntPtrType(mContext);
+        auto llvmElementType = valueType(arrayType->elementType());
+        auto llvmPayloadType = llvm::ArrayType::get(llvmElementType, 0);
+        return llvm::StructType::get(
+            mContext, { llvmSizeType, llvmPayloadType });
     }
 
     if (auto functionType = dynamic_cast<FunctionType*>(type)) {
@@ -161,78 +111,55 @@ llvm::Type* LLVMTypeMapper::objectType(Type* type)
     }
 
     if (auto structType = dynamic_cast<StructType*>(type)) {
-        return getStructOrClassLayoutType(structType);
+        return getStructOrClassInstanceDataType(structType);
     }
 
-    if (dynamic_cast<ClassType*>(type) != nullptr) {
-        llvm::Type* llvmType
-            = llvm::StructType::getTypeByName(mContext, mangledName(type));
-
-        if (llvmType == nullptr) {
-            /*
-             * A class instance is represented by a pointer to an array,
-             * where each element in return points to the instance data
-             * of each class the instance is composed of (that is, the
-             * instance's class and all base classes).
-             */
-
-            int numClasses = 1;
-
-            ClassType* ctype = (ClassType*)type;
-
-            while (ctype->baseClass() != nullptr) {
-                numClasses++;
-                ctype = (ClassType*)ctype->baseClass();
-            }
-
-            llvm::Type* i8 = llvm::Type::getInt8Ty(mContext);
-            llvm::Type* i8p = llvm::PointerType::getUnqual(i8);
-
-            llvm::Type* refType = llvm::PointerType::getUnqual(
-                llvm::ArrayType::get(i8p, numClasses));
-
-            llvm::StructType* wrapperStruct = llvm::StructType::get(refType);
-
-            wrapperStruct->setName(mangledName(type));
-            llvmType = wrapperStruct;
-        }
-
-        return llvmType;
+    if (auto classType = dynamic_cast<ClassType*>(type)) {
+        return getStructOrClassInstanceDataType(classType);
     }
 
     /*
      * Unknown Type
      */
-    else {
-        throw std::runtime_error("Unknown type");
-    }
+    throw std::runtime_error("Unknown type");
 }
 
-llvm::Type* LLVMTypeMapper::getPointerSizeType()
+llvm::Type* LLVMTypeMapper::getPointerSizeType() const
 {
     return mDataLayout.getIntPtrType(mContext);
 }
 
-llvm::Type* LLVMTypeMapper::getStructOrClassLayoutType(UserDefinedType* type)
+llvm::Type* LLVMTypeMapper::getStructOrClassInstanceDataType(
+    UserDefinedType* type)
 {
+    assert(dynamic_cast<StructType*>(type) || dynamic_cast<ClassType*>(type));
+
     auto name = mangledName(type);
-    auto llvmType = llvm::StructType::getTypeByName(mContext, name);
-
-    if (!llvmType) {
-        std::vector<llvm::Type*> memberTypes;
-
-        for (DeclarationBlock::declarations_iterator it
-            = type->body()->declarations_begin();
-            it != type->body()->declarations_end(); ++it) {
-            if (auto var = dynamic_cast<Variable*>((*it)->declaredEntity())) {
-                memberTypes.push_back(valueType(var->type()));
-            }
-        }
-
-        llvmType = llvm::StructType::create(memberTypes);
+    auto existingLLVMType = llvm::StructType::getTypeByName(mContext, name);
+    if (existingLLVMType) {
+        return existingLLVMType;
     }
 
-    return llvmType;
+    std::vector<llvm::Type*> memberTypes;
+
+    if (auto classType = dynamic_cast<ClassType*>(type)) {
+        if (auto baseClass = static_cast<ClassType*>(classType->baseClass())) {
+            auto llvmBase = getStructOrClassInstanceDataType(baseClass);
+            for (unsigned i = 0; i < llvmBase->getStructNumElements(); i++) {
+                memberTypes.push_back(llvmBase->getStructElementType(i));
+            }
+        }
+    }
+
+    for (DeclarationBlock::declarations_iterator it
+        = type->body()->declarations_begin();
+        it != type->body()->declarations_end(); ++it) {
+        if (auto var = dynamic_cast<Variable*>((*it)->declaredEntity())) {
+            memberTypes.push_back(valueType(var->type()));
+        }
+    }
+
+    return llvm::StructType::create(mContext, memberTypes, name);
 }
 
 } // namespace soyac::codegen

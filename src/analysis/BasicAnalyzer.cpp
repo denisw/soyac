@@ -1725,7 +1725,8 @@ void* BasicAnalyzer::visitCallExpression(CallExpression* expr)
      * best (if any) and set the callee to the corresponing
      * FunctionExpression.
      */
-    if (dynamic_cast<UnresolvedFunctionExpression*>(expr->callee()) != nullptr) {
+    if (dynamic_cast<UnresolvedFunctionExpression*>(expr->callee())
+        != nullptr) {
         UnresolvedFunctionExpression* unresolved
             = (UnresolvedFunctionExpression*)expr->callee();
 
@@ -2076,7 +2077,8 @@ void* BasicAnalyzer::visitUnresolvedBinaryExpression(
             DeclaredEntity* callee;
             FunctionGroup* group;
 
-            if ((group = dynamic_cast<FunctionGroup*>(lookupResult)) != nullptr) {
+            if ((group = dynamic_cast<FunctionGroup*>(lookupResult))
+                != nullptr) {
                 NodeList<Expression> args;
                 args.push_back(expr->rightHand());
 

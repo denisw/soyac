@@ -261,7 +261,7 @@ llvm::Value* CodeGenerator::createGetInstanceData(
         cls = static_cast<ClassType*>(cls->baseClass());
     }
 
-    auto pointerType = llvm::PointerType::getUnqual(mContext);
+    auto pointerType = mTypeMapper.objectType(type);
 
     llvm::Value* dataPointer = mBuilder.CreateGEP(pointerType, instance,
         {
@@ -280,15 +280,6 @@ void CodeGenerator::createInitializer(UserDefinedType* type)
     llvm::BasicBlock* tmpBlock = mBuilder.GetInsertBlock();
     mBuilder.SetInsertPoint(llvm::BasicBlock::Create(mContext, "", mFunction));
 
-    if (auto ctype = dynamic_cast<ClassType*>(type)) {
-        llvm::Value* data = createGCMalloc(mTypeMapper.objectType(ctype));
-
-        llvm::Value* thisVal = (llvm::Value*)ThisExpression(ctype).visit(this);
-
-        llvm::Value* dataPtr = createGetInstanceData(thisVal, ctype, true);
-        mBuilder.CreateStore(data, dataPtr);
-    }
-
     /*
      * Generate code for initializing all instance variables.
      */
@@ -296,9 +287,7 @@ void CodeGenerator::createInitializer(UserDefinedType* type)
     for (DeclarationBlock::declarations_iterator it
         = type->body()->declarations_begin();
         it != type->body()->declarations_end(); it++) {
-        if (dynamic_cast<Variable*>((*it)->declaredEntity()) != nullptr) {
-            Variable* var = (Variable*)(*it)->declaredEntity();
-
+        if (auto var = dynamic_cast<Variable*>((*it)->declaredEntity())) {
             Expression* lh
                 = new InstanceVariableExpression(new ThisExpression(type), var);
             Expression* rh;
@@ -680,35 +669,28 @@ llvm::Value* CodeGenerator::createSizeof(llvm::Type* type)
 
 llvm::Value* CodeGenerator::createGCMalloc(llvm::Value* size)
 {
-    llvm::Type* i8p
-        = llvm::PointerType::getUnqual(llvm::IntegerType::getInt8Ty(mContext));
+    llvm::Type* ptr = llvm::PointerType::getUnqual(mContext);
 
     std::vector<llvm::Value*> args;
     args.push_back(size);
 
     llvm::Function* gcMalloc = mLLVMModule->getFunction("GC_malloc");
-
-    if (gcMalloc == nullptr) {
-        std::vector<llvm::Type*> params;
-        params.push_back(sizeType());
-
+    if (!gcMalloc) {
         llvm::FunctionType* gcMallocType
-            = llvm::FunctionType::get(i8p, params, false);
-
+            = llvm::FunctionType::get(ptr, { sizeType() }, false);
         gcMalloc = llvm::Function::Create(gcMallocType,
-            llvm::Function::ExternalLinkage, "GC_malloc", mLLVMModule);
+            llvm::Function::ExternalLinkage, 0, "GC_malloc", mLLVMModule);
     }
 
-    return mBuilder.CreateCall(gcMalloc, args);
+    return mBuilder.CreateCall(gcMalloc, { size });
 }
 
-llvm::Value* CodeGenerator::createGCMalloc(llvm::Type* type, llvm::Value* n)
+llvm::Value* CodeGenerator::createGCMalloc(llvm::Type* type)
 {
-    llvm::Value* size = createSizeof(type);
-    if (n != nullptr) {
-        size = mBuilder.CreateMul(size, n);
-    }
-    return createGCMalloc(size);
+    assert(type->isSized());
+    size_t size = mLLVMModule->getDataLayout().getTypeAllocSize(type);
+    auto sizeConstant = llvm::ConstantInt::get(sizeType(), size, false);
+    return createGCMalloc(sizeConstant);
 }
 
 ///// Module
@@ -739,8 +721,6 @@ void* CodeGenerator::visitModule(soyac::ast::Module* m)
     mBuilder.SetInsertPoint(body);
 
     m->body()->visit(this);
-
-    mBuilder.SetInsertPoint(&mFunction->back());
 
     if (m == Module::getProgram()) {
         mBuilder.CreateRet(
@@ -1103,8 +1083,8 @@ void* CodeGenerator::visitVariable(Variable* var)
             llvm::GlobalVariable::ExternalLinkage, defaultValue(var->type()),
             mangledName(var));
     } else {
-        v = mBuilder.CreateAlloca(
-            mTypeMapper.valueType(var->type()), nullptr, mangledName(var).c_str());
+        v = mBuilder.CreateAlloca(mTypeMapper.valueType(var->type()), nullptr,
+            mangledName(var).c_str());
 
         if (var->initializer() == nullptr) {
             Expression* rh
@@ -1158,10 +1138,12 @@ void* CodeGenerator::visitArrayCreationExpression(ArrayCreationExpression* expr)
      */
 
     ArrayType* arrayType = (ArrayType*)expr->type();
-    llvm::Type* llvmArrayType = mTypeMapper.objectType(arrayType);
+    Type* elementType = arrayType->elementType();
+    llvm::Type* llvmArrayPointerType = mTypeMapper.objectType(arrayType);
+    llvm::Type* llvmElementType = mTypeMapper.valueType(elementType);
 
     llvm::Value* allocSize
-        = mBuilder.CreateMul(createSizeof(llvmArrayType), len);
+        = mBuilder.CreateMul(createSizeof(llvmElementType), len);
     allocSize = mBuilder.CreateAdd(allocSize, createSizeof(sizeType()));
 
     llvm::Value* array = createGCMalloc(allocSize);
@@ -1170,19 +1152,25 @@ void* CodeGenerator::visitArrayCreationExpression(ArrayCreationExpression* expr)
      * Finally, the array length and all element values need to be
      * copied into the array.
      */
-
+    llvm::Value* lengthFieldIndices[] = {
+        llvm::ConstantInt::get(sizeType(), 0), // pointer dereference
+        llvm::ConstantInt::get(
+            llvm::Type::getInt32Ty(mContext), 0) // field index
+    };
+    llvm::Value* dataFieldIndices[] = {
+        llvm::ConstantInt::get(sizeType(), 0), // pointer dereference
+        llvm::ConstantInt::get(
+            llvm::Type::getInt32Ty(mContext), 1) // field index
+    };
     llvm::Value* lengthField
-        = mBuilder.CreateStructGEP(llvmArrayType, array, 0);
-    llvm::Value* dataField = mBuilder.CreateStructGEP(llvmArrayType, array, 1);
+        = mBuilder.CreateGEP(llvmArrayPointerType, array, lengthFieldIndices);
+    llvm::Value* dataField
+        = mBuilder.CreateGEP(llvmArrayPointerType, array, dataFieldIndices);
 
     mBuilder.CreateStore(len, lengthField);
 
-    Type* elementType = arrayType->elementType();
-    llvm::Type* llvmElementType = mTypeMapper.valueType(elementType);
-
     for (size_t index = 0; index < elems.size(); index++) {
         std::vector<llvm::Value*> indices;
-        indices.push_back(llvm::ConstantInt::get(sizeType(), 0, false));
         indices.push_back(llvm::ConstantInt::get(sizeType(), index, false));
 
         llvm::Value* elemLH
@@ -1234,7 +1222,8 @@ void* CodeGenerator::visitCallExpression(CallExpression* expr)
 
         if (dynamic_cast<BuiltInType*>(funcExpr->instance()->type()) != nullptr
             || dynamic_cast<ArrayType*>(funcExpr->instance()->type()) != nullptr
-            || dynamic_cast<EnumType*>(funcExpr->instance()->type()) != nullptr) {
+            || dynamic_cast<EnumType*>(funcExpr->instance()->type())
+                != nullptr) {
             if (dynamic_cast<PropertyGetAccessor*>(funcExpr->target())
                 != nullptr) {
                 return createBuiltInPropertyCall(
@@ -1609,18 +1598,11 @@ void* CodeGenerator::visitInstanceVariableExpression(
     llvm::Value* instanceVal = (llvm::Value*)expr->instance()->visit(this);
     mLValue = tmp;
 
-    UserDefinedType* utype
+    UserDefinedType* instanceType
         = dynamic_cast<UserDefinedType*>(expr->instance()->type());
+    assert(instanceType != nullptr);
 
-    assert(utype != nullptr);
-
-    /*
-     * If the instance's type is a class, we need to retrieve the correct
-     * instance data pointer fist (see classPrivate()).
-     */
-    if (auto classType = dynamic_cast<ClassType*>(utype)) {
-        instanceVal = createGetInstanceData(instanceVal, classType);
-    }
+    auto llvmStructType = mTypeMapper.objectType(instanceType);
 
     /*
      * To retrieve the right field from the struct or class, we need to know
@@ -1628,16 +1610,23 @@ void* CodeGenerator::visitInstanceVariableExpression(
      * struct is the same as the instance variable declaration order in the
      * Soya struct body, we get the index by looking where the variable to
      * retrieve is placed in the struct's or class' body.
+     *
+     * (In case the type is a class, we also need to take into account the
+     * instance variables declared in the base classes.)
      */
 
-    int index = 0;
+    unsigned index = 0;
 
-    for (DeclarationBlock::declarations_iterator it
-        = utype->body()->declarations_begin();
-        it != utype->body()->declarations_end(); it++) {
+    if (auto classType = dynamic_cast<ClassType*>(instanceType)) {
+        auto base = dynamic_cast<ClassType*>(classType->baseClass());
+        index += base ? base->totalInstanceVariableCount() : 0;
+    }
+
+    for (auto it = instanceType->body()->declarations_begin();
+        it != instanceType->body()->declarations_end(); it++) {
         if ((*it)->declaredEntity() == expr->target()) {
             break;
-        } else {
+        } else if (dynamic_cast<Variable*>((*it)->declaredEntity())) {
             index++;
         }
     }
@@ -1651,9 +1640,8 @@ void* CodeGenerator::visitInstanceVariableExpression(
     llvm::Value* result;
 
     if (llvm::isa<llvm::PointerType>(instanceVal->getType())) {
-        auto instanceType = mTypeMapper.objectType(expr->instance()->type());
-        result = mBuilder.CreateStructGEP(instanceType, instanceVal, index);
-
+        auto llvmInstanceType = mTypeMapper.objectType(instanceType);
+        result = mBuilder.CreateStructGEP(llvmInstanceType, instanceVal, index);
         if (!mLValue) {
             auto varType = mTypeMapper.valueType(expr->type());
             result = mBuilder.CreateLoad(varType, result);

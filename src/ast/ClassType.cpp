@@ -8,6 +8,7 @@
 
 #include "ClassType.h"
 #include "UnknownType.h"
+#include "Variable.h"
 #include "Visitor.h"
 
 namespace soyac {
@@ -48,6 +49,24 @@ bool ClassType::isImplicitlyConvertableTo(Type* other) const
 }
 
 Type* ClassType::baseClass() const { return mBaseClass.target(); }
+
+size_t ClassType::totalInstanceVariableCount() const
+{
+    size_t count = 0;
+
+    for (auto it = body()->declarations_begin();
+        it != body()->declarations_end(); it++) {
+        if (dynamic_cast<Variable*>((*it)->declaredEntity())) {
+            count++;
+        }
+    }
+
+    if (auto base = dynamic_cast<ClassType*>(baseClass())) {
+        count += base->totalInstanceVariableCount();
+    }
+
+    return count;
+}
 
 } // namespace ast
 } // namespace soyac

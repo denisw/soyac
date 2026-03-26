@@ -28,20 +28,20 @@ public:
 
     /**
      * Given a Soya type, returns its value representation as an LLVM type.
-     * For reference types, an LLVM pointer type is returned.
+     * For reference types, this is a pointer type.
      *
      * @param type  The Soya type.
-     * @return      The matching LLVM type for stac.
+     * @return      The matching LLVM value type.
      */
     llvm::Type* valueType(soyac::ast::Type* type);
 
     /**
      * Returns the LLVM type describing the data layout of the given Soya type.
      * For value types, this is equivalent to {@link valueType()}; for
-     * reference types, the heap
+     * reference types, this is the heap representation instead.
      *
      * @param type  The Soya type.
-     * @return      The matching LLVM type for stac.
+     * @return      The matching LLVM object type.
      */
     llvm::Type* objectType(ast::Type* type);
 
@@ -49,9 +49,9 @@ private:
     llvm::LLVMContext& mContext;
     const llvm::DataLayout& mDataLayout;
 
-    llvm::Type* getPointerSizeType();
+    llvm::Type* getPointerSizeType() const;
 
-    llvm::Type* getStructOrClassLayoutType(ast::UserDefinedType* type);
+    llvm::Type* getStructOrClassInstanceDataType(ast::UserDefinedType* type);
 };
 
 } // namespace soyac::codegen

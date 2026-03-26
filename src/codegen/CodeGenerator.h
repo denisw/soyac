@@ -517,7 +517,7 @@ private:
      * @param type  The type for which memory should be allocated.
      * @param n     The size multiplier.
      */
-    llvm::Value* createGCMalloc(llvm::Type* type, llvm::Value* n = nullptr);
+    llvm::Value* createGCMalloc(llvm::Type* type);
 };
 
 } // namespace codegen

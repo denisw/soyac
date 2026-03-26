@@ -2,8 +2,9 @@
 .cache
 .idea
 
-# Binaries
+# Binaries & build artifacts
 *.a
+*.ll
 *.o
 *.so
 a.out

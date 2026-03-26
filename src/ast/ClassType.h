@@ -55,6 +55,14 @@ public:
      */
     Type* baseClass() const;
 
+    /**
+     * Returns the class type's total number of instance variables,
+     * including those defined in base classes.
+     *
+     * @return  The base class.
+     */
+    size_t totalInstanceVariableCount() const;
+
 private:
     Link<Type> mBaseClass;
 };
